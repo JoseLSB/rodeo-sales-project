@@ -1,0 +1,122 @@
+unit MFichas.Model.Conexao.SQL;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Classes,
+  System.IOUtils,
+
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Error,
+  FireDAC.UI.Intf,
+  FireDAC.Phys.Intf,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Stan.Async,
+  FireDAC.Phys,
+  FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef,
+  FireDAC.Stan.ExprFuncs,
+  FireDAC.FMXUI.Wait,
+  FireDAC.Comp.Client,
+  FireDAC.Stan.Param,
+  FireDAC.DatS,
+  FireDAC.DApt.Intf,
+  FireDAC.DApt,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.UI,
+  FireDAC.ConsoleUI.Wait,
+
+  Data.DB,
+
+  ORMBR.Factory.Interfaces,
+  ORMBR.Factory.FireDAC,
+  ORMBR.Types.DataBase,
+  ORMBR.DDL.Generator.SQLite,
+  ORMBR.DML.Generator.SQLite,
+
+  MFichas.Model.Conexao.Interfaces;
+
+const
+  CaminhoDoBancoSQLiteLocal  = 'F:\Bancos\SQLite\FICHAS.db3';
+  CaminhoDoBancoSQLiteMobile = 'FICHAS.db3';
+
+type
+  TModelConexaoSQL = class(TInterfacedObject, iModelConexaoSQL)
+  private
+    FFDConnection: TFDConnection;
+    FFDQuery     : TFDQuery;
+    FConn        : IDBConnection;
+    constructor Create;
+    procedure CriarFDConnection;
+    procedure CriarFDQuery;
+  public
+    destructor Destroy; override;
+    class function New: iModelConexaoSQL;
+    function Conn: iDBConnection;
+    function Query: TFDQuery;
+  end;
+
+implementation
+
+{ TModelConexaoSQL }
+
+function TModelConexaoSQL.Conn: iDBConnection;
+begin
+  Result := FConn;
+end;
+
+constructor TModelConexaoSQL.Create;
+begin
+  CriarFDConnection;
+  CriarFDQuery;
+  FConn := TFactoryFireDAC.Create(FFDConnection, dnSQLite);
+end;
+
+procedure TModelConexaoSQL.CriarFDConnection;
+begin
+  FFDConnection := TFDConnection.Create(nil);
+  {$IFDEF MSWINDOWS}
+  FFDConnection.Params.Database := CaminhoDoBancoSQLiteLocal;
+  {$ELSE}
+  FFDConnection.Params.Values['Database'] := TPath.Combine(TPath.GetDocumentsPath, CaminhoDoBancoSQLiteMobile);
+  {$ENDIF}
+  FFDConnection.DriverName      := 'SQLite';
+  FFDConnection.Params.DriverID := 'SQLite';
+  FFDConnection.Params.Add('LockingMode=Normal');
+  FFDConnection.Connected       := True;
+end;
+
+procedure TModelConexaoSQL.CriarFDQuery;
+begin
+  FFDQuery            := TFDQuery.Create(nil);
+  FFDQuery.Connection := FFDConnection;
+end;
+
+destructor TModelConexaoSQL.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FFDConnection);
+  FreeAndNil(FFDQuery);
+  {$ELSE}
+  FFDConnection.Free;
+  FFDConnection.DisposeOf;
+  FFDQuery.Free;
+  FFDQuery.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelConexaoSQL.New: iModelConexaoSQL;
+begin
+  Result := Self.Create;
+end;
+
+function TModelConexaoSQL.Query: TFDQuery;
+begin
+  Result := FFDQuery;
+end;
+
+end.

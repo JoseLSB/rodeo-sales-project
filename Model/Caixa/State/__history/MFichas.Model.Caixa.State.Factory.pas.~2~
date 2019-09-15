@@ -1,0 +1,39 @@
+unit MFichas.Model.Caixa.State.Factory;
+
+interface
+
+uses
+  MFichas.Model.Caixa.State.Interfaces;
+
+type
+  TModelCaixaStateFactory = class(TInterfacedObject, iModelCaixaStateFactory)
+  private
+    constructor Create;
+    destructor Destroy; override;
+  public
+    class function New: iModelCaixaStateFactory;
+    function Abertura  : iModelCaixaMetodos;
+    function Fechamento: iModelCaixaMetodos;
+  end;
+
+implementation
+
+{ TModelCaixaStateFactory }
+
+constructor TModelCaixaStateFactory.Create;
+begin
+
+end;
+
+destructor TModelCaixaStateFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelCaixaStateFactory.New: iModelCaixaStateFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,73 @@
+unit MFichas.Model.Item.Interfaces;
+
+interface
+
+uses
+  MFichas.Model.Entidade.VENDAITENS;
+
+type
+  iModelItem                = interface;
+  iModelItemMetodos         = interface;
+  iModelItemMetodosVender   = interface;
+  iModelItemMetodosCancelar = interface;
+  iModelItemMetodosDevolver = interface;
+  iModelItemGravarNoBanco   = interface;
+  iModelItemIterator        = interface;
+
+  iModelItem = interface
+    ['{5B8DF055-DE04-4F76-9FE8-2FCF25CA52A8}']
+    function Metodos      : iModelItemMetodos;
+    function Entidade                    : TVENDAITENS; overload;
+    function Entidade(AItem: TVENDAITENS): iModelItem; overload;
+    function Iterator     : iModelItemIterator;
+    function GravarNoBanco: iModelItemGravarNoBanco;
+  end;
+
+  iModelItemMetodos = interface
+    ['{19104467-5F17-4446-8955-479F0EF22859}']
+    function Vender       : iModelItemMetodosVender;
+    function Cancelar     : iModelItemMetodosCancelar;
+    function Devolver     : iModelItemMetodosDevolver;
+    function &End         : iModelItem;
+  end;
+
+  iModelItemMetodosVender = interface
+    ['{074EC8C6-BC20-4B2B-81D7-3BAB3422F5ED}']
+    function Codigo(ACodigo: String)         : iModelItemMetodosVender;
+    function Quantidade(AQuantidade: Double) : iModelItemMetodosVender;
+    function Valor(AValor: Currency)         : iModelItemMetodosVender;
+    function &End                            : iModelItemMetodos;
+  end;
+
+  iModelItemMetodosCancelar = interface
+    ['{FAF10726-6CEA-4531-BB55-D6213F8C6FC1}']
+    function Index(AIndex: Integer): iModelItemMetodosCancelar;
+    function &End                  : iModelItemMetodos;
+  end;
+
+  iModelItemMetodosDevolver = interface
+    ['{45A37434-3D88-4453-AF80-1B9D6F7040EF}']
+    function Codigo(ACodigo: String)         : iModelItemMetodosDevolver;
+    function Quantidade(AQuantidade: Double) : iModelItemMetodosDevolver;
+    function Valor(AValor: Currency)         : iModelItemMetodosDevolver;
+    function &End                            : iModelItemMetodos;
+  end;
+
+  iModelItemGravarNoBanco = interface
+    ['{852B1824-F8DB-409D-B00C-9ECBB4E8F240}']
+    function Executar: iModelItemGravarNoBanco;
+    function &End    : iModelItem;
+  end;
+
+  iModelItemIterator = interface
+    ['{803BC0B9-1FB8-4D1E-841E-557541A3CA25}']
+    function hasNext: Boolean;
+    function Next: iModelItem;
+    function Add(AItem: iModelItem): iModelItemIterator;
+    function Remove(AIndex: Integer): iModelItemIterator;
+    function &End                   : iModelItem;
+  end;
+
+implementation
+
+end.

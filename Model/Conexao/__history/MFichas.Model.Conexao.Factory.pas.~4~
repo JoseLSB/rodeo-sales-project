@@ -1,0 +1,44 @@
+unit MFichas.Model.Conexao.Factory;
+
+interface
+
+uses
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.SQL;
+
+type
+  TModelConexaoFactory = class(TInterfacedObject, iModelConexaoFactory)
+  private
+    constructor Create;
+    destructor Destroy; override;
+  public
+    class function New: iModelConexaoFactory;
+    function ConexaoSQL: iModelConexaoSQL;
+  end;
+
+implementation
+
+{ TModelConexaoFactory }
+
+function TModelConexaoFactory.ConexaoSQL: iModelConexaoSQL;
+begin
+  Result := TDMSQL.New;
+end;
+
+constructor TModelConexaoFactory.Create;
+begin
+
+end;
+
+destructor TModelConexaoFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactory.New: iModelConexaoFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

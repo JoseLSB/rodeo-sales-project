@@ -1,0 +1,103 @@
+unit MFichas.Model.Usuario.Interfaces;
+
+interface
+
+uses
+  MFichas.Controller.Usuario.Operacoes.Interfaces,
+  MFichas.Model.Entidade.USUARIO,
+
+  ORMBR.Container.ObjectSet.Interfaces,
+  ORMBR.Container.DataSet.interfaces,
+
+  FireDAC.Comp.Client;
+
+type
+  iModelUsuario                  = interface;
+  iModelUsuarioMetodos           = interface;
+  iModelUsuarioFuncoes           = interface;
+  iModelUsuarioFuncoesCadastrar  = interface;
+  iModelUsuarioFuncoesEditar     = interface;
+  iModelUsuarioFuncoesBuscar     = interface;
+  iModelUsuarioFuncoesValidarUES = interface;
+
+
+  iModelUsuario = interface
+    ['{CEAD7FDD-AE0F-4254-891E-7B61C3DDA754}']
+    function Metodos(AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+    function Funcoes                      : iModelUsuarioFuncoes;
+    function Entidade                     : TUSUARIO; overload;
+    function EntidadeFiscal               : TUSUARIO;
+    function Entidade(AEntidade: TUSUARIO): iModelUsuario; overload;
+    function DAO                          : iContainerObjectSet<TUSUARIO>;
+    function DAODataSet                   : iContainerDataSet<TUSUARIO>;
+  end;
+
+  iModelUsuarioMetodos = interface
+    ['{86A4A224-05F9-43FF-A3BE-4D6C3760FC1E}']
+    function SetOperacoes(AOperacoes: iControllerUsuarioOperacoes): iModelUsuarioMetodos;
+    function NextReponsibility(AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+    function LogoENomeDaFesta           : iModelUsuarioMetodos;
+    function AbrirCaixa                 : iModelUsuarioMetodos;
+    function FecharCaixa                : iModelUsuarioMetodos;
+    function Suprimento                 : iModelUsuarioMetodos;
+    function Sangria                    : iModelUsuarioMetodos;
+    function CadastrarProdutos          : iModelUsuarioMetodos;
+    function CadastrarGrupos            : iModelUsuarioMetodos;
+    function CadastrarUsuarios          : iModelUsuarioMetodos;
+    function AcessarRelatorios          : iModelUsuarioMetodos;
+    function AcessarConfiguracoes       : iModelUsuarioMetodos;
+    function ExcluirProdutosPosImpressao: iModelUsuarioMetodos;
+    function &End                       : iModelUsuario;
+  end;
+
+  iModelUsuarioFuncoes = interface
+    ['{994A0965-45DD-434E-B0FF-65535C4ADED5}']
+    function Cadastrar           : iModelUsuarioFuncoesCadastrar;
+    function Editar              : iModelUsuarioFuncoesEditar;
+    function Buscar              : iModelUsuarioFuncoesBuscar;
+    function ValidarUsuarioESenha: iModelUsuarioFuncoesValidarUES;
+    function &End                : iModelUsuario;
+  end;
+
+  iModelUsuarioFuncoesCadastrar = interface
+    ['{0AD7A26C-CDB9-4FB0-B935-B4ACBF1241F5}']
+    function Login(ALogin: String)         : iModelUsuarioFuncoesCadastrar;
+    function Nome(ANomeUsuario: String)    : iModelUsuarioFuncoesCadastrar;
+    function Senha(ASenha: String)         : iModelUsuarioFuncoesCadastrar;
+    function TipoUsuario(ABoolean: Integer): iModelUsuarioFuncoesCadastrar;
+    function &End                          : iModelUsuarioFuncoes;
+  end;
+
+  iModelUsuarioFuncoesEditar = interface
+    ['{BC9607BA-F6B5-4D6E-B6C7-C28A73E224DA}']
+    function GUUID(AGUUID: String)          : iModelUsuarioFuncoesEditar;
+    function Login(ALogin: String)          : iModelUsuarioFuncoesEditar;
+    function Nome(ANomeUsuario: String)     : iModelUsuarioFuncoesEditar;
+    function Senha(ASenha: String)          : iModelUsuarioFuncoesEditar;
+    function TipoUsuario(ABoolean: Integer) : iModelUsuarioFuncoesEditar;
+    function AtivoInativo(ABoolean: Integer): iModelUsuarioFuncoesEditar;
+    function &End                           : iModelUsuarioFuncoes;
+  end;
+
+  iModelUsuarioFuncoesBuscar = interface
+    ['{396E689B-7567-4C97-8860-49D73952F598}']
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelUsuarioFuncoesBuscar;
+    function BuscarTodos                         : iModelUsuarioFuncoesBuscar;
+    function BuscarTodosAtivos                   : iModelUsuarioFuncoesBuscar;
+    function BuscarCaixas                        : iModelUsuarioFuncoesBuscar;
+    function BuscarFiscais                       : iModelUsuarioFuncoesBuscar;
+    function BuscarProprietarios                 : iModelUsuarioFuncoesBuscar;
+    function BuscarPorCodigo(AGUUID: String)     : iModelUsuarioFuncoesBuscar;
+    function &End                                : iModelUsuarioFuncoes;
+  end;
+
+  iModelUsuarioFuncoesValidarUES = interface
+    ['{59FC6597-F0A8-41D5-87F4-C7E89A0BC5C7}']
+    function NomeDoUsuario(AValue: String): iModelUsuarioFuncoesValidarUES;
+    function Senha(AValue: String)        : iModelUsuarioFuncoesValidarUES;
+    function &End                         : iModelUsuarioFuncoes;
+  end;
+
+implementation
+
+end.

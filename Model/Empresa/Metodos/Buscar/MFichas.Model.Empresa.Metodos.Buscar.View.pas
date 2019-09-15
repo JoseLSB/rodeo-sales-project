@@ -1,0 +1,90 @@
+unit MFichas.Model.Empresa.Metodos.Buscar.View;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Empresa.Interfaces,
+
+  FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet;
+
+type
+  TModelEmpresaMetodosBuscarView = class(TInterfacedObject, iModelEmpresaMetodosBuscarView)
+  private
+    [weak]
+    FParent    : iModelEmpresa;
+    FFDMemTable: TFDMemTable;
+    constructor Create(AParent: iModelEmpresa);
+    procedure Validacao;
+    procedure CopiarDataSet;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelEmpresa): iModelEmpresaMetodosBuscarView;
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelEmpresaMetodosBuscarView;
+    function BuscarEmpresa                       : iModelEmpresaMetodosBuscarView;
+    function &End                                : iModelEmpresaMetodos;
+  end;
+
+implementation
+
+{ TModelEmpresaMetodosBuscarView }
+
+function TModelEmpresaMetodosBuscarView.BuscarEmpresa: iModelEmpresaMetodosBuscarView;
+begin
+  Result := Self;
+
+  FParent.DAODataSet.Open;
+  Validacao;
+  CopiarDataSet;
+end;
+
+function TModelEmpresaMetodosBuscarView.&End: iModelEmpresaMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+procedure TModelEmpresaMetodosBuscarView.CopiarDataSet;
+begin
+  FFDMemTable.CopyDataSet(FParent.DAODataSet.DataSet, [coStructure, coRestart, coAppend]);
+end;
+
+constructor TModelEmpresaMetodosBuscarView.Create(AParent: iModelEmpresa);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelEmpresaMetodosBuscarView.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelEmpresaMetodosBuscarView.FDMemTable(
+  AFDMemTable: TFDMemTable): iModelEmpresaMetodosBuscarView;
+begin
+  Result      := Self;
+  FFDMemTable := AFDMemTable;
+end;
+
+class function TModelEmpresaMetodosBuscarView.New(AParent: iModelEmpresa): iModelEmpresaMetodosBuscarView;
+begin
+  Result := Self.Create(AParent);
+end;
+
+procedure TModelEmpresaMetodosBuscarView.Validacao;
+begin
+  if FParent.DAODataSet.DataSet.RecordCount = 0 then
+    raise Exception.Create(
+      'Nenhuma empresa encontrada.'
+    );
+
+  if not Assigned(FFDMemTable) then
+    raise Exception.Create(
+      'Para prosseguir, você deve vincular um FDMemTable ao encadeamento' +
+      ' de funcões do método de Empresa.Metodos.BuscarView .'
+    );
+end;
+
+end.

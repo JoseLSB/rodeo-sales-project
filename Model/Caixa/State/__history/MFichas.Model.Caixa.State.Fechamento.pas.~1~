@@ -1,0 +1,7 @@
+unit MFichas.Model.Caixa.State.Fechamento;
+
+interface
+
+implementation
+
+end.

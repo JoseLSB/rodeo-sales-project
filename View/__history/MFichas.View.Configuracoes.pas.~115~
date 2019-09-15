@@ -1,0 +1,542 @@
+unit MFichas.View.Configuracoes;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+  System.Actions,
+  System.Messaging,
+  System.Generics.Collections,
+
+  FMX.Types,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Graphics,
+  FMX.Dialogs,
+  FMX.ListView.Types,
+  FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base,
+  FMX.StdCtrls,
+  FMX.ListView,
+  FMX.Controls.Presentation,
+  FMX.Objects,
+  FMX.TabControl,
+  FMX.Layouts,
+  FMX.Platform,
+  FMX.VirtualKeyboard,
+  FMX.Gestures,
+  FMX.Effects,
+  FMX.ListBox,
+  FMX.Edit,
+  FMX.ActnList,
+  FMX.StdActns,
+  FMX.MediaLibrary.Actions,
+  FMX.MediaLibrary,
+
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Param,
+  FireDAC.Stan.Error,
+  FireDAC.DatS,
+  FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client,
+
+  MultiDetailAppearanceU,
+
+  Data.DB,
+
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Permissoes.Interfaces,
+  MFichas.Model.Empresa.Interfaces,
+  MFichas.Model.Configuracao.Interfaces,
+
+  MFichas.View.Dialog.PedirSenha, MFichas.Model.Usuario.Interfaces;
+
+type
+  TConfiguracoesView = class(TForm)
+    LayoutPrincipal: TLayout;
+    TabControlPrincipal: TTabControl;
+    TabItemListarConfiguracoes: TTabItem;
+    RectangleListar: TRectangle;
+    ToolBarListar: TToolBar;
+    LabelToolBarListar: TLabel;
+    ButtonBackListar: TButton;
+    ListBox1: TListBox;
+    ListBoxGroupHeaderEmpresa: TListBoxGroupHeader;
+    ListBoxGroupHeaderPermissoes: TListBoxGroupHeader;
+    ListBoxGroupHeaderImpressora: TListBoxGroupHeader;
+    ListBoxGroupHeaderTermino: TListBoxGroupHeader;
+    ListBoxItemEmpresa: TListBoxItem;
+    ListBoxItemPermissoes: TListBoxItem;
+    ListBoxItemImpressora: TListBoxItem;
+    ListBoxItemTermino: TListBoxItem;
+    Layout1: TLayout;
+    Layout2: TLayout;
+    Label1: TLabel;
+    Layout4: TLayout;
+    Layout5: TLayout;
+    Label2: TLabel;
+    Layout6: TLayout;
+    ImageEmpresa: TImage;
+    EditNomeDaEmpresa: TEdit;
+    CheckBoxAbrirCaixa: TCheckBox;
+    CheckBoxExcluirProdutos: TCheckBox;
+    CheckBoxAcessarConfiguracoes: TCheckBox;
+    CheckBoxAcessarRelatorios: TCheckBox;
+    CheckBoxCadastrarUsuarios: TCheckBox;
+    CheckBoxCadastrarGrupos: TCheckBox;
+    CheckBoxCadastrarProdutos: TCheckBox;
+    CheckBoxSangriaCaixa: TCheckBox;
+    CheckBoxSuprimentoCaixa: TCheckBox;
+    CheckBoxFecharCaixa: TCheckBox;
+    Label3: TLabel;
+    RoundRectEncerrarSessao: TRoundRect;
+    ComboBoxImpressora: TComboBox;    
+    LabelBotaoEncerrarSessao: TLabel;
+    LayoutPagamentoBottom: TLayout;
+    RoundRectSalvarAlteracoes: TRoundRect;
+    LabelBotaoSalvarAlteracoes: TLabel;
+    ActionList: TActionList;
+    TakePhotoFromLibraryAction: TTakePhotoFromLibraryAction;
+    Button1: TButton;
+    FDMemTableEmpresa: TFDMemTable;
+    FDMemTableConfiguracao: TFDMemTable;
+    procedure FormCreate(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure ButtonBackListarClick(Sender: TObject);
+    procedure TakePhotoFromLibraryActionDidFinishTaking(Image: TBitmap);
+    procedure ComboBoxImpressoraClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure RoundRectSalvarAlteracoesClick(Sender: TObject);
+    procedure EditNomeDaEmpresaChangeTracking(Sender: TObject);
+    procedure RoundRectEncerrarSessaoClick(Sender: TObject);
+  private
+    { Private declarations }
+    FPermissoes       : iModelPermissoes;
+    FEmpresa          : iModelEmpresa;
+    FConfiguracao     : iModelConfiguracao;
+    FUsuario          : iModelUsuario;
+    FConexao          : iModelConexaoSQL;
+    FConexaoBluetooth : iModelConexaoBluetooth;
+    FListaDispositivos: TList<String>;
+    FFrameSenha       : TFrameViewPedirSenha;
+    procedure VoltarAbas;
+    procedure AtribuirPermissoesAosCheckBox;
+    procedure FecharForm;
+    procedure PreencherDadosDaEmpresa;
+    procedure PreencherConfiguracoes;
+    procedure AtualizarPermissoes;
+    procedure AtualizarDadosEmpresa;
+    procedure AtualizarConfiguracao;
+    procedure CriarFramePedirSenha;
+    procedure LimparBancoDeDados;
+    procedure DoClickSenha(Sender: TObject);
+    procedure DoClickSenhaCancel(Sender: TObject);
+    procedure FecharFramePedirSenha;
+    procedure LimparCampos;
+  public
+    { Public declarations }
+  end;
+
+var
+  ConfiguracoesView: TConfiguracoesView;
+
+implementation
+
+{$R *.fmx}
+
+uses
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Permissoes,
+  MFichas.Model.Empresa,
+  MFichas.Model.Configuracao,
+  MFichas.Model.Usuario, MaykoFichas.View.Principal;
+
+procedure TConfiguracoesView.AtribuirPermissoesAosCheckBox;
+begin
+  CheckBoxAbrirCaixa.IsChecked           := Boolean(FPermissoes.ListaDePermissoes.AbrirCaixa);
+  CheckBoxFecharCaixa.IsChecked          := Boolean(FPermissoes.ListaDePermissoes.FecharCaixa);
+  CheckBoxSuprimentoCaixa.IsChecked      := Boolean(FPermissoes.ListaDePermissoes.Suprimento);
+  CheckBoxSangriaCaixa.IsChecked         := Boolean(FPermissoes.ListaDePermissoes.Sangria);
+  CheckBoxCadastrarProdutos.IsChecked    := Boolean(FPermissoes.ListaDePermissoes.CadastrarProdutos);
+  CheckBoxCadastrarGrupos.IsChecked      := Boolean(FPermissoes.ListaDePermissoes.CadastrarGrupos);
+  CheckBoxCadastrarUsuarios.IsChecked    := Boolean(FPermissoes.ListaDePermissoes.CadastrarUsuarios);
+  CheckBoxAcessarRelatorios.IsChecked    := Boolean(FPermissoes.ListaDePermissoes.AcessarRelatorios);
+  CheckBoxAcessarConfiguracoes.IsChecked := Boolean(FPermissoes.ListaDePermissoes.AcessarConfiguracoes);
+  CheckBoxExcluirProdutos.IsChecked      := Boolean(FPermissoes.ListaDePermissoes.ExcluirProdutosPosImpressao);
+end;
+
+procedure TConfiguracoesView.ButtonBackListarClick(Sender: TObject);
+begin
+  VoltarAbas;
+end;
+
+procedure TConfiguracoesView.ComboBoxImpressoraClick(Sender: TObject);
+var
+  LDeviceName: String;
+  LSelected  : String;
+  LDropDown  : Boolean;
+begin
+  FConexaoBluetooth.ListarDispositivos(FListaDispositivos);
+
+  if (ComboBoxImpressora.Items.Count > 0) and (ComboBoxImpressora.ItemIndex >= 0) then
+    LSelected := ComboBoxImpressora.Items.Strings[ComboBoxImpressora.ItemIndex];
+
+  if ComboBoxImpressora.Items.Count = 0 then
+    LDropDown := True;
+    
+  ComboBoxImpressora.Clear;
+  ComboBoxImpressora.Items.BeginUpdate;
+  for LDeviceName in FListaDispositivos do
+  begin
+    ComboBoxImpressora.Items.Add(LDeviceName);
+  end;
+  ComboBoxImpressora.Items.EndUpdate;
+
+  if not LSelected.IsNullOrWhiteSpace(LSelected) then
+    ComboBoxImpressora.ItemIndex := ComboBoxImpressora.Items.IndexOf(LSelected);
+
+  if LDropDown then
+    ComboBoxImpressora.DropDown;
+end;
+
+procedure TConfiguracoesView.CriarFramePedirSenha;
+begin
+  FFrameSenha        := TFrameViewPedirSenha.Create(nil);
+  FFrameSenha.Parent := Self;
+  FFrameSenha.ConfigurarTamanhoDoModal(Self);
+end;
+
+procedure TConfiguracoesView.DoClickSenha(Sender: TObject);
+begin
+  if FFrameSenha.ComboBoxUsuario.ItemIndex < 0 then
+    raise Exception.Create('Selecione um usuário.');
+
+  FUsuario
+  .Funcoes
+    .ValidarUsuarioESenha
+      .NomeDoUsuario(FFrameSenha.ComboBoxUsuario.Items.Strings[FFrameSenha.ComboBoxUsuario.ItemIndex])
+      .Senha(FFrameSenha.EditSenha.Text)
+    .&End
+  .&End;
+
+ LimparBancoDeDados;
+ LimparCampos;
+ FecharFramePedirSenha;
+ FecharForm;
+end;
+
+procedure TConfiguracoesView.DoClickSenhaCancel(Sender: TObject);
+begin
+  FecharFramePedirSenha;
+end;
+
+procedure TConfiguracoesView.EditNomeDaEmpresaChangeTracking(Sender: TObject);
+begin
+  EditNomeDaEmpresa.Text := AnsiUpperCase(EditNomeDaEmpresa.Text);
+end;
+
+procedure TConfiguracoesView.FecharForm;
+begin
+  ConfiguracoesView.Close;
+  {$IFDEF ANDROID OR IOS}
+  if Assigned(ConfiguracoesView) then
+  begin
+    ConfiguracoesView.DisposeOf;
+    ConfiguracoesView.Free;
+  end;
+  {$ENDIF}
+end;
+
+procedure TConfiguracoesView.FecharFramePedirSenha;
+begin
+  {$IFDEF MSWINDOWS}
+  if Assigned(FFrameSenha) then
+  begin
+    FFrameSenha.Visible := False;
+    FreeAndNil(FFrameSenha);
+  end;
+  {$ELSE}
+  if Assigned(FFrameSenha) then
+  begin
+    FFrameSenha.Visible := False;
+    FFrameSenha.Free;
+    FFrameSenha.DisposeOf;
+  end;
+  {$ENDIF}
+end;
+
+procedure TConfiguracoesView.LimparCampos;
+begin
+  EditNomeDaEmpresa.Text := '';
+  ComboBoxImpressora.Clear;
+end;
+
+procedure TConfiguracoesView.FormCreate(Sender: TObject);
+begin
+  TabControlPrincipal.TabPosition := TTabPosition.None;
+  TabControlPrincipal.ActiveTab   := TabItemListarConfiguracoes;
+
+  FPermissoes        := TModelPermissoes.New;
+  FEmpresa           := TModelEmpresa.New;
+  FConfiguracao      := TModelConfiguracao.New;
+  FConexao           := TModelConexaoFactory.New.ConexaoSQL;
+  FUsuario           := TModelUsuario.New;
+  FConexaoBluetooth  := TModelConexaoFactory.New.ConexaoBluetooth;
+  FListaDispositivos := TList<String>.Create;
+
+  AtribuirPermissoesAosCheckBox;
+  PreencherDadosDaEmpresa;
+  PreencherConfiguracoes;
+end;
+
+procedure TConfiguracoesView.FormDestroy(Sender: TObject);
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FListaDispositivos);
+  {$ELSE}
+  FListaDispositivos.Free;
+  FListaDispositivos.DisposeOf;
+  {$ENDIF}
+end;
+
+procedure TConfiguracoesView.FormKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+var
+  LTeclado: IFMXVirtualKeyboardService;
+begin
+  if (Key = vkHardwareBack) then
+  begin
+    TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(LTeclado));
+    if (LTeclado <> nil) and (TVirtualKeyboardState.Visible in LTeclado.VirtualKeyboardState) then
+      LTeclado.HideVirtualKeyboard
+    else
+    begin
+      Key := 0;
+      VoltarAbas;
+    end;
+  end;
+end;
+
+procedure TConfiguracoesView.LimparBancoDeDados;
+begin
+  FConexao.Query.SQL.Text := '';
+  FConexao.Query.SQL.Text := 'DELETE FROM CAIXA';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM CAIXAOPERACOES';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM CONFIGURACOES';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM EMPRESA';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM GRUPOPRODUTO';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM PRODUTO';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM USUARIO WHERE TIPO < 2';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM VENDA';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM VENDAITENS';
+  FConexao.Query.ExecSQL;
+  FConexao.Query.SQL.Text := 'DELETE FROM VENDAPAGAMENTOS';
+  FConexao.Query.ExecSQL;
+
+  FConexao.Query.SQL.Text := '' +
+                    'INSERT INTO EMPRESA ('+
+                    '    DATAALTERACAO,   '+
+                    '    DATACADASTRO,    '+
+                    '    LOGOTIPO,        '+
+                    '    DESCRICAO,       '+
+                    '    GUUID            '+
+                    ')                    '+
+                    'VALUES (             '+
+                    '    :DATAALTERACAO,  '+
+                    '    :DATACADASTRO,   '+
+                    '    :LOGOTIPO,       '+
+                    '    :DESCRICAO,      '+
+                    '    :GUUID           '+
+                    ');                   ';
+  FConexao.Query.ParamByName('DATAALTERACAO').AsDateTime := Now;
+  FConexao.Query.ParamByName('DATACADASTRO').AsDateTime := Now;
+  FConexao.Query.ParamByName('LOGOTIPO').AsString := '';
+  FConexao.Query.ParamByName('DESCRICAO').AsString := '';
+  FConexao.Query.ParamByName('GUUID').AsString := TGUID.NewGuid.ToString;
+  FConexao.Query.ExecSQL;
+
+  FConexao.Query.SQL.Text := '' +
+                    'INSERT INTO CONFIGURACOES ( '+
+                    '    DATALIBERACAO,          '+
+                    '    DATAALTERACAO,          '+
+                    '    DATACADASTRO,           '+
+                    '    GUUIDDISPOSITIVO,       '+
+                    '    NOMEDISPOSITIVO,        '+
+                    '    IMPRESSORA,             '+
+                    '    GUUID                   '+
+                    ')                           '+
+                    'VALUES (                    '+
+                    '    :DATALIBERACAO,         '+
+                    '    :DATAALTERACAO,         '+
+                    '    :DATACADASTRO,          '+
+                    '    :GUUIDDISPOSITIVO,      '+
+                    '    :NOMEDISPOSITIVO,       '+
+                    '    :IMPRESSORA,            '+
+                    '    :GUUID                  '+
+                    ');                          ';
+  FConexao.Query.ParamByName('DATALIBERACAO').AsDateTime := Now;
+  FConexao.Query.ParamByName('DATAALTERACAO').AsDateTime := Now;
+  FConexao.Query.ParamByName('DATACADASTRO').AsDateTime := Now;
+  FConexao.Query.ParamByName('GUUIDDISPOSITIVO').AsString := '';
+  FConexao.Query.ParamByName('NOMEDISPOSITIVO').AsString := '';
+  FConexao.Query.ParamByName('IMPRESSORA').AsString := '';
+  FConexao.Query.ParamByName('GUUID').AsString := TGUID.NewGuid.ToString;
+  FConexao.Query.ExecSQL;
+end;
+
+procedure TConfiguracoesView.PreencherConfiguracoes;
+var
+  LDeviceName: String;
+  LImpressora: String;
+begin
+  FConfiguracao
+  .Metodos
+    .BuscarView
+      .FDMemTable(FDMemTableConfiguracao)
+      .BuscarConfiguracao
+    .&End
+  .&End;
+
+  FDMemTableConfiguracao.First;
+  LImpressora := FDMemTableConfiguracao.FieldByName('IMPRESSORA').AsString;
+
+  if not LImpressora.IsNullOrWhiteSpace(LImpressora) then
+  begin
+    FConexaoBluetooth.ListarDispositivos(FListaDispositivos);
+    ComboBoxImpressora.Clear;
+    ComboBoxImpressora.Items.BeginUpdate;
+    for LDeviceName in FListaDispositivos do
+    begin
+      ComboBoxImpressora.Items.Add(LDeviceName);
+    end;
+    ComboBoxImpressora.Items.EndUpdate;
+
+    if not LImpressora.IsNullOrWhiteSpace(LImpressora) then
+      ComboBoxImpressora.ItemIndex := ComboBoxImpressora.Items.IndexOf(LImpressora);
+  end;
+end;
+
+procedure TConfiguracoesView.PreencherDadosDaEmpresa;
+var
+  LNomeEmpresa: String;
+begin
+  FEmpresa
+  .Metodos
+    .BuscarView
+      .FDMemTable(FDMemTableEmpresa)
+      .BuscarEmpresa
+    .&End
+  .&End;
+
+  FDMemTableEmpresa.First;
+  LNomeEmpresa := FDMemTableEmpresa.FieldByName('DESCRICAO').AsString;
+
+  EditNomeDaEmpresa.Text := LNomeEmpresa;
+end;
+
+procedure TConfiguracoesView.AtualizarPermissoes;
+begin
+  FPermissoes
+    .EditarPermissoes
+      .AbrirCaixa(Integer(CheckBoxAbrirCaixa.IsChecked))
+      .FecharCaixa(Integer(CheckBoxFecharCaixa.IsChecked))
+      .Suprimento(Integer(CheckBoxSuprimentoCaixa.IsChecked))
+      .Sangria(Integer(CheckBoxSangriaCaixa.IsChecked))
+      .CadastrarProdutos(Integer(CheckBoxCadastrarProdutos.IsChecked))
+      .CadastrarGrupos(Integer(CheckBoxCadastrarGrupos.IsChecked))
+      .CadastrarUsuarios(Integer(CheckBoxCadastrarUsuarios.IsChecked))
+      .AcessarRelatorios(Integer(CheckBoxAcessarRelatorios.IsChecked))
+      .AcessarConfiguracoes(Integer(CheckBoxAcessarConfiguracoes.IsChecked))
+      .ExcluirProdutosPosImpressao(Integer(CheckBoxExcluirProdutos.IsChecked))
+    .Executar
+  .&End;
+end;
+
+procedure TConfiguracoesView.AtualizarDadosEmpresa;
+begin
+  FEmpresa
+  .Metodos
+    .EditarView
+      .Descricao(EditNomeDaEmpresa.Text)
+    .&End
+  .&End;
+end;
+
+procedure TConfiguracoesView.AtualizarConfiguracao;
+var
+  LImpressoraAtual: String;
+  LImpressoraNova: String;
+begin
+  LImpressoraAtual := FDMemTableConfiguracao.FieldByName('IMPRESSORA').AsString;
+  if (ComboBoxImpressora.ItemIndex >= 0) then
+    LImpressoraNova := ComboBoxImpressora.Items.Strings[ComboBoxImpressora.ItemIndex];
+
+  if LImpressoraAtual <> LImpressoraNova then
+  begin
+    FConfiguracao
+    .Metodos
+      .EditarView
+        .Impressora(ComboBoxImpressora.Items.Strings[ComboBoxImpressora.ItemIndex])
+      .&End
+    .&End;
+  end;
+end;
+
+procedure TConfiguracoesView.RoundRectEncerrarSessaoClick(Sender: TObject);
+begin
+  if (Form3.TabControlPrincipal.ActiveTab <> Form3.TabItemLogin) then
+    raise Exception.Create(
+      'Para encerrar esta sessão, você precisa estar na tela de LOGIN.'
+    );
+
+  CriarFramePedirSenha;
+  FFrameSenha.LabelTitulo.Text                := 'Digite a senha de PROPRIETÁRIO';
+  FFrameSenha.LabelBotaoConfirmar.Text        := 'Confirmar';
+  FFrameSenha.LabelBotaoCancelar.Text         := 'Cancelar';
+  FFrameSenha.PreencherUsuariosGerentesNoComboBox;
+  FFrameSenha.RoundRectBotaoConfirmar.OnClick := DoClickSenha;
+  FFrameSenha.RoundRectBotaoCancelar.OnClick  := DoClickSenhaCancel;
+end;
+
+procedure TConfiguracoesView.RoundRectSalvarAlteracoesClick(Sender: TObject);
+begin
+  AtualizarPermissoes;
+  AtualizarDadosEmpresa;
+  AtualizarConfiguracao;
+
+  FecharForm;
+end;
+
+procedure TConfiguracoesView.TakePhotoFromLibraryActionDidFinishTaking(
+  Image: TBitmap);
+begin
+  if (Image.Width > 50) or (Image.Height > 50) then
+    raise Exception.Create(
+      'O tamanho desta imagem é maior do que o permitido.' + sLineBreak +
+      'Por favor selecione uma imagem com as dimensões de 50x50.'
+    );
+  ImageEmpresa.Bitmap.Assign(Image);
+end;
+
+procedure TConfiguracoesView.VoltarAbas;
+begin
+  FecharForm;
+end;
+
+end.

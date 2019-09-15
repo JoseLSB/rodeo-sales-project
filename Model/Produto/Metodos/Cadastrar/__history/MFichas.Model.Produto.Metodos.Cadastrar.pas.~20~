@@ -1,0 +1,79 @@
+unit MFichas.Model.Produto.Metodos.Cadastrar;
+
+interface
+
+uses
+  MFichas.Model.Produto.Interfaces,
+
+  MFichas.Controller.Constantes;
+
+type
+  TModelProdutoMetodosCadastrar = class(TInterfacedObject, iModelProdutoMetodosCadastrar)
+  private
+    [weak]
+    FParent   : iModelProduto;
+    FDescricao: String;
+    FValor    : Currency;
+    FGrupo    : String;
+    constructor Create(AParent: iModelProduto);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelProduto): iModelProdutoMetodosCadastrar;
+    function Descricao(ADescricao: String): iModelProdutoMetodosCadastrar;
+    function Valor(AValor: Currency)      : iModelProdutoMetodosCadastrar;
+    function Grupo(AGrupo: String)        : iModelProdutoMetodosCadastrar;
+    function &End                         : iModelProdutoMetodos;
+  end;
+
+implementation
+
+{ TModelProdutoMetodosCadastrar }
+
+function TModelProdutoMetodosCadastrar.&End: iModelProdutoMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE CADASTRAR PRODUTO.
+  Result                     := FParent.Metodos;
+  FParent.Entidade.DESCRICAO := FDescricao;
+  FParent.Entidade.PRECO     := FValor;
+  FParent.Entidade.STATUS    := Integer(saiAtivo);
+  FParent.Entidade.GRUPO     := FGrupo;
+  FParent.DAO.Insert(FParent.Entidade);
+end;
+
+constructor TModelProdutoMetodosCadastrar.Create(AParent: iModelProduto);
+begin
+  FParent   := AParent;
+end;
+
+function TModelProdutoMetodosCadastrar.Descricao(
+  ADescricao: String): iModelProdutoMetodosCadastrar;
+begin
+  Result     := Self;
+  FDescricao := ADescricao;
+end;
+
+destructor TModelProdutoMetodosCadastrar.Destroy;
+begin
+  inherited;
+end;
+
+function TModelProdutoMetodosCadastrar.Grupo(
+  AGrupo: String): iModelProdutoMetodosCadastrar;
+begin
+  Result := Self;
+  FGrupo := AGrupo;
+end;
+
+class function TModelProdutoMetodosCadastrar.New(AParent: iModelProduto): iModelProdutoMetodosCadastrar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelProdutoMetodosCadastrar.Valor(
+  AValor: Currency): iModelProdutoMetodosCadastrar;
+begin
+  Result := Self;
+  FValor := AValor;
+end;
+
+end.

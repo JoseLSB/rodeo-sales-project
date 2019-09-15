@@ -1,0 +1,7 @@
+unit MFichas.Model.Pagamento.Interfaces;
+
+interface
+
+implementation
+
+end.

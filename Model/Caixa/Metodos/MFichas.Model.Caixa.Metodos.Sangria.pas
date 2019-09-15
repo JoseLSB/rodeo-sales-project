@@ -1,0 +1,138 @@
+unit MFichas.Model.Caixa.Metodos.Sangria;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Bluetooth,
+
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Entidade.CAIXA,
+  MFichas.Model.Entidade.CAIXAOPERACOES,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+
+  MFichas.Controller.Types;
+
+type
+  TModelCaixaMetodosSangria = class(TInterfacedObject, iModelCaixaMetodosSangria)
+  private
+    [weak]
+    FParent      : iModelCaixa;
+    FEntidade    : TCAIXAOPERACOES;
+    FValorSangria: Currency;
+    FOperador    : String;
+    FBluetooth   : iModelConexaoBluetooth;
+    constructor Create(AParent: iModelCaixa);
+    procedure Imprimir;
+    procedure Gravar;
+    procedure LimparEntidade;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelCaixa): iModelCaixaMetodosSangria;
+    function SetValorSangria(AValue: Currency): iModelCaixaMetodosSangria;
+    function SetOperador(AOperador: String)   : iModelCaixaMetodosSangria;
+    function &End                             : iModelCaixaMetodos;
+  end;
+
+implementation
+
+{ TModelCaixaMetodosSangria }
+
+function TModelCaixaMetodosSangria.&End: iModelCaixaMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE SANGRIA
+  Result := FParent.Metodos;
+
+  Imprimir;
+  Gravar;
+
+  LimparEntidade;
+end;
+
+procedure TModelCaixaMetodosSangria.Gravar;
+var
+  LCaixaOperacoes: TCAIXAOPERACOES;
+begin
+  FParent.DAO.Modify(FParent.Entidade);
+
+  FParent.Entidade.OPERACOES.Add(TCAIXAOPERACOES.Create);
+  LCaixaOperacoes          := FParent.Entidade.OPERACOES.Last;
+  LCaixaOperacoes.CAIXA    := FParent.Entidade.GUUID;
+  LCaixaOperacoes.TIPO     := Integer(ocSangria);
+  LCaixaOperacoes.VALOR    := FValorSangria;
+  LCaixaOperacoes.OPERADOR := FOperador;
+
+  FParent.DAO.Update(FParent.Entidade);
+end;
+
+procedure TModelCaixaMetodosSangria.Imprimir;
+var
+  LSocket: TBluetoothSocket;
+begin
+  FBluetooth.ConectarDispositivo(LSocket);
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('SANGRIA' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(-)VALOR: ' + FormatCurr('#,##0.00', FValorSangria) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+end;
+
+procedure TModelCaixaMetodosSangria.LimparEntidade;
+begin
+  FParent.Entidade.OPERACOES.Clear;
+end;
+
+constructor TModelCaixaMetodosSangria.Create(AParent: iModelCaixa);
+begin
+  FParent   := AParent;
+  FEntidade := TCAIXAOPERACOES.Create;
+  FBluetooth := TModelConexaoFactory.New.ConexaoBluetooth;
+end;
+
+destructor TModelCaixaMetodosSangria.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelCaixaMetodosSangria.New(AParent: iModelCaixa): iModelCaixaMetodosSangria;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelCaixaMetodosSangria.SetOperador(
+  AOperador: String): iModelCaixaMetodosSangria;
+begin
+  Result    := Self;
+  FOperador := AOperador;
+end;
+
+function TModelCaixaMetodosSangria.SetValorSangria(
+  AValue: Currency): iModelCaixaMetodosSangria;
+begin
+  Result        := Self;
+  if AValue <= 0 then
+    raise Exception.Create(
+      'Para fazer uma sangria, insira um valor maior que R$0.'
+    );
+  FValorSangria := AValue;
+end;
+
+end.

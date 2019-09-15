@@ -1,0 +1,82 @@
+unit MFichas.Model.Conexao.SQL2;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Classes,
+  System.IOUtils,
+
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Error,
+  FireDAC.UI.Intf,
+  FireDAC.Phys.Intf,
+  FireDAC.Stan.Def,
+  FireDAC.Stan.Pool,
+  FireDAC.Stan.Async,
+  FireDAC.Phys,
+  FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef,
+  FireDAC.FMXUI.Wait,
+  FireDAC.Comp.UI,
+  FireDAC.Phys.IBBase,
+  FireDAC.Comp.Client,
+  FireDAC.VCLUI.Wait,
+  FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef,
+  FireDAC.Stan.ExprFuncs,
+
+  Data.DB,
+
+  ORMBR.Factory.Interfaces,
+  ORMBR.Factory.FireDAC,
+  ORMBR.Types.DataBase,
+  ORMBR.DDL.Generator.SQLite,
+  ORMBR.DML.Generator.SQLite,
+
+  MFichas.Model.Conexao.Interfaces;
+
+type
+  TModelConexaoSQL2 = class(TInterfacedObject, iModelConexaoSQL)
+  private
+
+    constructor Create;
+    procedure CriarFDConnection;
+  public
+    destructor Destroy; override;
+    class function New: iModelConexaoSQL;
+    function Conn: iDBConnection;
+  end;
+
+implementation
+
+{ TModelConexaoSQL2 }
+
+function TModelConexaoSQL2.Conn: iDBConnection;
+begin
+
+end;
+
+constructor TModelConexaoSQL2.Create;
+begin
+  CriarFDConnection;
+end;
+
+procedure TModelConexaoSQL2.CriarFDConnection;
+begin
+
+end;
+
+destructor TModelConexaoSQL2.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoSQL2.New: iModelConexaoSQL;
+begin
+  Result := Self.Create;
+end;
+
+end.

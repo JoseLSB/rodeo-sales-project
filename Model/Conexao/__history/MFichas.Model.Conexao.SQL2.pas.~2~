@@ -1,0 +1,40 @@
+unit MFichas.Model.Conexao.SQL2;
+
+interface
+
+uses
+  ORMBR.Container.ObjectSet.Interfaces,
+
+  MFichas.Model.Conexao.Interfaces;
+
+type
+  TModelConexaoSQL2 = class(TInterfacedObject, iModelConexaoSQL)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelConexaoSQL;
+    function Conn: iDBConnection;
+  end;
+
+implementation
+
+{ TModelConexaoSQL2 }
+
+constructor TModelConexaoSQL2.Create;
+begin
+
+end;
+
+destructor TModelConexaoSQL2.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoSQL2.New: iModelConexaoSQL;
+begin
+  Result := Self.Create;
+end;
+
+end.

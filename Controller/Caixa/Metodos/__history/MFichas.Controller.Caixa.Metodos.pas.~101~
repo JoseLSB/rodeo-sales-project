@@ -1,0 +1,328 @@
+unit MFichas.Controller.Caixa.Metodos;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Controller.Caixa.Interfaces,
+  MFichas.Controller.Usuario,
+
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Caixa,
+  MFichas.Model.Usuario.Interfaces,
+  MFichas.Model.Usuario,
+
+  MFichas.View.Dialog.AberturaCaixa,
+  MFichas.View.Dialog.PedirSenha,
+
+  MFichas.Controller.Types;
+
+type
+  TControllerCaixaMetodos = class(TInterfacedObject, iControllerCaixaMetodos)
+  private
+    [weak]
+    FParent            : iControllerCaixa;
+    FModel             : iModelCaixa;
+    FUsuario           : iModelUsuario;
+    FOperacoesSistema  : TTypePermissoesUsuario;
+    constructor Create(AParent: iControllerCaixa);
+    procedure DoClickValores(Sender: TObject);
+    procedure DoClickValoresCancel(Sender: TObject);
+    procedure DoClickSenha(Sender: TObject);
+    procedure DoClickSenhaCancel(Sender: TObject);
+    procedure FecharDialogsDeCapturaValorESenha;
+    procedure CriarFrameCapturaValor;
+    procedure CriarFramePedirSenha;
+    procedure Abrir;
+    procedure Fechar;
+    procedure SuprimentoCaixa;
+    procedure SangriaCaixa;
+    procedure PedirSenhaFiscal;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iControllerCaixa): iControllerCaixaMetodos;
+    function AbrirCaixa : iControllerCaixaMetodos;
+    function FecharCaixa: iControllerCaixaMetodos;
+    function Suprimento : iControllerCaixaMetodos;
+    function Sangria    : iControllerCaixaMetodos;
+    function &End       : iControllerCaixa;
+  end;
+
+implementation
+
+{ TControllerCaixaMetodos }
+
+uses
+  MaykoFichas.View.Principal,
+  MFichas.Model.Permissoes;
+
+procedure TControllerCaixaMetodos.Abrir;
+begin
+  Form3.FFrameAberturaCaixa                                   := TFrameViewAberturaCaixa.Create(nil);
+  Form3.FFrameAberturaCaixa.Parent                            := Form3;
+  Form3.FFrameAberturaCaixa.ConfigurarTamanhoDoModal(Form3);
+  Form3.FFrameAberturaCaixa.LabelTitulo.Text                  := 'Abertura de CAIXA';
+  Form3.FFrameAberturaCaixa.LabelBotaoConfirmar.Text          := 'Confirmar';
+  Form3.FFrameAberturaCaixa.LabelBotaoCancelar.Text           := 'Cancelar';
+  Form3.FFrameAberturaCaixa.RoundRectBotaoConfirmar.OnClick   := DoClickValores;
+  Form3.FFrameAberturaCaixa.RoundRectBotaoCancelar.OnClick    := DoClickValoresCancel;
+end;
+
+function TControllerCaixaMetodos.AbrirCaixa: iControllerCaixaMetodos;
+begin
+  Result := Self;
+  FModel.Metodos.Abrir;
+  FOperacoesSistema := puAbrirCaixa;
+  if TModelPermissoes.New.ListaDePermissoes.AbrirCaixa = Integer(tuFiscal) then
+  begin
+    Form3.FTabs         := tTabCapturaValor;
+    Form3.FTabQueChamou := tTabLogin;
+    PedirSenhaFiscal;
+  end
+  else
+    Abrir;
+end;
+
+function TControllerCaixaMetodos.&End: iControllerCaixa;
+begin
+  Result := FParent;
+end;
+
+procedure TControllerCaixaMetodos.PedirSenhaFiscal;
+begin
+  CriarFramePedirSenha;
+  Form3.FFrameSenha.LabelTitulo.Text                := 'Digite a senha de fiscal.';
+  Form3.FFrameSenha.LabelBotaoConfirmar.Text        := 'Confirmar';
+  Form3.FFrameSenha.LabelBotaoCancelar.Text         := 'Cancelar';
+  Form3.FFrameSenha.RoundRectBotaoConfirmar.OnClick := DoClickSenha;
+  Form3.FFrameSenha.RoundRectBotaoCancelar.OnClick  := DoClickSenhaCancel;
+end;
+
+procedure TControllerCaixaMetodos.SuprimentoCaixa;
+begin
+  CriarFrameCapturaValor;
+  Form3.FFrameAberturaCaixa.LabelTitulo.Text                := 'Suprimento';
+  Form3.FFrameAberturaCaixa.LabelBotaoConfirmar.Text        := 'Confirmar';
+  Form3.FFrameAberturaCaixa.LabelBotaoCancelar.Text         := 'Cancelar';
+  Form3.FFrameAberturaCaixa.RoundRectBotaoConfirmar.OnClick := DoClickValores;
+  Form3.FFrameAberturaCaixa.RoundRectBotaoCancelar.OnClick  := DoClickValoresCancel;
+end;
+
+procedure TControllerCaixaMetodos.CriarFramePedirSenha;
+begin
+  Form3.FFrameSenha        := TFrameViewPedirSenha.Create(nil);
+  Form3.FFrameSenha.Parent := Form3;
+  Form3.FFrameSenha.ConfigurarTamanhoDoModal(Form3);
+end;
+
+procedure TControllerCaixaMetodos.CriarFrameCapturaValor;
+begin
+  Form3.FFrameAberturaCaixa        := TFrameViewAberturaCaixa.Create(nil);
+  Form3.FFrameAberturaCaixa.Parent := Form3;
+  Form3.FFrameAberturaCaixa.ConfigurarTamanhoDoModal(Form3);
+end;
+
+procedure TControllerCaixaMetodos.FecharDialogsDeCapturaValorESenha;
+begin
+  {$IFDEF MSWINDOWS}
+  if Assigned(Form3.FFrameSenha) then
+  begin
+    Form3.FFrameSenha.Visible := False;
+    FreeAndNil(Form3.FFrameSenha);
+  end;
+  if Assigned(Form3.FFrameAberturaCaixa) then
+  begin
+    Form3.FFrameAberturaCaixa.Visible := False;
+    FreeAndNil(Form3.FFrameAberturaCaixa);
+  end;
+  {$ELSE}
+  if Assigned(Form3.FFrameSenha) then
+  begin
+    Form3.FFrameSenha.Visible := False;
+    Form3.FFrameSenha.Free;
+    Form3.FFrameSenha.DisposeOf;
+  end;
+  if Assigned(Form3.FFrameAberturaCaixa) then
+  begin
+    Form3.FFrameAberturaCaixa.Visible := False;
+    Form3.FFrameAberturaCaixa.Free;
+    Form3.FFrameAberturaCaixa.DisposeOf;
+  end;
+  {$ENDIF}
+end;
+
+constructor TControllerCaixaMetodos.Create(AParent: iControllerCaixa);
+begin
+  FParent := AParent;
+  FModel  := TModelCaixa.New;
+  FUsuario := TModelUsuario.New;
+end;
+
+destructor TControllerCaixaMetodos.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TControllerCaixaMetodos.DoClickSenha(Sender: TObject);
+begin
+  if Form3.FFrameSenha.ComboBoxUsuario.ItemIndex < 0 then
+    raise Exception.Create('Selecione um usuário.');
+
+  FUsuario
+  .Funcoes
+    .ValidarUsuarioESenha
+      .NomeDoUsuario(Form3.FFrameSenha.ComboBoxUsuario.Items.Strings[Form3.FFrameSenha.ComboBoxUsuario.ItemIndex])
+      .Senha(Form3.FFrameSenha.EditSenha.Text)
+    .&End
+  .&End;
+
+  case FOperacoesSistema of
+    puAbrirCaixa: begin
+      Abrir;
+    end;
+
+    puFecharCaixa: begin
+      Fechar;
+    end;
+
+    puSuprimentoCaixa: begin
+      SuprimentoCaixa;
+    end;
+
+    puSangriaCaixa: begin
+      SangriaCaixa;
+    end;
+
+    else
+      raise Exception.Create(
+        'Nenhuma operação do sistema foi repassada.'
+      );
+  end;
+end;
+
+procedure TControllerCaixaMetodos.DoClickSenhaCancel(Sender: TObject);
+begin
+  FecharDialogsDeCapturaValorESenha;
+end;
+
+procedure TControllerCaixaMetodos.DoClickValores(Sender: TObject);
+begin
+  case FOperacoesSistema of
+    puAbrirCaixa:      begin
+                         FModel
+                         .Metodos
+                           .Abrir
+                             .SetValorAbertura(Form3.FFrameAberturaCaixa.EditValor.Text.Replace('.','').ToDouble)
+                             .SetOperador('FAZER VALIDACAO DO USUARIO')
+                           .&End
+                         .&End;
+                         FecharDialogsDeCapturaValorESenha;
+                         Form3.MudarAba(Form3.TabControlPrincipal, tTabMenu, Form3.TabItemMenu);
+                       end;
+    puFecharCaixa:     begin
+                         Fechar;
+                       end;
+    puSuprimentoCaixa: begin
+                         FModel
+                          .Metodos
+                            .Suprimento
+                              .SetValorSuprimento(Form3.FFrameAberturaCaixa.EditValor.Text.Replace('.','').ToDouble)
+                              .SetOperador('FAZER VALIDACAO DO USUARIO')
+                            .&End
+                          .&End;
+                          FecharDialogsDeCapturaValorESenha;
+                       end;
+    puSangriaCaixa:    begin
+                         FModel
+                          .Metodos
+                            .Sangria
+                              .SetValorSangria(Form3.FFrameAberturaCaixa.EditValor.Text.Replace('.','').ToDouble)
+                              .SetOperador('FAZER VALIDACAO DO USUARIO')
+                            .&End
+                          .&End;
+                          FecharDialogsDeCapturaValorESenha;
+                       end;
+  end;
+end;
+
+procedure TControllerCaixaMetodos.DoClickValoresCancel(Sender: TObject);
+begin
+  FecharDialogsDeCapturaValorESenha;
+end;
+
+procedure TControllerCaixaMetodos.Fechar;
+begin
+  FModel
+  .Metodos
+    .Fechar
+      .SetValorFechamento(0)
+      .SetOperador('FAZER VALIDACAO DO USUARIO')
+    .&End
+  .&End;
+  FecharDialogsDeCapturaValorESenha;
+  Form3.MudarAba(Form3.TabControlPrincipal, tTabLogin, Form3.TabItemLogin);
+end;
+
+function TControllerCaixaMetodos.FecharCaixa: iControllerCaixaMetodos;
+begin
+  Result := Self;
+  FModel.Metodos.Fechar;
+  FOperacoesSistema := puFecharCaixa;
+  if TModelPermissoes.New.ListaDePermissoes.FecharCaixa = Integer(tuFiscal) then
+  begin
+    Form3.FTabs         := tTabCapturaValor;
+    Form3.FTabQueChamou := tTabMenu;
+    PedirSenhaFiscal;
+  end
+  else
+    Fechar;
+end;
+
+class function TControllerCaixaMetodos.New(AParent: iControllerCaixa): iControllerCaixaMetodos;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TControllerCaixaMetodos.Sangria: iControllerCaixaMetodos;
+begin
+  Result := Self;
+  FModel.Metodos.Sangria;
+  FOperacoesSistema := puSangriaCaixa;
+  if TModelPermissoes.New.ListaDePermissoes.Sangria = Integer(tuFiscal) then
+  begin
+    Form3.FTabs         := tTabCapturaValor;
+    Form3.FTabQueChamou := tTabMenu;
+    PedirSenhaFiscal;
+  end
+  else
+    SangriaCaixa;
+end;
+
+procedure TControllerCaixaMetodos.SangriaCaixa;
+begin
+  CriarFrameCapturaValor;
+  Form3.FFrameAberturaCaixa.LabelTitulo.Text                := 'Sangria';
+  Form3.FFrameAberturaCaixa.LabelBotaoConfirmar.Text        := 'Confirmar';
+  Form3.FFrameAberturaCaixa.LabelBotaoCancelar.Text         := 'Cancelar';
+  Form3.FFrameAberturaCaixa.RoundRectBotaoConfirmar.OnClick := DoClickValores;
+  Form3.FFrameAberturaCaixa.RoundRectBotaoCancelar.OnClick  := DoClickValoresCancel;
+end;
+
+function TControllerCaixaMetodos.Suprimento: iControllerCaixaMetodos;
+begin
+  Result := Self;
+  FModel.Metodos.Suprimento;
+  FOperacoesSistema := puSuprimentoCaixa;
+  if TModelPermissoes.New.ListaDePermissoes.Suprimento = Integer(tuFiscal) then
+  begin
+    Form3.FTabs         := tTabCapturaValor;
+    Form3.FTabQueChamou := tTabMenu;
+    PedirSenhaFiscal;
+  end
+  else
+    SuprimentoCaixa;
+end;
+
+end.

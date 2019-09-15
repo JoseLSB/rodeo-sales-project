@@ -1,0 +1,575 @@
+unit MFichas.Model.Impressao.Caixa.Fechamento;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Classes,
+
+  MFichas.Model.Impressao.Interfaces,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Impressao.Constantes,
+
+  MFichas.Controller.Types,
+
+  FireDAC.Comp.Client;
+
+const
+  _2CIFROES = 4;
+  _1CIFRAO  = 2;
+
+type
+  TModelImpressaoCaixaMetodosFechamento = class(TInterfacedObject, iModelImpressaoCaixaFechamento)
+  private
+    [weak]
+    FParent                             : iModelImpressaoCaixa;
+    FConexaoSQL                         : iModelConexaoSQL;
+    FBluetooth                          : iModelConexaoBluetooth;
+    FTitulo                             : String;
+    FGUUIDCaixa                         : String;
+    FAbertura                           : Currency;
+    FSuprimento                         : Currency;
+    FSangria                            : Currency;
+    FTotalVendidoEmDinheiro             : Currency;
+    FTotalDevolvidoEmDinheiro           : Currency;
+    FTotalDinheiro                      : Currency;
+    FCartaoCredito                      : Currency;
+    FCartaoDebito                       : Currency;
+    FTotalQtdeItensVendidos             : Integer;
+    FTotalQtdeItensDevolvidos           : Integer;
+    FValorTotalItensVendidos            : Currency;
+    FSQL                                : String;
+    FWhere                              : String;
+    FGroupBy                            : String;
+    FStringListQtdeItensVendidos        : TStrings;
+    FStringListQtdeItensDevolvidos      : TStrings;
+    FStringListValorTotalItensVendidos  : TStrings;
+    FStringListValorTotalItensDevolvidos: TStrings;
+    constructor Create(AParent: iModelImpressaoCaixa);
+    procedure RecuperarValores;
+    procedure Abertura;
+    procedure Suprimento;
+    procedure Sangria;
+    procedure TotalVendido;
+    procedure TotalDevolvido;
+    procedure SomarTotalDinheiro;
+    procedure SomarTotalCartaoCredito;
+    procedure SomarTotalCartaoDebito;
+    procedure SomarQuantidadeDeItensVendidos;
+    procedure SomarQuantidadeDeItensDevolvidos;
+    procedure SomarValorTotalDeItensVendidos;
+    procedure BuildSQL(AFDQuery: TFDQuery; ASQL: String); overload;
+    procedure BuildSQL(AFDQuery: TFDQuery; ASQL: String; AFilter: String); overload;
+    procedure RelacaoDeItensVendidos;
+    procedure TotalGeralDeItensVendidos;
+    procedure RelacaoDeItensDevolvidos;
+    procedure TotalGeralDeItensDevolvidos;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelImpressaoCaixa): iModelImpressaoCaixaFechamento;
+    function TituloDaImpressao(ATitulo: String): iModelImpressaoCaixaFechamento;
+    function CodigoDoCaixa(AGUUID: String)     : iModelImpressaoCaixaFechamento;
+    function ExecutarImpressao                 : iModelImpressaoCaixaFechamento;
+    function &End                              : iModelImpressaoCaixa;
+  end;
+
+implementation
+
+uses
+  System.Bluetooth;
+
+{ TModelImpressaoCaixaMetodosFechamento }
+
+procedure TModelImpressaoCaixaMetodosFechamento.BuildSQL(AFDQuery: TFDQuery;
+  ASQL: String);
+begin
+  AFDQuery.Active   := False;
+  AFDQuery.Filtered := False;
+  AFDQuery.SQL.Text := '';
+  AFDQuery.SQL.Text := ASQL;
+  AFDQuery.Active   := True;
+  AFDQuery.Open;
+  AFDQuery.First;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.Abertura;
+begin
+  FSQL   := ' SELECT * FROM CAIXA ';
+  FWhere := ' GUUID = ' + QuotedStr(FGUUIDCaixa);
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FAbertura := 0;
+  FAbertura := FConexaoSQL.Query.FieldByName('VALORABERTURA').AsCurrency;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.BuildSQL(AFDQuery: TFDQuery;
+  ASQL, AFilter: String);
+begin
+  AFDQuery.Active   := False;
+  AFDQuery.SQL.Text := '';
+  AFDQuery.SQL.Text := ASQL;
+  AFDQuery.Filtered := False;
+  AFDQuery.Filter   := AFilter;
+  AFDQuery.Filtered := True;
+  AFDQuery.Active   := True;
+  AFDQuery.Open;
+  AFDQuery.First;
+end;
+
+function TModelImpressaoCaixaMetodosFechamento.CodigoDoCaixa(
+  AGUUID: String): iModelImpressaoCaixaFechamento;
+begin
+  Result      := Self;
+  FGUUIDCaixa := AGUUID;
+end;
+
+function TModelImpressaoCaixaMetodosFechamento.&End: iModelImpressaoCaixa;
+begin
+  Result := FParent;
+end;
+
+function TModelImpressaoCaixaMetodosFechamento.ExecutarImpressao: iModelImpressaoCaixaFechamento;
+var
+  LSocket: TBluetoothSocket;
+begin
+  RecuperarValores;
+
+  Result := Self;
+  FBluetooth.ConectarDispositivo(LSocket);
+  //CABEÇALHO
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(ALINHAR_CENTRO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FTitulo + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(ALINHAR_CENTRO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(+)ABERTURA: '   + FormatCurr('#,##0.00', FAbertura) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(+)SUPRIMENTO: ' + FormatCurr('#,##0.00', FSuprimento) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(-)SANGRIA: '    + FormatCurr('#,##0.00', FSangria) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(+)DINHEIRO: '   + FormatCurr('#,##0.00', FTotalVendidoEmDinheiro) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(=)TOTAL DINHEIRO: ' + FormatCurr('#,##0.00', FTotalDinheiro) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(=)CARTAO CREDITO: ' + FormatCurr('#,##0.00', FCartaoCredito) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(=)CARTAO DEBITO:  ' + FormatCurr('#,##0.00', FCartaoDebito) + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(QUEBRADELINHA));
+  //RELAÇÃO DE ITENS VENDIDOS
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(ALINHAR_CENTRO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('RELACAO DE ITENS VENDIDOS' + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FStringListQtdeItensVendidos.Text + QUEBRADELINHA));
+  //TOTALGERAL DE ITENS VENDIDOS
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FStringListValorTotalItensVendidos.Text + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + QUEBRADELINHA));
+  //RELACAO DE ITENS DEVOLVIDOS
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('RELACAO DE ITENS DEVOLVIDOS' + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FStringListQtdeItensDevolvidos.Text + QUEBRADELINHA));
+  //TOTALGERAL DE ITENS DEVOLVIDOS
+  LSocket.SendData(TEncoding.UTF8.GetBytes(PULAR_1LINHA_ANTESDOPROXIMOTEXTO));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_12PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FStringListValorTotalItensDevolvidos.Text + QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(FONTE_14PX));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + QUEBRADELINHA));
+
+  LSocket.SendData(TEncoding.UTF8.GetBytes(QUEBRADELINHA));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(QUEBRADELINHA));
+end;
+
+constructor TModelImpressaoCaixaMetodosFechamento.Create(AParent: iModelImpressaoCaixa);
+begin
+  FParent                              := AParent;
+  FConexaoSQL                          := TModelConexaoFactory.New.ConexaoSQL;
+  FBluetooth                           := TModelConexaoFactory.New.ConexaoBluetooth;
+  FStringListQtdeItensVendidos         := TStringList.Create;
+  FStringListQtdeItensDevolvidos       := TStringList.Create;
+  FStringListValorTotalItensVendidos   := TStringList.Create;
+  FStringListValorTotalItensDevolvidos := TStringList.Create;
+end;
+
+destructor TModelImpressaoCaixaMetodosFechamento.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FStringListQtdeItensVendidos);
+  FreeAndNil(FStringListQtdeItensDevolvidos);
+  FreeAndNil(FStringListValorTotalItensVendidos);
+  FreeAndNil(FStringListValorTotalItensDevolvidos);
+  {$ELSE}
+  FStringListQtdeItensVendidos.Free;
+  FStringListQtdeItensVendidos.DisposeOf;
+  FStringListQtdeItensDevolvidos.Free;
+  FStringListQtdeItensDevolvidos.DisposeOf;
+  FStringListValorTotalItensVendidos.Free;
+  FStringListValorTotalItensVendidos.DisposeOf;
+  FStringListValorTotalItensDevolvidos.Free;
+  FStringListValorTotalItensDevolvidos.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelImpressaoCaixaMetodosFechamento.New(AParent: iModelImpressaoCaixa): iModelImpressaoCaixaFechamento;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelImpressaoCaixaMetodosFechamento.TituloDaImpressao(
+  ATitulo: String): iModelImpressaoCaixaFechamento;
+begin
+  Result  := Self;
+  FTitulo := ATitulo;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.TotalDevolvido;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT C.GUUID as GUUIDCAIXA, A.TIPO AS TIPOPAGAMENTO, A.VALOR AS VALORDOPAGAMENTO, A.STATUS AS STATUSPAGAMENTO FROM VENDAPAGAMENTOS A ' +
+            ' INNER JOIN VENDA B ON B.GUUID = A.VENDA ' +
+            ' INNER JOIN CAIXA C ON C.GUUID = B.CAIXA ';
+
+  FWhere := ' GUUIDCAIXA      = ' + QuotedStr(FGUUIDCaixa)       + ' AND ' +
+            ' TIPOPAGAMENTO   = ' + Integer(tpDinheiro).ToString + ' AND ' +
+            ' STATUSPAGAMENTO = ' + Integer(spEstornado).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FTotalDevolvidoEmDinheiro := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FTotalDevolvidoEmDinheiro := FTotalDevolvidoEmDinheiro + (FConexaoSQL.Query.FieldByName('VALORDOPAGAMENTO').AsCurrency);
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.TotalGeralDeItensDevolvidos;
+var
+  I                       : Integer;
+  LCalculoEspaco          : Integer;
+  LEspaco                 : String;
+  LTotalLenght            : Integer;
+  LTotalQtdeItensDevolvidos : String;
+  LValorTotalItensDevolvidos: String;
+  LTotalGeral             : String;
+begin
+  LEspaco           := '';
+
+  LTotalGeral              := 'TOTAL GERAL:';
+  LTotalQtdeItensDevolvidos  := FormatCurr('###', FTotalQtdeItensDevolvidos);
+  LValorTotalItensDevolvidos := FormatCurr('#,##0.00', FValorTotalItensVendidos);
+  LTotalLenght      := (
+    LTotalGeral.Length +
+    LTotalQtdeItensDevolvidos.Length +
+    LValorTotalItensDevolvidos.Length +
+    _1CIFRAO
+  );
+
+  LCalculoEspaco := Trunc((32 - LTotalLenght)/2);
+
+  for I := 0 to Pred(LCalculoEspaco) do
+    LEspaco := LEspaco + ' ';
+
+  FStringListValorTotalItensDevolvidos.Add(
+    LTotalGeral              +
+    LEspaco                  +
+    LTotalQtdeItensDevolvidos  +
+    LEspaco                  +
+    'R$' + LValorTotalItensDevolvidos
+  );
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.TotalGeralDeItensVendidos;
+var
+  I                       : Integer;
+  LCalculoEspaco          : Integer;
+  LEspaco                 : String;
+  LTotalLenght            : Integer;
+  LTotalQtdeItensVendidos : String;
+  LValorTotalItensVendidos: String;
+  LTotalGeral             : String;
+begin
+  LEspaco           := '';
+
+  LTotalGeral              := 'TOTAL GERAL:';
+  LTotalQtdeItensVendidos  := FormatCurr('###', FTotalQtdeItensVendidos);
+  LValorTotalItensVendidos := FormatCurr('#,##0.00', FValorTotalItensVendidos);
+  LTotalLenght      := (
+    LTotalGeral.Length +
+    LTotalQtdeItensVendidos.Length +
+    LValorTotalItensVendidos.Length +
+    _1CIFRAO
+  );
+
+  LCalculoEspaco := Trunc((32 - LTotalLenght)/2);
+
+  for I := 0 to Pred(LCalculoEspaco) do
+    LEspaco := LEspaco + ' ';
+
+  FStringListValorTotalItensVendidos.Add(
+    LTotalGeral              +
+    LEspaco                  +
+    LTotalQtdeItensVendidos  +
+    LEspaco                  +
+    'R$' + LValorTotalItensVendidos
+  );
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.TotalVendido;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT C.GUUID as GUUIDCAIXA, A.TIPO AS TIPOPAGAMENTO, A.VALOR AS VALORDOPAGAMENTO, A.STATUS AS STATUSPAGAMENTO FROM VENDAPAGAMENTOS A ' +
+            ' INNER JOIN VENDA B ON B.GUUID = A.VENDA ' +
+            ' INNER JOIN CAIXA C ON C.GUUID = B.CAIXA ';
+
+  FWhere := ' GUUIDCAIXA      = ' + QuotedStr(FGUUIDCaixa)       + ' AND ' +
+            ' TIPOPAGAMENTO   = ' + Integer(tpDinheiro).ToString + ' AND ' +
+            ' STATUSPAGAMENTO = ' + Integer(spProcessado).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FTotalVendidoEmDinheiro := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FTotalVendidoEmDinheiro := FTotalVendidoEmDinheiro + (FConexaoSQL.Query.FieldByName('VALORDOPAGAMENTO').AsCurrency);
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.RecuperarValores;
+begin
+  Abertura;
+  Suprimento;
+  Sangria;
+  TotalVendido;
+  TotalDevolvido;
+  SomarTotalDinheiro;
+  SomarTotalCartaoCredito;
+  SomarTotalCartaoDebito;
+  RelacaoDeItensVendidos;
+  SomarValorTotalDeItensVendidos;
+  TotalGeralDeItensVendidos;
+  RelacaoDeItensDevolvidos;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.RelacaoDeItensDevolvidos;
+var
+  I                : Integer;
+  LCountEspacos    : Integer;
+  LDescricaoProduto: String;
+  LValorProduto    : Currency;
+  LQuantidade      : Currency;
+  LTotal           : Currency;
+  LCalculoEspaco   : Integer;
+  LEspaco          : String;
+  LTotalLenght     : Integer;
+begin
+  FSQL     := ' SELECT D.DESCRICAO as DESCRICAOPRODUTO, COUNT(DISTINCT C.PRODUTO), SUM(C.QUANTIDADE) as QUANTIDADEPRODUTO, C.PRECO as PRECOPRODUTO, C.TIPO as TIPOVENDAITEM, A.GUUID as GUUIDCAIXA FROM CAIXA A ' +
+              ' INNER JOIN VENDA B ON B.CAIXA = A.GUUID ' +
+              ' INNER JOIN VENDAITENS C ON C.VENDA = B.GUUID ' +
+              ' INNER JOIN PRODUTO D ON D.GUUID = C.PRODUTO ';
+
+  FWhere   := ' WHERE ' +
+              ' A.GUUID = ' + QuotedStr(FGUUIDCaixa) + ' AND ' +
+              ' C.TIPO  = ' + Integer(tvDevolucao).ToString;
+
+  FGroupBy := ' GROUP BY C.PRODUTO ';
+
+  BuildSQL(FConexaoSQL.Query, FSQL + FWhere + FGroupBy);
+  FTotalQtdeItensDevolvidos := 0;
+  FConexaoSQL.Query.First;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    SomarQuantidadeDeItensDevolvidos;
+    LEspaco           := '';
+    LDescricaoProduto := FConexaoSQL.Query.FieldByName('DESCRICAOPRODUTO').AsString;
+    LValorProduto     := FConexaoSQL.Query.FieldByName('PRECOPRODUTO').AsCurrency;
+    LQuantidade       := FConexaoSQL.Query.FieldByName('QUANTIDADEPRODUTO').AsCurrency;
+    LTotal            := (LValorProduto * LQuantidade);
+    LTotalLenght      := (
+      FormatCurr('', LValorProduto).Length +
+      FormatCurr('', LQuantidade).Length +
+      FormatCurr('', LTotal).Length +
+      _2CIFROES
+    );
+    LCalculoEspaco := Trunc((32 - LTotalLenght)/2);
+
+    for LCountEspacos := 0 to Pred(LCalculoEspaco) do
+      LEspaco := LEspaco + ' ';
+
+    FStringListQtdeItensDevolvidos.Add(
+      LDescricaoProduto                    + QUEBRADELINHA +
+      FormatCurr('', LQuantidade)          + LEspaco +
+      'R$' + FormatCurr('', LValorProduto) + LEspaco +
+      'R$' + FormatCurr('', LTotal)
+    );
+
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.RelacaoDeItensVendidos;
+var
+  I                : Integer;
+  LCountEspacos    : Integer;
+  LDescricaoProduto: String;
+  LValorProduto    : Currency;
+  LQuantidade      : Currency;
+  LTotal           : Currency;
+  LCalculoEspaco   : Integer;
+  LEspaco          : String;
+  LTotalLenght     : Integer;
+begin
+  FSQL     := ' SELECT D.DESCRICAO as DESCRICAOPRODUTO, COUNT(DISTINCT C.PRODUTO), SUM(C.QUANTIDADE) as QUANTIDADEPRODUTO, C.PRECO as PRECOPRODUTO, C.TIPO as TIPOVENDAITEM, A.GUUID as GUUIDCAIXA FROM CAIXA A ' +
+              ' INNER JOIN VENDA B ON B.CAIXA = A.GUUID ' +
+              ' INNER JOIN VENDAITENS C ON C.VENDA = B.GUUID ' +
+              ' INNER JOIN PRODUTO D ON D.GUUID = C.PRODUTO ';
+
+  FWhere   := ' WHERE ' +
+              ' A.GUUID = ' + QuotedStr(FGUUIDCaixa) + ' AND ' +
+              ' C.TIPO  = ' + Integer(tvVenda).ToString;
+
+  FGroupBy := ' GROUP BY C.PRODUTO ';
+
+  BuildSQL(FConexaoSQL.Query, FSQL + FWhere + FGroupBy);
+  FTotalQtdeItensVendidos := 0;
+  FConexaoSQL.Query.First;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    SomarQuantidadeDeItensVendidos;
+    LEspaco           := '';
+    LDescricaoProduto := FConexaoSQL.Query.FieldByName('DESCRICAOPRODUTO').AsString;
+    LValorProduto     := FConexaoSQL.Query.FieldByName('PRECOPRODUTO').AsCurrency;
+    LQuantidade       := FConexaoSQL.Query.FieldByName('QUANTIDADEPRODUTO').AsCurrency;
+    LTotal            := (LValorProduto * LQuantidade);
+    LTotalLenght      := (
+      FormatCurr('###', LValorProduto).Length +
+      FormatCurr('#,##0.00', LQuantidade).Length +
+      FormatCurr('#,##0.00', LTotal).Length +
+      _2CIFROES
+    );
+    LCalculoEspaco := Trunc((32 - LTotalLenght)/2);
+
+    for LCountEspacos := 0 to Pred(LCalculoEspaco) do
+      LEspaco := LEspaco + ' ';
+
+    FStringListQtdeItensVendidos.Add(
+      LDescricaoProduto                    + QUEBRADELINHA +
+      FormatCurr('###', LQuantidade)          + LEspaco +
+      'R$' + FormatCurr('#,##0.00', LValorProduto) + LEspaco +
+      'R$' + FormatCurr('#,##0.00', LTotal)
+    );
+
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.Sangria;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT * FROM CAIXAOPERACOES ';
+  FWhere := ' CAIXA = ' + QuotedStr(FGUUIDCaixa) + ' AND ' +
+            ' TIPO  = ' + Integer(ocSangria).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FSangria := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FSangria := FSangria + FConexaoSQL.Query.FieldByName('VALOR').AsCurrency;
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.SomarQuantidadeDeItensDevolvidos;
+begin
+  FTotalQtdeItensDevolvidos := FTotalQtdeItensDevolvidos + Trunc(FConexaoSQL.Query.FieldByName('QUANTIDADEPRODUTO').AsCurrency);
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.SomarQuantidadeDeItensVendidos;
+begin
+  FTotalQtdeItensVendidos := FTotalQtdeItensVendidos + Trunc(FConexaoSQL.Query.FieldByName('QUANTIDADEPRODUTO').AsCurrency);
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.SomarTotalCartaoCredito;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT C.GUUID as GUUIDCAIXA, A.TIPO AS TIPOPAGAMENTO, A.VALOR AS VALORDOPAGAMENTO, A.STATUS AS STATUSPAGAMENTO FROM VENDAPAGAMENTOS A ' +
+            ' INNER JOIN VENDA B ON B.GUUID = A.VENDA ' +
+            ' INNER JOIN CAIXA C ON C.GUUID = B.CAIXA ';
+
+  FWhere := ' GUUIDCAIXA      = ' + QuotedStr(FGUUIDCaixa)            + ' AND ' +
+            ' TIPOPAGAMENTO   = ' + Integer(tpCartaoCredito).ToString + ' AND ' +
+            ' STATUSPAGAMENTO = ' + Integer(spProcessado).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FCartaoCredito := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FCartaoCredito := FCartaoCredito + (FConexaoSQL.Query.FieldByName('VALORDOPAGAMENTO').AsCurrency);
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.SomarTotalCartaoDebito;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT C.GUUID as GUUIDCAIXA, A.TIPO AS TIPOPAGAMENTO, A.VALOR AS VALORDOPAGAMENTO, A.STATUS AS STATUSPAGAMENTO FROM VENDAPAGAMENTOS A ' +
+            ' INNER JOIN VENDA B ON B.GUUID = A.VENDA ' +
+            ' INNER JOIN CAIXA C ON C.GUUID = B.CAIXA ';
+
+  FWhere := ' GUUIDCAIXA      = ' + QuotedStr(FGUUIDCaixa)           + ' AND ' +
+            ' TIPOPAGAMENTO   = ' + Integer(tpCartaoDebito).ToString + ' AND ' +
+            ' STATUSPAGAMENTO = ' + Integer(spProcessado).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FCartaoDebito := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FCartaoDebito := FCartaoDebito + (FConexaoSQL.Query.FieldByName('VALORDOPAGAMENTO').AsCurrency);
+    FConexaoSQL.Query.Next;
+  end;
+end;
+procedure TModelImpressaoCaixaMetodosFechamento.SomarTotalDinheiro;
+begin
+  FTotalDinheiro := ((FTotalVendidoEmDinheiro + FSuprimento + FAbertura) - FSangria - FTotalDevolvidoEmDinheiro);
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.SomarValorTotalDeItensVendidos;
+begin
+  FValorTotalItensVendidos := 0;
+  FValorTotalItensVendidos := FTotalVendidoEmDinheiro + FCartaoCredito + FCartaoDebito;
+end;
+
+procedure TModelImpressaoCaixaMetodosFechamento.Suprimento;
+var
+  I: Integer;
+begin
+  FSQL   := ' SELECT * FROM CAIXAOPERACOES ';
+  FWhere := ' CAIXA = ' + QuotedStr(FGUUIDCaixa) + ' AND ' +
+            ' TIPO  = ' + Integer(ocSuprimento).ToString;
+
+  BuildSQL(FConexaoSQL.Query, FSQL, FWhere);
+  FSuprimento := 0;
+  while not FConexaoSQL.Query.Eof do
+  begin
+    FSuprimento := FSuprimento + FConexaoSQL.Query.FieldByName('VALOR').AsCurrency;
+    FConexaoSQL.Query.Next;
+  end;
+end;
+
+end.

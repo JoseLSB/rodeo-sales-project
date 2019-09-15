@@ -1,0 +1,7 @@
+unit MFichas.Controller.Conexao.Interfaces;
+
+interface
+
+implementation
+
+end.

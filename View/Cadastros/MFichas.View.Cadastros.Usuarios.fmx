@@ -1,0 +1,726 @@
+object CadastrosUsuariosView: TCadastrosUsuariosView
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 320
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
+  DesignerMasterStyle = 3
+  object LayoutPrincipal: TLayout
+    Align = Contents
+    Size.Width = 320.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object TabControlPrincipal: TTabControl
+      Align = Contents
+      Size.Width = 320.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabHeight = 49.000000000000000000
+      TabIndex = 1
+      TabOrder = 0
+      TabPosition = PlatformDefault
+      Sizes = (
+        320s
+        431s
+        320s
+        431s
+        320s
+        431s)
+      object TabItemListarUsuarios: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 106.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'Listar'
+        ExplicitSize.cx = 106.000000000000000000
+        ExplicitSize.cy = 49.000000000000000000
+        object RectangleListar: TRectangle
+          Align = Contents
+          Size.Width = 320.000000000000000000
+          Size.Height = 431.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          object Layout1: TLayout
+            Align = Bottom
+            Position.Y = 376.000000000000000000
+            Size.Width = 320.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object Circle1: TCircle
+              Touch.InteractiveGestures = [LongTap]
+              Align = Center
+              Fill.Color = claWhite
+              Margins.Bottom = 50.000000000000000000
+              Size.Width = 73.000000000000000000
+              Size.Height = 80.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              object ShadowEffect1: TShadowEffect
+                Distance = 3.000000000000000000
+                Direction = 90.000000000000000000
+                Softness = 0.300000011920929000
+                Opacity = 0.400000005960464500
+                ShadowColor = claBlack
+              end
+            end
+          end
+          object ToolBarListar: TToolBar
+            Size.Width = 320.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            TintColor = xFFE0E0E0
+            object LabelToolBarListar: TLabel
+              Align = Contents
+              StyledSettings = [Style]
+              Size.Width = 320.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Segoe UI Historic'
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.HorzAlign = Center
+              Text = 'Usu'#225'rios'
+            end
+            object ButtonBackListar: TButton
+              Align = Left
+              IconTintColor = xFF5C5C5C
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'backtoolbutton'
+              TabOrder = 0
+              OnClick = ButtonBackListarClick
+            end
+          end
+          object ListViewUsuarios: TListView
+            Touch.GestureManager = GestureManager1
+            Touch.InteractiveGestures = [LongTap]
+            OnGesture = ListViewUsuariosGesture
+            ItemAppearanceClassName = 'TMultiDetailItemAppearance'
+            ItemEditAppearanceClassName = 'TMultiDetailDeleteAppearance'
+            HeaderAppearanceClassName = 'TListHeaderObjects'
+            FooterAppearanceClassName = 'TListHeaderObjects'
+            Align = Client
+            Size.Width = 320.000000000000000000
+            Size.Height = 328.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            ItemAppearanceObjects.ItemObjects.MultiDetail1.Font.StyleExt = {00070000000000000004000000}
+            ItemAppearanceObjects.ItemObjects.Accessory.Visible = False
+            OnDblClick = ListViewUsuariosDblClick
+            CanSwipeDelete = False
+          end
+        end
+        object Layout2: TLayout
+          Align = Contents
+          Size.Width = 320.000000000000000000
+          Size.Height = 431.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object Layout3: TLayout
+            Align = Bottom
+            Position.Y = 339.000000000000000000
+            Size.Width = 320.000000000000000000
+            Size.Height = 92.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object Image1: TImage
+              MultiResBitmap.Height = 64
+              MultiResBitmap.Width = 64
+              MultiResBitmap = <
+                item
+                  Width = 64
+                  Height = 64
+                  PNG = {
+                    89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
+                    DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                    05CF49444154785EE59B4B6C546514C7CFF9EE4C0B5898014A34209AD8961201
+                    8118971289B0322E4C2CB605A23C4413296D2306DD80CACA80DA0124624040CA
+                    546445485C002E50779A501144FA3031BC7CF0B8B680EDCCDCEFF89D99E394A1
+                    8F996967DA99B9BFA49DEFFFEF637ACEFD9EF79E22649940DB8BD3C8F22E4282
+                    3944381B912A1DA0C9E084FCDD56A8C40F93C8717AEE8055645BA06E12411B20
+                    5D5080E74311FA76E3EC96EBF2ABB24256121068AB5E080A9783C6A57617CCF3
+                    FB87F73EB60D34C94767CD4F9FB494D5BCE1B1E69FE44B19236309D8D6BAE201
+                    6F89B316B45E83CA9A277666D1701615ECEBBDADF6BDB5A0F98EB82362C409D8
+                    D359E5EB256F1D01D41B591A73B34B08E06F2F511392DA553FEB7097D8C36244
+                    0908B4D53C1F51CE6E0F781E166B54D10EFC018A363594B71C4204730DD26758
+                    0968EA5CF90851F88002B558ACB145D33761D4AB36561CB9244ECA28794D19BE
+                    EAA89D3339133CA3F0597329CFECE8A87E4E9C944939016679C2A6F69AAD7617
+                    1E336F3645EC9CC10BD6D45BB63A1E68AF7957AC944869087C4555D695766BB7
+                    526A9D58390D913E70EBF2B557DF5B7C3A22D6A0244D00077FADD3DB629A5531
+                    273FD0E64F9F5116AE5D86471DB10664C821C0DDFE6AA7F753D3CCABE01913D8
+                    32EEB5220765C804043A6ADE375D64ADC8BC83876CB23961D021C0332A4F2AC3
+                    DDC60E467D7970C8DF17E8A81DD67A3E18BC9DF6FBE085FA8AE031B11218B007
+                    6C6F7F696608E860A6831F0B380647F7ECDFF55BEDA36225D02F013CEE2DC483
+                    BCAC8895F758D6B8C91147EF159940BF0404DAAB97E7D426274320AA254D1D35
+                    D522E32424800F36446A9BC88243037EF8C185D51345464948009FEA94050F89
+                    2C382C80E9C545FFBE21324A3C017C9EEF05D820B26041C237779DAB2A11D997
+                    00BE995104304D642153EA145BABA4DD9700D4B85A9A850F523CD6680262F7F0
+                    E089A8E30AAC054D9DD5D178633D806F60BA0CD3E3A331C712A07169F4D54568
+                    8CC5AC76FEB2722A74D973A3AE8B50B63D7FFBAF35A5CA298E3C6336CCF1C9D0
+                    3598983D1EF5B40242D75DFDFF31C1CF311F5029DA75987377259AF3F78FA6FD
+                    64CC4A4EB2F3FC5893D6FD044D3F28ED4446E5694E2EE2282A554A79124E476E
+                    C20235510142FC60E0366C00930097C3ABC06D69BB0E3F40B7D23AD22DDA7538
+                    A0BB95B23C592D41C9652C8DD7B1A9BD36880835E2659DD17E2E9084665E052E
+                    8A701DE64A5C546619F859B4EB7088CE290C59A7C1B6B578EEC1C4EC38F0BDAA
+                    7BFCD00DEDF3B9AF17F87DAD5C8318DD0821E089A8E9262816733401A421C8AF
+                    6E8294E6A28F58021A2B83AD5C84C86D376026BC330D655F46E38D9F05B80253
+                    9A050F127D2ECDBE04148F2FD9CB1598220B9708FC397EC2C4FE09786DC66777
+                    8B8802220B16F2C0471CABC8BE044421B51328724D540142573C3DE184C2A984
+                    0470E131A167A3C88283081BD7CF3D9A70FC4FEC018686F260906B6F45160C1A
+                    E8444345F0A8C838FD121043BD623E15CE3199E0A657E18055AE0326C00C85CB
+                    04F43297988995B7700C1A70D5FAC782BF8B95C0D067732E3244DC22322F3117
+                    72734379CB5691FD48FA90E3E38EDA1DA69BD489CC2B88608F19F7AF8B1C9041
+                    E6803E6694851BB9F058641E4147A69787130AA206226902B8DA9AABAE4D3AB9
+                    683A3F20D87FF3D2D515C92AC599B49EF3F19C60FF839B73B58496273C9F9FB6
+                    0C35E6EF27ED407674D62EA1303483071E142B57B8CE2B9709FE6BD129917408
+                    DCCF86B2E0A9B0E53C45A44F8935E6F02607342E4C377866445D99FF810A147E
+                    629A3363CE2863CE2D1AACB71B2B5ABE10276DD2EE01F7523FABE5784F78DC1C
+                    427A874291BFC4CE3AFC5E6687B6C9EAA55923099EC9D864B6E7CABA093D77BB
+                    D6985DD71A85385FEC0CE3B412A97D7C9EBFF7483B12B2329B731122D7E17129
+                    1A57630DBB088B6FD7FB7D26683C69211CAE2B0F66FCEE75D697332EC3738AF4
+                    222E48D204B3CD1A5D892A3205C8C38B69AC36819F5063C4066DDD20C43604BA
+                    60365FE73D61CF777CDB3EFA3D5901E03F77660F56A366281D0000000049454E
+                    44AE426082}
+                  FileName = 'C:\PROJETOS\MaykoFichas\Images\plus-circle.png'
+                end>
+              Align = Center
+              Size.Width = 50.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = Image1Click
+            end
+          end
+        end
+      end
+      object TabItemCadastrarUsuarios: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 106.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'Cadastrar'
+        ExplicitSize.cx = 106.000000000000000000
+        ExplicitSize.cy = 49.000000000000000000
+        object Rectangle1: TRectangle
+          Align = Contents
+          Size.Width = 320.000000000000000000
+          Size.Height = 431.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+        object ToolBar1: TToolBar
+          Size.Width = 320.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 11
+          TintColor = xFFE0E0E0
+          object LabelToolBarCadastrar: TLabel
+            Align = Contents
+            StyledSettings = [Style]
+            Size.Width = 320.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            TextSettings.HorzAlign = Center
+            Text = 'Preencha todos os CAMPOS.'
+          end
+          object ButtonBackCadastrar: TButton
+            Align = Left
+            IconTintColor = xFF5C5C5C
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'backtoolbutton'
+            TabOrder = 0
+            OnClick = ButtonBackCadastrarClick
+          end
+        end
+        object Layout4: TLayout
+          Align = Bottom
+          Position.Y = 376.000000000000000000
+          Size.Width = 320.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object LayoutDireita: TLayout
+            Align = Right
+            Position.X = 182.000000000000000000
+            Size.Width = 138.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object RoundRectBotaoConfirmarCadastro: TRoundRect
+              Align = Center
+              Size.Width = 108.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF5C5C5C
+              Stroke.Thickness = 1.500000000000000000
+              OnClick = RoundRectBotaoConfirmarCadastroClick
+              object LabelBotaoConfirmar: TLabel
+                Align = Center
+                AutoSize = True
+                StyledSettings = [Family]
+                Margins.Left = 8.000000000000000000
+                Margins.Top = 8.000000000000000000
+                Margins.Right = 8.000000000000000000
+                Margins.Bottom = 8.000000000000000000
+                Size.Width = 84.000000000000000000
+                Size.Height = 17.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF5C5C5C
+                TextSettings.HorzAlign = Center
+                Text = 'Confirmar'
+              end
+            end
+          end
+          object LayoutEsquerda: TLayout
+            Align = Left
+            Size.Width = 138.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object RoundRectBotaoCancelarCadastro: TRoundRect
+              Align = Center
+              Size.Width = 108.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF5C5C5C
+              Stroke.Thickness = 1.500000000000000000
+              OnClick = RoundRectBotaoCancelarCadastroClick
+            end
+            object LabelBotaoCancelar: TLabel
+              Align = Center
+              AutoSize = True
+              StyledSettings = [Family]
+              Margins.Left = 8.000000000000000000
+              Margins.Top = 8.000000000000000000
+              Margins.Right = 8.000000000000000000
+              Margins.Bottom = 8.000000000000000000
+              Size.Width = 84.000000000000000000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.HorzAlign = Center
+              Text = 'Cancelar'
+            end
+          end
+        end
+        object Layout6: TLayout
+          Align = Client
+          Margins.Left = 20.000000000000000000
+          Margins.Top = 20.000000000000000000
+          Margins.Right = 20.000000000000000000
+          Margins.Bottom = 20.000000000000000000
+          Size.Width = 280.000000000000000000
+          Size.Height = 288.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object Label1: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Digite um usu'#225'rio para login:'
+          end
+          object EditCadastrarLogin: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 3
+            KeyboardType = Alphabet
+            Position.Y = 28.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            OnChangeTracking = EditCadastrarLoginChangeTracking
+          end
+          object Label2: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Margins.Top = 10.000000000000000000
+            Position.Y = 70.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Digite o nome deste usu'#225'rio:'
+          end
+          object EditCadastrarNomeUsuario: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 2
+            KeyboardType = Alphabet
+            Position.Y = 98.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            OnChangeTracking = EditCadastrarNomeUsuarioChangeTracking
+          end
+          object Label3: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Margins.Top = 10.000000000000000000
+            Position.Y = 140.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Digite uma senha para este usu'#225'rio:'
+          end
+          object EditCadastrarSenha: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 1
+            KeyboardType = Alphabet
+            Password = True
+            Position.Y = 168.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object CheckBoxCadastrarFiscal: TCheckBox
+            Align = Top
+            Margins.Top = 20.000000000000000000
+            Position.Y = 220.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 6
+            Text = 'Este usu'#225'rio ser'#225' um FISCAL?'
+          end
+        end
+      end
+      object TabItemEditarUsuarios: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 108.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'Editar'
+        ExplicitSize.cx = 108.000000000000000000
+        ExplicitSize.cy = 49.000000000000000000
+        object Rectangle2: TRectangle
+          Align = Contents
+          Size.Width = 320.000000000000000000
+          Size.Height = 431.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+        end
+        object ToolBar2: TToolBar
+          Size.Width = 320.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 11
+          TintColor = xFFE0E0E0
+          object LabelToolBarEditar: TLabel
+            Align = Contents
+            StyledSettings = [Style]
+            Size.Width = 320.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            TextSettings.HorzAlign = Center
+            Text = 'Altere e salve suas altera'#231#245'es.'
+          end
+          object ButtonBackEditar: TButton
+            Align = Left
+            IconTintColor = xFF5C5C5C
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'backtoolbutton'
+            TabOrder = 0
+            OnClick = ButtonBackEditarClick
+          end
+        end
+        object Layout5: TLayout
+          Align = Bottom
+          Position.Y = 376.000000000000000000
+          Size.Width = 320.000000000000000000
+          Size.Height = 55.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object Layout8: TLayout
+            Align = Right
+            Position.X = 182.000000000000000000
+            Size.Width = 138.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object RoundRectBotaoConfirmarAlteracao: TRoundRect
+              Align = Center
+              Size.Width = 108.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF5C5C5C
+              Stroke.Thickness = 1.500000000000000000
+              OnClick = RoundRectBotaoConfirmarAlteracaoClick
+              object Label7: TLabel
+                Align = Center
+                AutoSize = True
+                StyledSettings = [Family]
+                Margins.Left = 8.000000000000000000
+                Margins.Top = 8.000000000000000000
+                Margins.Right = 8.000000000000000000
+                Margins.Bottom = 8.000000000000000000
+                Size.Width = 84.000000000000000000
+                Size.Height = 17.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF5C5C5C
+                TextSettings.HorzAlign = Center
+                Text = 'Confirmar'
+              end
+            end
+          end
+          object Layout9: TLayout
+            Align = Left
+            Size.Width = 138.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object RoundRectBotaoCancelarAlteracao: TRoundRect
+              Align = Center
+              Size.Width = 108.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF5C5C5C
+              Stroke.Thickness = 1.500000000000000000
+              OnClick = RoundRectBotaoCancelarAlteracaoClick
+            end
+            object Label8: TLabel
+              Align = Center
+              AutoSize = True
+              StyledSettings = [Family]
+              Margins.Left = 8.000000000000000000
+              Margins.Top = 8.000000000000000000
+              Margins.Right = 8.000000000000000000
+              Margins.Bottom = 8.000000000000000000
+              Size.Width = 84.000000000000000000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.HorzAlign = Center
+              Text = 'Cancelar'
+            end
+          end
+        end
+        object Layout7: TLayout
+          Align = Client
+          Margins.Left = 20.000000000000000000
+          Margins.Top = 20.000000000000000000
+          Margins.Right = 20.000000000000000000
+          Margins.Bottom = 20.000000000000000000
+          Size.Width = 280.000000000000000000
+          Size.Height = 288.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object CheckBoxEditarAtivoInativo: TCheckBox
+            Align = Top
+            StyledSettings = [Style]
+            IsChecked = True
+            Margins.Top = 20.000000000000000000
+            Position.Y = 259.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 4
+            Text = 'Ativo'
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+          end
+          object CheckBoxEditarFiscal: TCheckBox
+            Align = Top
+            Margins.Top = 20.000000000000000000
+            Position.Y = 220.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 7
+            Text = 'Este usu'#225'rio '#233' um FISCAL?'
+          end
+          object Label4: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Margins.Top = 10.000000000000000000
+            Position.Y = 140.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Senha deste usu'#225'rio:'
+          end
+          object EditEditarSenha: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 1
+            KeyboardType = Alphabet
+            Password = True
+            Position.Y = 168.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object EditEditarNomeUsuario: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 2
+            KeyboardType = Alphabet
+            Position.Y = 98.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            OnChangeTracking = EditEditarNomeUsuarioChangeTracking
+          end
+          object Label5: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Margins.Top = 10.000000000000000000
+            Position.Y = 70.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Nome deste usu'#225'rio:'
+          end
+          object EditEditarLogin: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 3
+            KeyboardType = Alphabet
+            Position.Y = 28.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            OnChangeTracking = EditEditarLoginChangeTracking
+          end
+          object Label6: TLabel
+            Align = Top
+            StyledSettings = [Style]
+            Size.Width = 280.000000000000000000
+            Size.Height = 23.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Family = 'Segoe UI Historic'
+            TextSettings.Font.Size = 16.000000000000000000
+            TextSettings.FontColor = xFF5C5C5C
+            Text = 'Login:'
+          end
+        end
+      end
+    end
+  end
+  object RectangleFundo: TRectangle
+    Align = Contents
+    Fill.Color = claBlack
+    Opacity = 0.400000005960464500
+    Size.Width = 320.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    Visible = False
+    OnClick = RectangleFundoClick
+  end
+  object RectangleMenu: TRectangle
+    Align = Contents
+    Margins.Left = 40.000000000000000000
+    Margins.Top = 215.000000000000000000
+    Margins.Right = 40.000000000000000000
+    Margins.Bottom = 215.000000000000000000
+    Size.Width = 240.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    XRadius = 15.000000000000000000
+    YRadius = 15.000000000000000000
+    OnClick = RectangleMenuClick
+    object LabelEditar: TLabel
+      Align = Contents
+      StyledSettings = [Family, Size, Style]
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 224.000000000000000000
+      Size.Height = 34.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.FontColor = xFF5C5C5C
+      TextSettings.HorzAlign = Center
+      Text = 'Editar'
+    end
+    object ShadowEffectEditar: TShadowEffect
+      Distance = 0.500000000000000000
+      Direction = 45.000000000000000000
+      Softness = 0.300000011920929000
+      Opacity = 0.300000011920929000
+      ShadowColor = claBlack
+    end
+  end
+  object GestureManager1: TGestureManager
+    Sensitivity = 80.000000000000000000
+    Left = 240
+    Top = 120
+  end
+  object FDMemTableUsuarios: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 240
+    Top = 232
+  end
+end

@@ -1,0 +1,71 @@
+unit MFichas.Model.Entidade.CONFIGURACOES;
+
+interface
+
+uses
+  DB, 
+  Classes, 
+  SysUtils, 
+  Generics.Collections, 
+
+  /// orm 
+  ormbr.types.blob, 
+  ormbr.types.lazy, 
+  ormbr.types.mapping, 
+  ormbr.types.nullable, 
+  ormbr.mapping.classes, 
+  ormbr.mapping.register, 
+  ormbr.mapping.attributes; 
+
+type
+  [Entity]
+  [Table('CONFIGURACOES', '')]
+  [PrimaryKey('GUUID', NotInc, NoSort, False, 'Chave primária')]
+  TCONFIGURACOES = class
+  private
+    { Private declarations } 
+    FGUUID: Nullable<String>;
+    FIMPRESSORA: Nullable<String>;
+    FNOMEDISPOSITIVO: Nullable<String>;
+    FGUUIDDISPOSITIVO: TBlob;
+    FDATACADASTRO: Nullable<TDateTime>;
+    FDATAALTERACAO: Nullable<TDateTime>;
+    FDATALIBERACAO: Nullable<TDateTime>;
+  public 
+    { Public declarations } 
+    [Column('GUUID', ftString, 38)]
+    [Dictionary('GUUID', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property GUUID: Nullable<String> read FGUUID write FGUUID;
+
+    [Column('IMPRESSORA', ftString, 128)]
+    [Dictionary('IMPRESSORA', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property IMPRESSORA: Nullable<String> read FIMPRESSORA write FIMPRESSORA;
+
+    [Column('NOMEDISPOSITIVO', ftString, 128)]
+    [Dictionary('NOMEDISPOSITIVO', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property NOMEDISPOSITIVO: Nullable<String> read FNOMEDISPOSITIVO write FNOMEDISPOSITIVO;
+
+    [Column('GUUIDDISPOSITIVO', ftBlob)]
+    [Dictionary('GUUIDDISPOSITIVO', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property GUUIDDISPOSITIVO: TBlob read FGUUIDDISPOSITIVO write FGUUIDDISPOSITIVO;
+
+    [Column('DATACADASTRO', ftDateTime)]
+    [Dictionary('DATACADASTRO', 'Mensagem de validação', '', '', '', taCenter)]
+    property DATACADASTRO: Nullable<TDateTime> read FDATACADASTRO write FDATACADASTRO;
+
+    [Column('DATAALTERACAO', ftDateTime)]
+    [Dictionary('DATAALTERACAO', 'Mensagem de validação', '', '', '', taCenter)]
+    property DATAALTERACAO: Nullable<TDateTime> read FDATAALTERACAO write FDATAALTERACAO;
+
+    [Column('DATALIBERACAO', ftDateTime)]
+    [Dictionary('DATALIBERACAO', 'Mensagem de validação', '', '', '', taCenter)]
+    property DATALIBERACAO: Nullable<TDateTime> read FDATALIBERACAO write FDATALIBERACAO;
+  end;
+
+implementation
+
+initialization
+
+  TRegisterClass.RegisterEntity(TCONFIGURACOES)
+
+end.

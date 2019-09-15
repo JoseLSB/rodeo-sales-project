@@ -1,0 +1,12 @@
+unit MFichas.Controller.Constantes;
+
+interface
+
+type
+  TTypeStatusCaixa = (scFechado, scAberto);
+  TTypeTipoVenda   = (tvCancelamento, tvVenda, tvDevolucao);
+  TTypeStatusVenda = (svFechada, svAberta, svCancelada, svDevolvida);
+
+implementation
+
+end.

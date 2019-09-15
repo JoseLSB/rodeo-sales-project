@@ -1,0 +1,41 @@
+unit MFichas.Model.Venda.State.Factory;
+
+interface
+
+uses
+  MFichas.Model.Venda.State.Interfaces,
+  MFichas.Model.Venda.Interfaces;
+
+type
+  TModelVendaStateFactory = class(TInterfacedObject, iModelVendaStateFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelVendaStateFactory;
+    function Aberto : iModelVendaMetodos;
+    function Pagando: iModelVendaMetodos;
+    function Fechado: iModelVendaMetodos;
+  end;
+
+implementation
+
+{ TModelVendaStateFactory }
+
+constructor TModelVendaStateFactory.Create;
+begin
+
+end;
+
+destructor TModelVendaStateFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelVendaStateFactory.New: iModelVendaStateFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

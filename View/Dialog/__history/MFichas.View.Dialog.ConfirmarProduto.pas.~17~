@@ -1,0 +1,124 @@
+unit MFichas.View.Dialog.ConfirmarProduto;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+
+  FMX.Types,
+  FMX.Graphics,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Dialogs,
+  FMX.StdCtrls,
+  FMX.Edit,
+  FMX.Objects,
+  FMX.Controls.Presentation,
+  FMX.Layouts;
+
+type
+  TFrameConfirmacaoProduto = class(TFrame)
+    LayoutPrincipal: TLayout;
+    RectangleSombra: TRectangle;
+    RectanglePrincipal: TRectangle;
+    LayoutRectangleTop: TLayout;
+    LabelTitulo: TLabel;
+    LayoutRectangleClient: TLayout;
+    LayoutRectangleBottom: TLayout;
+    LayoutDireita: TLayout;
+    RoundRectBotaoConfirmar: TRoundRect;
+    LabelBotaoConfirmar: TLabel;
+    LayoutEsquerda: TLayout;
+    RoundRectBotaoCancelar: TRoundRect;
+    LabelBotaoCancelar: TLabel;
+    Layout1: TLayout;
+    Layout2: TLayout;
+    Layout3: TLayout;
+    Layout4: TLayout;
+    Image1: TImage;
+    Layout5: TLayout;
+    Layout6: TLayout;
+    Image2: TImage;
+    Layout7: TLayout;
+    Layout8: TLayout;
+    EditQuantidade: TEdit;
+    Layout9: TLayout;
+    Label1: TLabel;
+    LabelValorProduto: TLabel;
+    LabelDescricaoProduto: TLabel;
+    procedure Image2Click(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+  private
+    FValorOriginalDoProduto: String;
+    procedure SetValorOriginalDoProduto(const Value: String);
+    function ValorDoProdutoxQuantidade(AQuantidade: Integer): String;
+    { Private declarations }
+  public
+    { Public declarations }
+    property ValorOriginalDoProduto: String read FValorOriginalDoProduto write SetValorOriginalDoProduto;
+    procedure ConfigurarTamanhoDoModal(AParent: TForm);
+  end;
+
+implementation
+
+{$R *.fmx}
+
+procedure TFrameConfirmacaoProduto.ConfigurarTamanhoDoModal(AParent: TForm);
+begin
+  Self.Align                             := TAlignLayout.Contents;
+  Self.Visible                           := False;
+  Self.Parent                            := AParent;
+  Self.RectanglePrincipal.Margins.Top    := AParent.Height / 4.5;
+  Self.RectanglePrincipal.Margins.Bottom := AParent.Height / 4.5;
+  Self.RectanglePrincipal.Margins.Left   := AParent.Width  / 10;
+  Self.RectanglePrincipal.Margins.Right  := AParent.Width  / 10;
+  Self.Visible                           := True;
+end;
+
+procedure TFrameConfirmacaoProduto.Image1Click(Sender: TObject);
+var
+  LQuantidadeItem: Integer;
+begin
+  LQuantidadeItem        := StrToInt(EditQuantidade.Text);
+  if LQuantidadeItem > 1 then
+  begin
+    LQuantidadeItem      := StrToInt(EditQuantidade.Text) - 1;
+    EditQuantidade.Text  := IntToStr(LQuantidadeItem);
+  end;
+
+  LabelValorProduto.Text := ValorDoProdutoxQuantidade(LQuantidadeItem);
+end;
+
+procedure TFrameConfirmacaoProduto.Image2Click(Sender: TObject);
+var
+  LQuantidadeItem: Integer;
+begin
+  LQuantidadeItem        := StrToInt(EditQuantidade.Text);
+  if LQuantidadeItem < 99 then
+  begin
+    LQuantidadeItem      := StrToInt(EditQuantidade.Text) + 1;
+    EditQuantidade.Text  := IntToStr(LQuantidadeItem);
+  end;
+
+  LabelValorProduto.Text := ValorDoProdutoxQuantidade(LQuantidadeItem);
+end;
+
+procedure TFrameConfirmacaoProduto.SetValorOriginalDoProduto(const Value: String);
+begin
+  FValorOriginalDoProduto := Value;
+end;
+
+function TFrameConfirmacaoProduto.ValorDoProdutoxQuantidade(
+  AQuantidade: Integer): String;
+begin
+  Result := FormatCurr(
+    '#,##0.00',
+    (AQuantidade * StrToFloat(FValorOriginalDoProduto))
+  );
+end;
+
+end.

@@ -1,0 +1,7 @@
+unit MFichas.Model.Usuario.TipoDeUsuario.Interfaces;
+
+interface
+
+implementation
+
+end.

@@ -1,0 +1,7 @@
+unit MFichas.Model.Pagamento.Formas.Factory;
+
+interface
+
+implementation
+
+end.

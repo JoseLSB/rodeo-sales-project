@@ -1,0 +1,105 @@
+unit MFichas.Model.Permissoes;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Permissoes.Interfaces,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Entidade.USUARIOPERMISSOES,
+
+  MFichas.Controller.Types,
+
+  ORMBR.Container.ObjectSet,
+  ORMBR.Container.ObjectSet.Interfaces;
+type
+  TModelPermissoes = class(TInterfacedObject, iModelPermissoes)
+  private
+    FList          : TDictionary<String ,TTypeTipoUsuario>;
+    FListPermissoes: TObjectList<TUSUARIOPERMISSOES>;
+    FConn          : iModelConexaoSQL;
+    FDAO           : IContainerObjectSet<TUSUARIOPERMISSOES>;
+    class var FInstance: iModelPermissoes;
+    constructor Create;
+    procedure PreencherListaDePermissoes;
+  public
+    destructor Destroy; override;
+    class function New: iModelPermissoes;
+    function ListaDePermissoes: iModelPermissoesLista;
+    function EditarPermissoes : iModelPermissoesEditar;
+    function DAO              : iContainerObjectSet<TUSUARIOPERMISSOES>;
+  end;
+
+implementation
+
+{ TModelPermissoes }
+
+uses MFichas.Model.Permissoes.Metodos.Lista,
+  MFichas.Model.Permissoes.Metodos.Editar;
+
+constructor TModelPermissoes.Create;
+begin
+  FList := TDictionary<String ,TTypeTipoUsuario>.Create;
+  FConn := TModelConexaoFactory.New.ConexaoSQL;
+  FDAO  := TContainerObjectSet<TUSUARIOPERMISSOES>.Create(FConn.Conn);
+  PreencherListaDePermissoes;
+end;
+
+function TModelPermissoes.DAO: iContainerObjectSet<TUSUARIOPERMISSOES>;
+begin
+  Result := FDAO;
+end;
+
+destructor TModelPermissoes.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FList);
+  if Assigned(FListPermissoes) then
+    FreeAndNil(FListPermissoes);
+  {$ELSE}
+  FList.Free;
+  FList.DisposeOf;
+  if Assigned(FListPermissoes) then
+  begin
+    FListPermissoes.Free;
+    FListPermissoes.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelPermissoes.EditarPermissoes: iModelPermissoesEditar;
+begin
+  Result := TModelPermissoesMetodosEditar.New(Self);
+end;
+
+function TModelPermissoes.ListaDePermissoes: iModelPermissoesLista;
+begin
+  Result := TModelPermissoesMetodosLista.New(Self, FList);
+end;
+
+class function TModelPermissoes.New: iModelPermissoes;
+begin
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+  Result := FInstance;
+end;
+
+procedure TModelPermissoes.PreencherListaDePermissoes;
+var
+  I: Integer;
+begin
+  FListPermissoes := FDAO.Find;
+  for I := 0 to Pred(FListPermissoes.Count) do
+  begin
+    FList.Add(
+      FListPermissoes[I].DESCRICAO,
+      TTypeTipoUsuario(FListPermissoes[I].PERMISSAO)
+    );
+  end;
+end;
+
+end.

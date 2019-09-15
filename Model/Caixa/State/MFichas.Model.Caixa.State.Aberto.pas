@@ -1,0 +1,72 @@
+unit MFichas.Model.Caixa.State.Aberto;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Caixa.Interfaces;
+
+type
+  TModelCaixaStateAberto = class(TInterfacedObject, iModelCaixaMetodos)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelCaixaMetodos;
+    function Abrir     : iModelCaixaMetodosAbrir;
+    function Fechar    : iModelCaixaMetodosFechar;
+    function Suprimento: iModelCaixaMetodosSuprimento;
+    function Sangria   : iModelCaixaMetodosSangria;
+    function &End      : iModelCaixa;
+  end;
+
+implementation
+
+{ TModelCaixaStateAberto }
+
+function TModelCaixaStateAberto.Abrir: iModelCaixaMetodosAbrir;
+begin
+  raise Exception.Create(
+    'Já existe um caixa aberto.' + sLineBreak +
+    'Feche-o para prosseguir com a nova abertura.'
+  );
+end;
+
+function TModelCaixaStateAberto.&End: iModelCaixa;
+begin
+
+end;
+
+constructor TModelCaixaStateAberto.Create;
+begin
+
+end;
+
+destructor TModelCaixaStateAberto.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelCaixaStateAberto.Fechar: iModelCaixaMetodosFechar;
+begin
+
+end;
+
+class function TModelCaixaStateAberto.New: iModelCaixaMetodos;
+begin
+  Result := Self.Create;
+end;
+
+function TModelCaixaStateAberto.Sangria: iModelCaixaMetodosSangria;
+begin
+
+end;
+
+function TModelCaixaStateAberto.Suprimento: iModelCaixaMetodosSuprimento;
+begin
+
+end;
+
+end.

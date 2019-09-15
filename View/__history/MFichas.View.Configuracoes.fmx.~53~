@@ -1,0 +1,614 @@
+object ConfiguracoesView: TConfiguracoesView
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 320
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
+  DesignerMasterStyle = 3
+  object LayoutPrincipal: TLayout
+    Align = Contents
+    Size.Width = 320.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object TabControlPrincipal: TTabControl
+      Align = Contents
+      Size.Width = 320.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabHeight = 49.000000000000000000
+      TabIndex = 0
+      TabOrder = 0
+      TabPosition = PlatformDefault
+      Sizes = (
+        320s
+        431s)
+      object TabItemListarConfiguracoes: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 320.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'Listar'
+        ExplicitSize.cx = 106.000000000000000000
+        ExplicitSize.cy = 49.000000000000000000
+        object RectangleListar: TRectangle
+          Align = Contents
+          Size.Width = 320.000000000000000000
+          Size.Height = 431.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          object ToolBarListar: TToolBar
+            Size.Width = 320.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            TintColor = xFFE0E0E0
+            object LabelToolBarListar: TLabel
+              Align = Contents
+              StyledSettings = [Style]
+              Size.Width = 320.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Family = 'Segoe UI Historic'
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.HorzAlign = Center
+              Text = 'Configura'#231#245'es'
+            end
+            object ButtonBackListar: TButton
+              Align = Left
+              IconTintColor = xFF5C5C5C
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'backtoolbutton'
+              TabOrder = 0
+              OnClick = ButtonBackListarClick
+            end
+          end
+          object ListBox1: TListBox
+            Align = Client
+            Size.Width = 320.000000000000000000
+            Size.Height = 336.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            DisableFocusEffect = True
+            DefaultItemStyles.ItemStyle = ''
+            DefaultItemStyles.GroupHeaderStyle = ''
+            DefaultItemStyles.GroupFooterStyle = ''
+            Viewport.Width = 315.000000000000000000
+            Viewport.Height = 336.000000000000000000
+            object ListBoxGroupHeaderEmpresa: TListBoxGroupHeader
+              Size.Width = 315.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = 'Dados da Empresa'
+            end
+            object ListBoxItemEmpresa: TListBoxItem
+              Selectable = False
+              TextSettings.Font.Size = 16.000000000000000000
+              StyledSettings = [Family, Style, FontColor, Other]
+              Position.Y = 30.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 131.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 4
+              object Layout1: TLayout
+                Align = Top
+                Size.Width = 315.000000000000000000
+                Size.Height = 73.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                object Layout2: TLayout
+                  Align = Client
+                  Size.Width = 315.000000000000000000
+                  Size.Height = 73.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object Label1: TLabel
+                    Align = Top
+                    AutoSize = True
+                    StyledSettings = [Style, FontColor]
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 5.000000000000000000
+                    Position.X = 10.000000000000000000
+                    Position.Y = 5.000000000000000000
+                    Size.Width = 305.000000000000000000
+                    Size.Height = 22.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Segoe UI Historic'
+                    TextSettings.Font.Size = 16.000000000000000000
+                    TextSettings.VertAlign = Leading
+                    Text = 'Nome da Empresa:'
+                  end
+                  object EditNomeDaEmpresa: TEdit
+                    Touch.InteractiveGestures = [LongTap, DoubleTap]
+                    Align = Top
+                    TabOrder = 1
+                    Position.X = 10.000000000000000000
+                    Position.Y = 32.000000000000000000
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 5.000000000000000000
+                    Margins.Right = 10.000000000000000000
+                    Size.Width = 295.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    OnChangeTracking = EditNomeDaEmpresaChangeTracking
+                  end
+                end
+              end
+              object Layout4: TLayout
+                Align = Top
+                Position.Y = 73.000000000000000000
+                Size.Width = 315.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                Visible = False
+                TabOrder = 0
+                object Layout5: TLayout
+                  Align = Client
+                  Size.Width = 255.000000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 1
+                  object Label2: TLabel
+                    Align = Top
+                    AutoSize = True
+                    StyledSettings = [Style, FontColor]
+                    Margins.Left = 10.000000000000000000
+                    Margins.Top = 5.000000000000000000
+                    Position.X = 10.000000000000000000
+                    Position.Y = 5.000000000000000000
+                    Size.Width = 245.000000000000000000
+                    Size.Height = 43.000000000000000000
+                    Size.PlatformDefault = False
+                    TextSettings.Font.Family = 'Segoe UI Historic'
+                    TextSettings.Font.Size = 16.000000000000000000
+                    TextSettings.VertAlign = Leading
+                    Text = 'Selecione uma imagem ao lado com as dimens'#245'es de 50x50:'
+                  end
+                end
+                object Layout6: TLayout
+                  Align = Right
+                  Margins.Right = 10.000000000000000000
+                  Position.X = 255.000000000000000000
+                  Size.Width = 50.000000000000000000
+                  Size.Height = 50.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  object ImageEmpresa: TImage
+                    MultiResBitmap.Height = 64
+                    MultiResBitmap.Width = 64
+                    MultiResBitmap = <
+                      item
+                        Width = 64
+                        Height = 64
+                        PNG = {
+                          89504E470D0A1A0A0000000D4948445200000040000000400806000000AA6971
+                          DE000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                          063049444154785EEDD95B6C14551C06F073CECC6CF7D61B97D21B6DA94891D0
+                          522D62A4B5D57251918BA2F142308A516210D21813103431F862F0C184071FF0
+                          418D1A4DC40778E252B057A8D4623042B9B574DBD202BD52BADB99BDCC399E29
+                          FFA08D6D77BB9D995DE2FE5E3AE76BD3CC7C3B7BCE995D141313131313210C21
+                          0C871143E06744549795092D1BCA77C23022225A800623BCAF7543F9DB30345D
+                          C40BD0C8B27AA065DDCA8D303455541460B389047BFD3FB5AC7BAA1C22D34445
+                          01A36CA205ABE470EBDA158F42628AE8294023212752BD47DAD6AE5E0889E1A2
+                          AB008D256E26C56A65EBDA955990182AFA0AD01094490576FCCA4BCFCC86C430
+                          D15900C74F2C4FF0FA8F5C5CBF3C1E2243446D01A3082AB260DBA1B6B2322B24
+                          BA8BEE02EE2AA749E28F556565228C75753F14A0792133493860C4B3C3FD5200
+                          3F51FC966B43F93E18EA46B74619E3E7583DB5425DD5D9223D375F866150EDD7
+                          92ABCAFFFA45D7DDA22E0568174F4F67ECF7CBFE7C95B2328883E257AE0E7D59
+                          20C070525DD713EA067AE2973FDFF99DAE73C1B4DF02ACA948A2A7D2BF27186D
+                          8FB34B658285D4F30BA3F06B5DF4DC7434F08B7F0286BA9A5601AC29CD4E7DDD
+                          8708C19B20427116B1C421894DBC041F44D3D2DF6F3BEBEA4E32ECF920EC0258
+                          557692AA90E304913510DD638D23CB12E2483345B207A2B0B8EF48E7BBDB672C
+                          B22164C812A809AB005A9395A64ADE1A81A06288FE4392C442ABD5DEC9278841
+                          88A664D82DB5B45D9A3D971FF2EB37CE940B607559B9AA14A817885000D18444
+                          515A28D9A5213ED5DE802824B2075F775D4E4940224E84C830532A80366414F8
+                          70E09488702E44414902C911AD02A298B6413429D9CF7A5B2FA7325E5A0A4486
+                          0AB9007A3AADD8CB0235168253210A994510D2442424F1C34B7793F1B9FD813B
+                          572FA4DFE6ABAA76EB9B22A402687DC61A45F6565A91A85D4458AC0E29994996
+                          2C8CF13988C6F050ACB45F98DB8E2979102253042D809ECEDCA41074D8C64114
+                          36471CB233912DE2BBAF468846C91E597535A79CA794E443649A490BE01B9CF7
+                          1499FDA0E732648FB358F89DB09408B85E1BF35D24EA68CF3E437DE2D2D13F30
+                          D9B85B617E52983564EC5610FA1422DDF1EB4682ECABADDAB19AC81E4B094223
+                          F7CE6504D9EF1DDBC79EA3BAFFCDAFC3FA6CA0662F0EC0E118E31610B6AA4FC4
+                          CCCE0E3F8C82CA99E1AE63273F67F694D9A5FA9EC8588CB10F2AF7C47F01C331
+                          A6B40CEA694EFC48C373B9AEE5D4AF947A7ABA4F8D281E157EA51B5991557EA7
+                          6D99E8E235112920D9EAFFFDF5C25B8F137CF775677EB5980D0E9D1D5114EF68
+                          A00399FF2FBBD5FE62E56EE7B7108DCBF4021C82FAE79647AE3C4CB0360BFC83
+                          52755960A0E792AA52374461A30A1AE673EDD3C7763B0E433421530BB0107A71
+                          F392CE05A2681B7755C10C2F71DFE8EEA20AED8768CAF84CD72B48E8C9131F25
+                          D4403429D30A10096BDB5AD8929EE8A493EE27F89D9137D4DFE5F6FA7DDD1085
+                          2E403B30534B8E7DECFC0392A04C29400DB01B6F147638ED4E31A4871B7E7B64
+                          FB7A6F11AF4FB9065150FC0DD54C24A1F8E49EC42B1085C4F00230F20FBCB3AC
+                          3D30D3A94EED5B1E86523DBDBDC90165E4022413A28C3552A6961EFDD0711DA2
+                          90195A00E613DA2B05BD03B39C34AC871B892F18725FDF3CAFC73DE12D4D19AA
+                          F47B4756F0573EAC79C3B00264E4F3AECFBFE5CA4A52E643141E8CEDBE81C1C5
+                          3EB7A701927F3B283AECEB6AF6CE097BE530A800996E5C30743E6F96BC1882E9
+                          21C8E2BDD9F59877E8762D247CD9645F253EE078ED680599D6DEC190024AB2E5
+                          C6FCD4E12218EAC366233EF770A977B0BF8A4F109F9DD8E37CF7E0CB78DABB47
+                          5DB7E0454D5BA5F4BEBE5F572DECE70F37C1C9B2ACEE7AA8D1B00F3C43A1EB1D
+                          D054F45560555EDF6F30BC2FE85A00DFDAB31D39B53B19A2DF4014F5749F03B4
+                          1206B2C956FE3E0DBA0F8F06864C827B714D209EE157790921EDC723C9900234
+                          5BE6D528CCA7AC672A0A795F1E098615A0A958D0784762BE67F9B6F62A4451C7
+                          D00234DBE637F41046562195764114550C2F40B33DB7AA9D096C35F2A30188A2
+                          862905682A72EA9B5501AF4101DFB4BE31D69B690568DECFAD3EC388B85146FC
+                          5E8812A616A0A9C8AD3B6EC56CB32C8F7E351071A617A0A9C8AEFDD96E45DB60
+                          F8FFB5DF55BA0B0E6362626262624C87D0DF8D3522F9C8138747000000004945
+                          4E44AE426082}
+                        FileName = 
+                          'C:\PROJETOS\MaykoFichas\Images\iconfinder_11_photo_google_galler' +
+                          'y_image_picture_data_suit_services_2109139.png'
+                      end>
+                    Align = Center
+                  end
+                  object Button1: TButton
+                    Action = TakePhotoFromLibraryAction
+                    Align = Contents
+                    Enabled = True
+                    ImageIndex = -1
+                    Opacity = 0.000000000000000000
+                    Size.Width = 50.000000000000000000
+                    Size.Height = 50.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 3
+                    Visible = True
+                  end
+                end
+              end
+            end
+            object ListBoxGroupHeaderPermissoes: TListBoxGroupHeader
+              Position.Y = 161.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              Text = 'Permiss'#245'es do Usu'#225'rio'
+            end
+            object ListBoxItemPermissoes: TListBoxItem
+              Selectable = False
+              TextSettings.Font.Size = 16.000000000000000000
+              StyledSettings = [Family, Style, FontColor, Other]
+              Position.Y = 191.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 346.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 5
+              object CheckBoxAbrirCaixa: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 5.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 5.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 9
+                Text = 'Abrir Caixa'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxExcluirProdutos: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 311.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 8
+                Text = 'Excluir Produtos P'#243's Impress'#227'o'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxAcessarConfiguracoes: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 277.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 7
+                Text = 'Acessar Configura'#231#245'es'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxAcessarRelatorios: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 243.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 6
+                Text = 'Acessar Relat'#243'rios'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxCadastrarUsuarios: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 209.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 5
+                Text = 'Cadastrar Usu'#225'rios'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxCadastrarGrupos: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 175.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 4
+                Text = 'Cadastrar Grupos'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxCadastrarProdutos: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 141.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 3
+                Text = 'Cadastrar Produtos'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxSangriaCaixa: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 107.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 2
+                Text = 'Sangria Caixa'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxSuprimentoCaixa: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 73.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                Text = 'Suprimento Caixa'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+              object CheckBoxFecharCaixa: TCheckBox
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 15.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 39.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                Text = 'Fechar Caixa'
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+              end
+            end
+            object ListBoxGroupHeaderImpressora: TListBoxGroupHeader
+              Position.Y = 537.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              Text = 'Impressora Bluetooth'
+            end
+            object ListBoxItemImpressora: TListBoxItem
+              Selectable = False
+              TextSettings.Font.Size = 16.000000000000000000
+              StyledSettings = [Family, Style, FontColor, Other]
+              Position.Y = 567.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 74.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 6
+              object Label3: TLabel
+                Align = Top
+                StyledSettings = [Style, FontColor]
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 5.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 5.000000000000000000
+                Size.Width = 305.000000000000000000
+                Size.Height = 22.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Family = 'Segoe UI Historic'
+                TextSettings.Font.Size = 16.000000000000000000
+                TextSettings.VertAlign = Leading
+                Text = 'Selecione uma impressora Bluetooth:'
+              end
+              object ComboBoxImpressora: TComboBox
+                Align = Top
+                Margins.Left = 10.000000000000000000
+                Margins.Top = 5.000000000000000000
+                Margins.Right = 10.000000000000000000
+                Position.X = 10.000000000000000000
+                Position.Y = 32.000000000000000000
+                Size.Width = 295.000000000000000000
+                Size.Height = 32.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                OnClick = ComboBoxImpressoraClick
+              end
+            end
+            object ListBoxGroupHeaderTermino: TListBoxGroupHeader
+              StyledSettings = [Family, Size, Style, FontColor]
+              Position.Y = 641.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              Text = 'T'#233'rmino da Sess'#227'o'
+            end
+            object ListBoxItemTermino: TListBoxItem
+              Selectable = False
+              TextSettings.Font.Size = 16.000000000000000000
+              StyledSettings = [Family, Style, FontColor, Other]
+              Position.Y = 671.000000000000000000
+              Size.Width = 315.000000000000000000
+              Size.Height = 66.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 7
+              object RoundRectEncerrarSessao: TRoundRect
+                Align = Center
+                Fill.Color = claWhite
+                Size.Width = 157.000000000000000000
+                Size.Height = 35.000000000000000000
+                Size.PlatformDefault = False
+                Stroke.Color = claTomato
+                Stroke.Thickness = 2.000000000000000000
+                OnClick = RoundRectEncerrarSessaoClick
+                object LabelBotaoEncerrarSessao: TLabel
+                  Align = Client
+                  ClipChildren = True
+                  StyledSettings = [Family]
+                  Margins.Left = 8.000000000000000000
+                  Margins.Top = 8.000000000000000000
+                  Margins.Right = 8.000000000000000000
+                  Margins.Bottom = 8.000000000000000000
+                  Size.Width = 141.000000000000000000
+                  Size.Height = 19.000000000000000000
+                  Size.PlatformDefault = False
+                  TextSettings.Font.Size = 14.000000000000000000
+                  TextSettings.Font.StyleExt = {00070000000000000004000000}
+                  TextSettings.FontColor = claTomato
+                  TextSettings.HorzAlign = Center
+                  Text = 'Encerrar Sess'#227'o'
+                end
+              end
+            end
+          end
+          object LayoutPagamentoBottom: TLayout
+            Align = Bottom
+            Position.Y = 384.000000000000000000
+            Size.Width = 320.000000000000000000
+            Size.Height = 47.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            object RoundRectSalvarAlteracoes: TRoundRect
+              Align = Center
+              Size.Width = 157.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Color = xFF5C5C5C
+              Stroke.Thickness = 2.000000000000000000
+              OnClick = RoundRectSalvarAlteracoesClick
+              object LabelBotaoSalvarAlteracoes: TLabel
+                Align = Client
+                ClipChildren = True
+                StyledSettings = [Family]
+                Margins.Left = 8.000000000000000000
+                Margins.Top = 8.000000000000000000
+                Margins.Right = 8.000000000000000000
+                Margins.Bottom = 8.000000000000000000
+                Size.Width = 141.000000000000000000
+                Size.Height = 19.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFF5C5C5C
+                TextSettings.HorzAlign = Center
+                Text = 'Salvar Altera'#231#245'es'
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  object ActionList: TActionList
+    Left = 272
+    Top = 137
+    object TakePhotoFromLibraryAction: TTakePhotoFromLibraryAction
+      Category = 'Media Library'
+      MaxHeight = 50
+      MaxWidth = 50
+      OnDidFinishTaking = TakePhotoFromLibraryActionDidFinishTaking
+    end
+  end
+  object FDMemTableEmpresa: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 272
+    Top = 216
+  end
+  object FDMemTableConfiguracao: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 272
+    Top = 272
+  end
+end

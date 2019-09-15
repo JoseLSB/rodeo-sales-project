@@ -1,0 +1,25 @@
+unit MFichas.Controller.Caixa.Interfaces;
+
+interface
+
+type
+  iControllerCaixa        = interface;
+  iControllerCaixaMetodos = interface;
+
+  iControllerCaixa = interface
+    ['{6818CA15-04C7-441C-B2F4-E06C2DD42533}']
+    function Metodos: iControllerCaixaMetodos;
+  end;
+
+  iControllerCaixaMetodos = interface
+    ['{7772AD36-85CB-434E-800E-F6B358976BD8}']
+    function AbrirCaixa : iControllerCaixaMetodos;
+    function FecharCaixa: iControllerCaixaMetodos;
+    function Suprimento : iControllerCaixaMetodos;
+    function Sangria    : iControllerCaixaMetodos;
+    function &End       : iControllerCaixa;
+  end;
+
+implementation
+
+end.

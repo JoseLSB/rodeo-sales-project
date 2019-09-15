@@ -1,0 +1,61 @@
+unit MFichas.Model.State.Finalizar;
+
+interface
+
+uses
+  MFichas.Model.Venda.Interfaces;
+
+type
+  TModelStateFinalizar = class(TInterfacedObject, iModelVendaMetodos)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelVendaMetodos;
+    function Abrir    : iModelVendaMetodosAbrir;
+    function Pagar    : iModelVendaMetodosPagar;
+    function Finalizar: iModelVendaMetodosFinalizar;
+  end;
+
+implementation
+
+{ TModelStateFinalizar }
+
+function TModelStateFinalizar.Abrir: iModelVendaMetodosAbrir;
+begin
+
+end;
+
+constructor TModelStateFinalizar.Create;
+begin
+
+end;
+
+destructor TModelStateFinalizar.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelStateFinalizar.Finalizar: iModelVendaMetodosFinalizar;
+begin
+  raise Exception.Create(
+    'Não é possível usar o método de finalização de venda.' + sLineBreak +
+    'Não existe nenhuma venda aberta para ser finalizada.'
+  );
+end;
+
+class function TModelStateFinalizar.New: iModelVendaMetodos;
+begin
+  Result := Self.Create;
+end;
+
+function TModelStateFinalizar.Pagar: iModelVendaMetodosPagar;
+begin
+  raise Exception.Create(
+    'Não é possível adicionar um pagamento.' + sLineBreak +
+    'Não existe nenhuma venda em aberto.'
+  );
+end;
+
+end.

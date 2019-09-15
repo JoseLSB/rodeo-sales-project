@@ -1,0 +1,37 @@
+unit MFichas.Model.Empresa;
+
+interface
+
+uses
+  MFichas.Model.Empresa.Interfaces;
+
+type
+  TModelEmpresa = class(TInterfacedObject, iModelEmpresa, iModelEmpresaMetodos)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelEmpresa;
+  end;
+
+implementation
+
+{ TModelEmpresa }
+
+constructor TModelEmpresa.Create;
+begin
+
+end;
+
+destructor TModelEmpresa.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelEmpresa.New: iModelEmpresa;
+begin
+  Result := Self.Create;
+end;
+
+end.

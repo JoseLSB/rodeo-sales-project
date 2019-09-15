@@ -1,0 +1,56 @@
+unit MFichas.Model.Pagamento.Formas.Debito;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Pagamento.Interfaces;
+
+type
+  TModelPagamentoFormasDebito = class(TInterfacedObject, iModelPagamentoMetodos)
+  private
+    [weak]
+    FParent: iModelPagamento;
+    constructor Create(AParent: iModelPagamento);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPagamento): iModelPagamentoMetodos;
+    function Processar: iModelPagamentoMetodosProcessar;
+    function Estornar : iModelPagamentoMetodosEstornar;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasDebito }
+
+constructor TModelPagamentoFormasDebito.Create(AParent: iModelPagamento);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamentoFormasDebito.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPagamentoFormasDebito.Estornar: iModelPagamentoMetodosEstornar;
+begin
+  raise Exception.Create(
+    'Este método de pagamento ainda não está validado no sistema.' + sLineBreak +
+    'Por favor, utilize outro método.'
+  );
+end;
+
+class function TModelPagamentoFormasDebito.New(AParent: iModelPagamento): iModelPagamentoMetodos;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPagamentoFormasDebito.Processar: iModelPagamentoMetodosProcessar;
+begin
+
+end;
+
+end.

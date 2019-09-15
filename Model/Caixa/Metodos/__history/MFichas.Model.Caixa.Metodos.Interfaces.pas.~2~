@@ -1,0 +1,16 @@
+unit MFichas.Model.Caixa.Metodos.Interfaces;
+
+interface
+
+type
+  iModelCaixaMetodosFactory = interface
+    ['{430FF626-FC73-4CEE-BA4F-E98DEF26218B}']
+    function CaixaMetodoAbrir: iModelCaixaMetodosFactory;
+    function CaixaMetodoFechar: iModelCaixaMetodosFactory;
+    function CaixaMetodoSuprimento: iModelCaixaMetodosFactory;
+    function CaixaMetodoSangria: iModelCaixaMetodosFactory;
+  end;
+
+implementation
+
+end.

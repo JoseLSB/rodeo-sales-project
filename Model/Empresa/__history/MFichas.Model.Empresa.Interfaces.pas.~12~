@@ -1,0 +1,58 @@
+unit MFichas.Model.Empresa.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections,
+
+  MFichas.Model.Entidade.EMPRESA,
+
+  ORMBR.Container.ObjectSet.Interfaces,
+  ORMBR.Container.DataSet.interfaces,
+
+  FireDAC.Comp.Client;
+
+type
+  iModelEmpresa                   = interface;
+  iModelEmpresaMetodos            = interface;
+  iModelEmpresaMetodosEditarView  = interface;
+  iModelEmpresaMetodosBuscarModel = interface;
+  iModelEmpresaMetodosBuscarView  = interface;
+
+  iModelEmpresa = interface
+    ['{CCD68DC9-037A-4D2E-A58C-E4CEB5349B60}']
+    function Metodos   : iModelEmpresaMetodos;
+    function DAO       : iContainerObjectSet<TEMPRESA>;
+    function DAODataSet: iContainerDataSet<TEMPRESA>;
+  end;
+
+  iModelEmpresaMetodos = interface
+    ['{F4145C48-8209-43E8-A388-C0359E62558F}']
+    function BuscarModel: iModelEmpresaMetodosBuscarModel;
+    function EditarView : iModelEmpresaMetodosEditarView;
+    function BuscarView : iModelEmpresaMetodosBuscarView;
+  end;
+
+  iModelEmpresaMetodosBuscarModel = interface
+    ['{070A5592-6D5D-41CC-884F-2757C8E7C9FE}']
+    function NomeDaEmpresa: String;
+    function &End         : iModelEmpresaMetodos;
+  end;
+
+  iModelEmpresaMetodosEditarView = interface
+    ['{3FD6FD21-EF3A-4D8F-9785-7FCC7B097311}']
+    function Descricao(ANomeEmpresa: String): iModelEmpresaMetodosEditarView;
+    function LogoTipo(ALogoEmpresa: String) : iModelEmpresaMetodosEditarView;
+    function &End                           : iModelEmpresaMetodos;
+  end;
+
+  iModelEmpresaMetodosBuscarView = interface
+    ['{09CFFA6C-2D8F-4F2E-8D5F-5951BA2209F4}']
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelEmpresaMetodosBuscarView;
+    function BuscarEmpresa                       : iModelEmpresaMetodosBuscarView;
+    function &End                                : iModelEmpresaMetodos;
+  end;
+
+implementation
+
+end.

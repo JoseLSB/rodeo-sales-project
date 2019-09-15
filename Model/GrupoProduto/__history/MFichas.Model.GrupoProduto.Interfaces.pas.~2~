@@ -1,0 +1,37 @@
+unit MFichas.Model.GrupoProduto.Interfaces;
+
+interface
+
+type
+  iModelGrupo                 = interface;
+  iModelGrupoMetodos          = interface;
+  iModelGrupoMetodosCadastrar = interface;
+  iModelGrupoMetodosBuscar    = interface;
+
+  iModelGrupo = interface
+    ['{6AF44436-FC7C-4A59-930B-BD8D2A38AC15}']
+    function Metodos: iModelGrupoMetodos;
+  end;
+
+  iModelGrupoMetodos = interface
+    ['{71758538-4D50-4DF8-964D-454570EE0549}']
+    function Cadastrar: iModelGrupoMetodosCadastrar;
+    function Buscar   : iModelGrupoMetodosBuscar;
+    function &End     : iModelGrupo;
+  end;
+
+  iModelGrupoMetodosCadastrar = interface
+    ['{1E182DF8-3C14-47E9-B219-C7A706B2D951}']
+    function Descricao(ADescricao: String): iModelGrupoMetodosCadastrar;
+    function &End                         : iModelGrupoMetodos;
+  end;
+
+  iModelGrupoMetodosBuscar = interface
+    ['{D4C50BEF-1027-4A5E-A57A-30265A9DEC4C}']
+    function BuscarTodos: iModelGrupoMetodosBuscar;
+    function &End       : iModelGrupoMetodos;
+  end;
+
+implementation
+
+end.

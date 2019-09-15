@@ -1,0 +1,60 @@
+unit MFichas.Model.Venda.State.Pagar;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Venda.Interfaces;
+
+type
+  TModelStatePagar = class(TInterfacedObject, iModelVendaMetodos)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelVendaMetodos;
+    function Abrir    : iModelVendaMetodosAbrir;
+    function Pagar    : iModelVendaMetodosPagar;
+    function Finalizar: iModelVendaMetodosFinalizar;
+  end;
+
+implementation
+
+{ TModelStatePagar }
+
+function TModelStatePagar.Abrir: iModelVendaMetodosAbrir;
+begin
+  raise Exception.Create(
+    'Não é possível abrir uma nova venda sem finalizar a venda atual.' + sLineBreak +
+    'Insira uma forma de pagamento e finalize a venda atual.'
+  );
+end;
+
+constructor TModelStatePagar.Create;
+begin
+
+end;
+
+destructor TModelStatePagar.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelStatePagar.Finalizar: iModelVendaMetodosFinalizar;
+begin
+
+end;
+
+class function TModelStatePagar.New: iModelVendaMetodos;
+begin
+  Result := Self.Create;
+end;
+
+function TModelStatePagar.Pagar: iModelVendaMetodosPagar;
+begin
+
+end;
+
+end.

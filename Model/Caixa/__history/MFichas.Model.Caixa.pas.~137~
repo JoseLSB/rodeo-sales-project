@@ -1,0 +1,257 @@
+unit MFichas.Model.Caixa;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+  System.TypInfo,
+
+  MFichas.Model.Entidade.CAIXA,
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Caixa.Metodos.Factory,
+  MFichas.Model.Caixa.State.Factory,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Impressao,
+  MFichas.Model.Impressao.Interfaces,
+
+  MFichas.Controller.Types,
+
+  ORMBR.Container.ObjectSet,
+  ORMBR.Container.ObjectSet.Interfaces;
+
+type
+  TModelCaixa = class(TInterfacedObject, iModelCaixa, iModelCaixaMetodos)
+  private
+    FState     : iModelCaixaMetodos;
+    FEntidade  : TCAIXA;
+    FConn      : iModelConexaoSQL;
+    FDAO       : iContainerObjectSet<TCAIXA>;
+    FListaCaixa: TObjectList<TCaixa>;
+    FImpressao : iModelImpressao;
+    procedure Imprimir;
+    class var FInstance: iModelCaixa;
+    constructor Create;
+    procedure RecuperarStatusCaixa;
+    procedure InstanciarUmNovoCaixa;
+    procedure FecharCaixaDeixadoAberto;
+    procedure AtribuirStatusAoCaixa;
+    procedure LimparEntidade;
+    procedure ClonarObjeto;
+    procedure DestruirListaEEntidade;
+    procedure DestruirListaDeCaixas;
+  public
+    destructor Destroy; override;
+    class function New: iModelCaixa;
+    function SetState(AState: iModelCaixaMetodos): iModelCaixa;
+    function Metodos                             : iModelCaixaMetodos;
+    function Entidade: TCAIXA; overload;
+    function Entidade(ACaixa: TCAIXA): iModelCaixa; overload;
+    function DAO: iContainerObjectSet<TCAIXA>;
+    //METODOS
+    function Abrir     : iModelCaixaMetodosAbrir;
+    function Fechar    : iModelCaixaMetodosFechar;
+    function Suprimento: iModelCaixaMetodosSuprimento;
+    function Sangria   : iModelCaixaMetodosSangria;
+    function &End      : iModelCaixa;
+  end;
+
+implementation
+
+{ TModelCaixa }
+
+function TModelCaixa.Abrir: iModelCaixaMetodosAbrir;
+begin
+  RecuperarStatusCaixa;
+  FState.Abrir;
+  Result := TModelCaixaMetodosFactory.New.CaixaMetodoAbrir(Self);
+end;
+
+function TModelCaixa.&End: iModelCaixa;
+begin
+  Result := Self;
+end;
+
+procedure TModelCaixa.Imprimir;
+begin
+  FImpressao
+    .Caixa
+      .Fechamento
+        .TituloDaImpressao('FECHAMENTO DE CAIXA (DEIXADO ABERTO)')
+        .CodigoDoCaixa(FEntidade.GUUID)
+        .ExecutarImpressao
+      .&End
+    .&End;
+end;
+
+procedure TModelCaixa.FecharCaixaDeixadoAberto;
+begin
+  ClonarObjeto;
+
+  Imprimir;
+
+  Sleep(3000);
+
+  FDAO.Modify(FEntidade);
+  FEntidade.STATUS         := Integer(scFechado);
+  FEntidade.DATAFECHAMENTO := Now;
+  FDAO.Update(FEntidade);
+
+  LimparEntidade;
+end;
+
+procedure TModelCaixa.InstanciarUmNovoCaixa;
+begin
+  if not Assigned(FEntidade) then
+    FEntidade := TCAIXA.Create;
+end;
+
+function TModelCaixa.Entidade: TCAIXA;
+begin
+  Result := FEntidade;
+end;
+
+function TModelCaixa.Entidade(ACaixa: TCAIXA): iModelCaixa;
+begin
+  Result    := Self;
+  FEntidade := ACaixa;
+end;
+
+procedure TModelCaixa.ClonarObjeto;
+begin
+  if not Assigned(FEntidade) then
+    FEntidade                 := TCAIXA.Create;
+  FEntidade.GUUID           := FListaCaixa.Items[0].GUUID;
+  FEntidade.OPERADOR        := FListaCaixa.Items[0].OPERADOR;
+  FEntidade.STATUS          := FListaCaixa.Items[0].STATUS;
+  FEntidade.DATAABERTURA    := FListaCaixa.Items[0].DATAABERTURA;
+  FEntidade.DATAFECHAMENTO  := FListaCaixa.Items[0].DATAFECHAMENTO;
+  FEntidade.DATAALTERACAO   := FListaCaixa.Items[0].DATAALTERACAO;
+  FEntidade.VALORABERTURA   := FListaCaixa.Items[0].VALORABERTURA;
+  FEntidade.VALORFECHAMENTO := FListaCaixa.Items[0].VALORFECHAMENTO;
+end;
+
+constructor TModelCaixa.Create;
+begin
+  //TODO: VERIFICAR STATUS DO ULTIMO REGISTRO DE CAIXA NO BANCO DE DADOS.
+  FConn       := TModelConexaoFactory.New.ConexaoSQL;
+  FDAO        := TContainerObjectSet<TCAIXA>.Create(FConn.Conn);
+  FImpressao  := TModelImpressao.New;
+end;
+
+function TModelCaixa.DAO: iContainerObjectSet<TCAIXA>;
+begin
+  Result := FDAO;
+end;
+
+destructor TModelCaixa.Destroy;
+begin
+  DestruirListaEEntidade;
+  inherited;
+end;
+
+procedure TModelCaixa.DestruirListaDeCaixas;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FListaCaixa);
+  {$ELSE}
+  FListaCaixa.Free;
+  FListaCaixa.DisposeOf;
+  {$ENDIF}
+end;
+
+procedure TModelCaixa.DestruirListaEEntidade;
+begin
+  {$IFDEF MSWINDOWS}
+  if Assigned(FListaCaixa) then
+    FreeAndNil(FListaCaixa);
+  if Assigned(FEntidade) then
+    FreeAndNil(FEntidade);
+  {$ELSE}
+  if Assigned(FEntidade) then
+  begin
+    FEntidade.Free;
+    FEntidade.DisposeOf;
+  end;
+  if Assigned(FListaCaixa) then
+  begin
+    FListaCaixa.Free;
+    FListaCaixa.DisposeOf;
+  end;
+  {$ENDIF}
+end;
+
+function TModelCaixa.Fechar: iModelCaixaMetodosFechar;
+begin
+  FState.Fechar;
+  Result := TModelCaixaMetodosFactory.New.CaixaMetodoFechar(Self);
+end;
+
+procedure TModelCaixa.LimparEntidade;
+begin
+  FreeAndNil(FEntidade);
+  if not Assigned(FEntidade) then
+    FEntidade := TCAIXA.Create;
+//  FEntidade.CleanupInstance;
+//  FEntidade.DATAABERTURA   := StrToDate('30/12/1899');
+//  FEntidade.DATAFECHAMENTO := StrToDate('30/12/1899');
+//  FEntidade.DATAALTERACAO  := StrToDate('30/12/1899');
+//  FEntidade.VALORABERTURA  := 0;
+//  FEntidade.OPERACOES.Clear;
+end;
+
+function TModelCaixa.Metodos: iModelCaixaMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelCaixa.New: iModelCaixa;
+begin
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+  Result := FInstance;
+end;
+
+procedure TModelCaixa.RecuperarStatusCaixa;
+begin
+  FListaCaixa := FDAO.FindWhere('STATUS = ' + Integer(scAberto).ToString);
+
+  if FListaCaixa.Count <= 0 then
+    InstanciarUmNovoCaixa
+  else
+    FecharCaixaDeixadoAberto;
+
+  AtribuirStatusAoCaixa;
+  DestruirListaDeCaixas;
+end;
+
+function TModelCaixa.Sangria: iModelCaixaMetodosSangria;
+begin
+  FState.Sangria;
+  Result := TModelCaixaMetodosFactory.New.CaixaMetodoSangria(Self);
+end;
+
+procedure TModelCaixa.AtribuirStatusAoCaixa;
+begin
+  case TTypeStatusCaixa(FEntidade.STATUS) of
+    scFechado:
+      FState := TModelCaixaStateFactory.New.Fechado;
+    scAberto:
+      FState := TModelCaixaStateFactory.New.Aberto;
+  end;
+end;
+
+function TModelCaixa.SetState(AState: iModelCaixaMetodos): iModelCaixa;
+begin
+  Result := Self;
+  FState := AState;
+end;
+
+function TModelCaixa.Suprimento: iModelCaixaMetodosSuprimento;
+begin
+  FState.Suprimento;
+  Result := TModelCaixaMetodosFactory.New.CaixaMetodoSuprimento(Self);
+end;
+
+end.

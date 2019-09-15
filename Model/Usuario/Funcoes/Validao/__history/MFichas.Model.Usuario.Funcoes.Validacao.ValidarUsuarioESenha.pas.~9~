@@ -1,0 +1,74 @@
+unit MFichas.Model.Usuario.Funcoes.Validacao.ValidarUsuarioESenha;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Usuario.Interfaces;
+
+type
+  TModelUsuarioFuncoesValidarUES = class(TInterfacedObject, iModelUsuarioFuncoesValidarUES)
+  private
+    [weak]
+    FParent : iModelUsuarioFuncoes;
+    FUsuario: String;
+    FSenha  : String;
+    FConexao: iModelConexaoSQL;
+    constructor Create(AParent: iModelUsuarioFuncoes);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelUsuarioFuncoes): iModelUsuarioFuncoesValidarUES;
+    function NomeDoUsuario(AValue: String): iModelUsuarioFuncoesValidarUES;
+    function Senha(AValue: String)        : iModelUsuarioFuncoesValidarUES;
+    function &End                         : iModelUsuarioFuncoes;
+  end;
+
+implementation
+
+{ TModelUsuarioFuncoesValidarUES }
+
+function TModelUsuarioFuncoesValidarUES.&End: iModelUsuarioFuncoes;
+const
+  _SQL   = ' SELECT * FROM USUARIO ';
+  _WHERE = ' WHERE LOGIN = ' + QuotedStr(FUsuario) + ' AND ' +
+           '       SENHA = ' + QuotedStr(FSenha);
+begin
+  FConexao.Query.SQL.Text := '';
+  FConexao.Query.SQL.Text := '';
+end;
+
+constructor TModelUsuarioFuncoesValidarUES.Create(AParent: iModelUsuarioFuncoes);
+begin
+  FParent  := AParent;
+  FConexao := TModelConexaoFactory.New.ConexaoSQL;
+end;
+
+destructor TModelUsuarioFuncoesValidarUES.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelUsuarioFuncoesValidarUES.New(AParent: iModelUsuarioFuncoes): iModelUsuarioFuncoesValidarUES;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelUsuarioFuncoesValidarUES.NomeDoUsuario(
+  AValue: String): iModelUsuarioFuncoesValidarUES;
+begin
+  Result   := Self;
+  FUsuario := AValue.ToUpper;
+end;
+
+function TModelUsuarioFuncoesValidarUES.Senha(
+  AValue: String): iModelUsuarioFuncoesValidarUES;
+begin
+  Result := Self;
+  FSenha := AValue;
+end;
+
+end.

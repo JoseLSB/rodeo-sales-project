@@ -1,0 +1,98 @@
+unit MFichas.View.Dialog.ConfirmarProduto;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+
+  FMX.Types,
+  FMX.Graphics,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Dialogs,
+  FMX.StdCtrls,
+  FMX.Edit,
+  FMX.Objects,
+  FMX.Controls.Presentation,
+  FMX.Layouts;
+
+type
+  TFrameConfirmacaoProduto = class(TFrame)
+    LayoutPrincipal: TLayout;
+    RectangleSombra: TRectangle;
+    RectanglePrincipal: TRectangle;
+    LayoutRectangleTop: TLayout;
+    LabelTitulo: TLabel;
+    LayoutRectangleClient: TLayout;
+    LayoutRectangleBottom: TLayout;
+    LayoutDireita: TLayout;
+    RoundRectBotaoConfirmar: TRoundRect;
+    LabelBotaoConfirmar: TLabel;
+    LayoutEsquerda: TLayout;
+    RoundRectBotaoCancelar: TRoundRect;
+    LabelBotaoCancelar: TLabel;
+    Layout1: TLayout;
+    Layout2: TLayout;
+    Layout3: TLayout;
+    Layout4: TLayout;
+    Image1: TImage;
+    Layout5: TLayout;
+    Layout6: TLayout;
+    Image2: TImage;
+    Layout7: TLayout;
+    Layout8: TLayout;
+    EditQuantidade: TEdit;
+    Layout9: TLayout;
+    Label1: TLabel;
+    LabelValorProduto: TLabel;
+    LabelDescricaoProduto: TLabel;
+    procedure Image2Click(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
+  private
+    FValorOriginalDoProduto: Currency;
+    procedure SetValorOriginalDoProduto(const Value: Currency);
+    { Private declarations }
+  public
+    { Public declarations }
+    property ValorOriginalDoProduto: Currency read FValorOriginalDoProduto write SetValorOriginalDoProduto;
+  end;
+
+implementation
+
+{$R *.fmx}
+
+procedure TFrameConfirmacaoProduto.Image1Click(Sender: TObject);
+var
+  LQuantidadeItem: Integer;
+begin
+  LQuantidadeItem        := StrToInt(EditQuantidade.Text);
+  if LQuantidadeItem > 1 then
+  begin
+    LQuantidadeItem      := StrToInt(EditQuantidade.Text) - 1;
+    EditQuantidade.Text  := IntToStr(LQuantidadeItem);
+  end;
+end;
+
+procedure TFrameConfirmacaoProduto.Image2Click(Sender: TObject);
+var
+  LQuantidadeItem: Integer;
+begin
+  LQuantidadeItem        := StrToInt(EditQuantidade.Text);
+  if LQuantidadeItem < 99 then
+  begin
+    LQuantidadeItem      := StrToInt(EditQuantidade.Text) + 1;
+    EditQuantidade.Text  := IntToStr(LQuantidadeItem);
+  end;
+end;
+
+procedure TFrameConfirmacaoProduto.SetValorOriginalDoProduto(
+  const Value: Currency);
+begin
+  FValorOriginalDoProduto := Value;
+end;
+
+end.

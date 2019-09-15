@@ -1,0 +1,32 @@
+unit MFichas.Controller.Constantes;
+
+interface
+
+type
+  TTypeStatusCaixa        = (scFechado, scAberto);
+  TTypeOperacoesCaixa     = (ocSangria, ocSuprimento);
+  TTypeTipoVenda          = (tvCancelamento, tvVenda, tvDevolucao);
+  TTypeStatusVenda        = (svFechada, svAberta, svCancelada, svDevolvida);
+  TTypeTipoPagamento      = (tpDinheiro, tpCartaoDebito, tpCartaoCredito);
+  TTypeStatusPagamento    = (spEstornado, spProcessado);
+  TTypeStatusAtivoInativo = (saiInativo, saiAtivo);
+
+  TTypeChamadaUsuario     = (cuCaixa, cuFiscal, cuGerente);
+
+  TTypeOperacoesSistema   = (
+                              osLogoENomeDaFesta,
+                              osAbrirCaixa,
+                              osFecharCaixa,
+                              osSuprimento,
+                              osSangria,
+                              osCadastrarProdutos,
+                              osCadastrarGrupos,
+                              osCadastrarUsuarios,
+                              osAcessarRelatorios,
+                              osAcessarConfiguracoes,
+                              osExcluirProdutosPosImpressao
+                            );
+
+implementation
+
+end.

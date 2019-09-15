@@ -1,0 +1,39 @@
+unit MFichas.Controller.Venda.Metodos.VenderItem;
+
+interface
+
+uses
+  MFichas.Controller.Venda.Interfaces;
+
+type
+  TControllerVendaMetodosVenderItem = class(TInterfacedObject, iControllerVendaMetodosVenderItem)
+  private
+    [weak]
+    FParent: iControllerVenda;
+    constructor Create(AParent: iControllerVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iControllerVenda): iControllerVendaMetodosVenderItem;
+  end;
+
+implementation
+
+{ TControllerVendaMetodosVenderItem }
+
+constructor TControllerVendaMetodosVenderItem.Create(AParent: iControllerVenda);
+begin
+  FParent := AParent;
+end;
+
+destructor TControllerVendaMetodosVenderItem.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerVendaMetodosVenderItem.New(AParent: iControllerVenda): iControllerVendaMetodosVenderItem;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

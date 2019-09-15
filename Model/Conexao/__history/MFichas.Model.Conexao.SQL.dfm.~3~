@@ -1,0 +1,9 @@
+object DMSQL: TDMSQL
+  OldCreateOrder = False
+  Height = 311
+  Width = 446
+  object FDConnection: TFDConnection
+    Left = 200
+    Top = 120
+  end
+end

@@ -1,0 +1,7 @@
+unit MFichas.Model.Conexao.Factory;
+
+interface
+
+implementation
+
+end.

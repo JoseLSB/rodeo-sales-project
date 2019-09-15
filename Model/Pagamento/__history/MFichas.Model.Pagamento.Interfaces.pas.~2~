@@ -1,0 +1,19 @@
+unit MFichas.Model.Pagamento.Interfaces;
+
+interface
+
+type
+  iModelPagamento        = interface;
+  iModelPagamentoMetodos = interface;
+
+  iModelPagamento = interface
+    ['{ACB3004A-9D8D-4F6F-B6D0-50CC3674C34D}']
+  end;
+
+  iModelPagamentoMetodos = interface
+    ['{9A230FEB-97DC-4F2E-B9B6-3DAFCDE5EE98}']
+  end;
+
+implementation
+
+end.

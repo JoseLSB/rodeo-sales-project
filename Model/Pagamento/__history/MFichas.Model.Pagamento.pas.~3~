@@ -1,0 +1,40 @@
+unit MFichas.Model.Pagamento;
+
+interface
+
+uses
+  MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Pagamento.Interfaces;
+
+type
+  TModelPagamento = class(TInterfacedObject, iModelPagamento)
+  private
+    [weak]
+    FParent: iModelVenda;
+    constructor Create(AParent: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelVenda): iModelPagamento;
+  end;
+
+implementation
+
+{ TModelPagamento }
+
+constructor TModelPagamento.Create(AParent: iModelVenda);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamento.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelPagamento.New(AParent: iModelVenda): iModelPagamento;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

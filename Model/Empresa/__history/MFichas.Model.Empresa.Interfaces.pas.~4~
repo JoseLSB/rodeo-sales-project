@@ -1,0 +1,53 @@
+unit MFichas.Model.Empresa.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections,
+
+  MFichas.Model.Entidade.EMPRESA,
+
+  FireDAC.Comp.Client;
+
+type
+  iModelEmpresa                  = interface;
+  iModelEmpresaMetodos           = interface;
+  iModelEmpresaMetodosEditarView = interface;
+  iModelEmpresaMetodosBuscar     = interface;
+  iModelEmpresaMetodosBuscarView = interface;
+
+  iModelEmpresa = interface
+    ['{CCD68DC9-037A-4D2E-A58C-E4CEB5349B60}']
+    function Metodos: iModelEmpresaMetodos;
+  end;
+
+  iModelEmpresaMetodos = interface
+    ['{F4145C48-8209-43E8-A388-C0359E62558F}']
+    function EditarView: iModelEmpresaMetodosEditarView;
+    function Buscar    : iModelEmpresaMetodosBuscar;
+    function BuscarView: iModelEmpresaMetodosBuscarView;
+  end;
+
+  iModelEmpresaMetodosBuscar = interface
+    ['{070A5592-6D5D-41CC-884F-2757C8E7C9FE}']
+    function BuscarEmpresaAtual: TObjectList<TEMPRESA>;
+    function &End              : iModelEmpresa;
+  end;
+
+  iModelEmpresaMetodosEditarView = interface
+    ['{3FD6FD21-EF3A-4D8F-9785-7FCC7B097311}']
+    function Descricao(ANomeEmpresa: String): iModelEmpresaMetodosEditarView;
+    function LogoTipo(ALogoEmpresa: String) : iModelEmpresaMetodosEditarView;
+    function &End                           : iModelEmpresa;
+  end;
+
+  iModelEmpresaMetodosBuscarView = interface
+    ['{09CFFA6C-2D8F-4F2E-8D5F-5951BA2209F4}']
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelEmpresaMetodosBuscarView;
+    function BuscarEmpresa                       : iModelEmpresaMetodosBuscarView;
+    function &End                                : iModelEmpresa;
+  end;
+
+implementation
+
+end.

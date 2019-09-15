@@ -1,0 +1,7 @@
+unit MFichas.Model.Caixa.State.Interfaces;
+
+interface
+
+implementation
+
+end.

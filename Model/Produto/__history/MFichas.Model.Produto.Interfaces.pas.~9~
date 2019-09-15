@@ -1,0 +1,50 @@
+unit MFichas.Model.Produto.Interfaces;
+
+interface
+
+uses
+  MFichas.Model.Entidade.PRODUTO,
+
+  ORMBR.Container.ObjectSet.Interfaces, FireDAC.Comp.Client;
+
+type
+  iModelProduto                 = interface;
+  iModelProdutoMetodos          = interface;
+  iModelProdutoMetodosCadastrar = interface;
+  iModelProdutoMetodosBuscar    = interface;
+
+  iModelProduto = interface
+    ['{61661537-0B52-412D-ADBF-07AD0CE4B36A}']
+    function Metodos: iModelProdutoMetodos;
+    function Entidade: TPRODUTO; overload;
+    function Entidade(AEntidade: TPRODUTO): iModelProduto; overload;
+    function DAO    : iContainerObjectSet<TPRODUTO>;
+  end;
+
+  iModelProdutoMetodos = interface
+    ['{F0085DB7-902C-4F16-9EE4-FD46FDC51B48}']
+    function Cadastrar: iModelProdutoMetodosCadastrar;
+    function Buscar   : iModelProdutoMetodosBuscar;
+    function &End     : iModelProduto;
+  end;
+
+  iModelProdutoMetodosCadastrar = interface
+    ['{6F017D50-9B06-43DA-8EFB-2C96818DF053}']
+    function Descricao(ADescricao: String): iModelProdutoMetodosCadastrar;
+    function Valor(AValor: Currency)      : iModelProdutoMetodosCadastrar;
+    function Grupo(AGrupo: String)        : iModelProdutoMetodosCadastrar;
+    function &End                         : iModelProdutoMetodos;
+  end;
+
+  iModelProdutoMetodosBuscar = interface
+    ['{53805661-F48B-47DF-9CFF-84DC595B3C01}']
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelProdutoMetodosBuscar;
+    function BuscarTodos                     : iModelProdutoMetodosBuscar;
+    function BuscarPorCodigo(ACodigo: String): iModelProdutoMetodosBuscar;
+    function BuscarPorGrupo(AGrupo: String)  : iModelProdutoMetodosBuscar;
+    function &End                            : iModelProdutoMetodos;
+  end;
+
+implementation
+
+end.

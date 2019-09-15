@@ -1,0 +1,106 @@
+unit MFichas.Model.GrupoProduto;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.GrupoProduto.Interfaces,
+  MFichas.Model.GrupoProduto.Metodos.Buscar,
+  MFichas.Model.GrupoProduto.Metodos.Cadastrar,
+  MFichas.Model.Entidade.GRUPOPRODUTO,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+
+  ORMBR.Container.ObjectSet,
+  ORMBR.Container.ObjectSet.Interfaces,
+  ORMBR.DataSet.FDMemTable,
+  ORMBR.Container.DataSet.Interfaces;
+
+type
+  TModelGrupoProduto = class(TInterfacedObject, iModelGrupoProduto, iModelGrupoProdutoMetodos)
+  private
+    FEntidade    : TGRUPOPRODUTO;
+    FConn        : iModelConexaoSQL;
+    FDAOObjectSet: iContainerObjectSet<TGRUPOPRODUTO>;
+    FDAODataSet  : iContainerDataSet<TGRUPOPRODUTO>;
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelGrupoProduto;
+    function Metodos                           : iModelGrupoProdutoMetodos;
+    function Entidade                          : TGRUPOPRODUTO; overload;
+    function Entidade(AEntidade: TGRUPOPRODUTO): iModelGrupoProduto; overload;
+    function DAO                               : iContainerObjectSet<TGRUPOPRODUTO>;
+    function DAODataSet                        : iContainerDataSet<TGRUPOPRODUTO>;
+    //METODOS
+    function Cadastrar: iModelGrupoProdutoMetodosCadastrar;
+    function Buscar   : iModelGrupoProdutoMetodosBuscar;
+    function &End     : iModelGrupoProduto;
+  end;
+
+implementation
+
+{ TModelGrupoProduto }
+
+function TModelGrupoProduto.Buscar: iModelGrupoProdutoMetodosBuscar;
+begin
+  Result := TModelGrupoMetodosBuscar.New(Self);
+end;
+
+function TModelGrupoProduto.Cadastrar: iModelGrupoProdutoMetodosCadastrar;
+begin
+  Result := TModelGrupoMetodosCadastrar.New(Self);
+end;
+
+function TModelGrupoProduto.&End: iModelGrupoProduto;
+begin
+  Result := Self;
+end;
+
+function TModelGrupoProduto.Entidade: TGRUPOPRODUTO;
+begin
+  Result := FEntidade;
+end;
+
+function TModelGrupoProduto.Entidade(
+  AEntidade: TGRUPOPRODUTO): iModelGrupoProduto;
+begin
+  Result    := Self;
+  FEntidade := AEntidade;
+end;
+
+constructor TModelGrupoProduto.Create;
+begin
+  FEntidade := TGRUPOPRODUTO.Create;
+  FConn     := TModelConexaoFactory.New.ConexaoSQL;
+  FDAOObjectSet      := TContainerObjectSet<TGRUPOPRODUTO>.Create(FConn.Conn, 10);
+end;
+
+function TModelGrupoProduto.DAO: iContainerObjectSet<TGRUPOPRODUTO>;
+begin
+  Result := FDAOObjectSet;
+end;
+
+destructor TModelGrupoProduto.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelGrupoProduto.Metodos: iModelGrupoProdutoMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelGrupoProduto.New: iModelGrupoProduto;
+begin
+  Result := Self.Create;
+end;
+
+end.

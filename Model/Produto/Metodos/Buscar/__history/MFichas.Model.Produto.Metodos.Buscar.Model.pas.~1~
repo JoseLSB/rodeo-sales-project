@@ -1,0 +1,7 @@
+unit MFichas.Model.Produto.Metodos.Buscar.Model;
+
+interface
+
+implementation
+
+end.

@@ -1,0 +1,53 @@
+unit MFichas.Model.Grupo.Metodos.Cadastrar;
+
+interface
+
+uses
+  MFichas.Model.Grupo.Interfaces;
+
+type
+  TModelGrupoMetodosCadastrar = class(TInterfacedObject, iModelGrupoMetodosCadastrar)
+  private
+    [weak]
+    FParent   : iModelGrupo;
+    FDescricao: String;
+    constructor Create(AParent: iModelGrupo);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelGrupo): iModelGrupoMetodosCadastrar;
+    function Descricao(ADescricao: String): iModelGrupoMetodosCadastrar;
+    function &End                         : iModelGrupoMetodos;
+  end;
+
+implementation
+
+{ TModelGrupoMetodosCadastrar }
+
+function TModelGrupoMetodosCadastrar.&End: iModelGrupoMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+constructor TModelGrupoMetodosCadastrar.Create(AParent: iModelGrupo);
+begin
+  FParent := AParent;
+end;
+
+function TModelGrupoMetodosCadastrar.Descricao(
+  ADescricao: String): iModelGrupoMetodosCadastrar;
+begin
+
+end;
+
+destructor TModelGrupoMetodosCadastrar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelGrupoMetodosCadastrar.New(AParent: iModelGrupo): iModelGrupoMetodosCadastrar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

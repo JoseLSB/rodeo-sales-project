@@ -1,0 +1,66 @@
+unit MFichas.Model.Entidade.VENDA;
+
+interface
+
+uses
+  DB, 
+  Classes, 
+  SysUtils, 
+  Generics.Collections, 
+
+  /// orm 
+  ormbr.types.blob, 
+  ormbr.types.lazy, 
+  ormbr.types.mapping, 
+  ormbr.types.nullable, 
+  ormbr.mapping.classes, 
+  ormbr.mapping.register, 
+  ormbr.mapping.attributes; 
+
+type
+  [Entity]
+  [Table('VENDA', '')]
+  [PrimaryKey('GUUID', NotInc, NoSort, False, 'Chave primária')]
+  TVENDA = class
+  private
+    { Private declarations } 
+    FGUUID: Nullable<String>;
+    FCAIXA: Nullable<String>;
+    FNUMERO: Nullable<Integer>;
+    FDATAABERTURA: Nullable<TDateTime>;
+    FDATAFECHAMENTO: Nullable<TDateTime>;
+    FSTATUS: Nullable<Integer>;
+  public 
+    { Public declarations } 
+    [Column('GUUID', ftString, 38)]
+    [Dictionary('GUUID', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property GUUID: Nullable<String> read FGUUID write FGUUID;
+
+    [Column('CAIXA', ftString, 38)]
+    [Dictionary('CAIXA', 'Mensagem de validação', '', '', '', taLeftJustify)]
+    property CAIXA: Nullable<String> read FCAIXA write FCAIXA;
+
+    [Column('NUMERO', ftInteger)]
+    [Dictionary('NUMERO', 'Mensagem de validação', '', '', '', taCenter)]
+    property NUMERO: Nullable<Integer> read FNUMERO write FNUMERO;
+
+    [Column('DATAABERTURA', ftDateTime)]
+    [Dictionary('DATAABERTURA', 'Mensagem de validação', '', '', '', taCenter)]
+    property DATAABERTURA: Nullable<TDateTime> read FDATAABERTURA write FDATAABERTURA;
+
+    [Column('DATAFECHAMENTO', ftDateTime)]
+    [Dictionary('DATAFECHAMENTO', 'Mensagem de validação', '', '', '', taCenter)]
+    property DATAFECHAMENTO: Nullable<TDateTime> read FDATAFECHAMENTO write FDATAFECHAMENTO;
+
+    [Column('STATUS', ftInteger)]
+    [Dictionary('STATUS', 'Mensagem de validação', '', '', '', taCenter)]
+    property STATUS: Nullable<Integer> read FSTATUS write FSTATUS;
+  end;
+
+implementation
+
+initialization
+
+  TRegisterClass.RegisterEntity(TVENDA)
+
+end.

@@ -1,0 +1,60 @@
+unit MFichas.Model.Item.Metodos.Factory;
+
+interface
+
+uses
+  MFichas.Model.Item.Metodos.Interfaces,
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Item.Metodos.Vender,
+  MFichas.Model.Item.Metodos.Cancelar,
+  MFichas.Model.Item.Metodos.Devolver, MFichas.Model.Venda.Interfaces;
+
+type
+  TModelItemMetodosFactory = class(TInterfacedObject, iModelItemMetodosFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelItemMetodosFactory;
+    function Vender(AParent: iModelItem; AVenda: iModelVenda)  : iModelItemMetodosVender;
+    function Cancelar(AParent: iModelItem): iModelItemMetodosCancelar;
+    function Devolver(AParent: iModelItem; AVenda: iModelVenda): iModelItemMetodosDevolver;
+  end;
+
+implementation
+
+{ TModelItemMetodosFactory }
+
+function TModelItemMetodosFactory.Cancelar(
+  AParent: iModelItem): iModelItemMetodosCancelar;
+begin
+  Result := TModelItemMetodosCancelar.New(AParent);
+end;
+
+constructor TModelItemMetodosFactory.Create;
+begin
+
+end;
+
+destructor TModelItemMetodosFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelItemMetodosFactory.Devolver(AParent: iModelItem; AVenda: iModelVenda): iModelItemMetodosDevolver;
+begin
+  Result := TModelItemMetodosDevolver.New(AParent, AVenda);
+end;
+
+class function TModelItemMetodosFactory.New: iModelItemMetodosFactory;
+begin
+  Result := Self.Create;
+end;
+
+function TModelItemMetodosFactory.Vender(AParent: iModelItem; AVenda: iModelVenda)  : iModelItemMetodosVender;
+begin
+  Result := TModelItemMetodosVender.New(AParent, AVenda);
+end;
+
+end.

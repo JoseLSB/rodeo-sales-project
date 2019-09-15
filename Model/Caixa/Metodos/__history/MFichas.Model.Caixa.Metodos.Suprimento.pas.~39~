@@ -1,0 +1,131 @@
+unit MFichas.Model.Caixa.Metodos.Suprimento;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Bluetooth,
+
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Entidade.CAIXA,
+  MFichas.Model.Entidade.CAIXAOPERACOES,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+
+  MFichas.Controller.Types;
+
+type
+  TModelCaixaMetodosSuprimento = class(TInterfacedObject, iModelCaixaMetodosSuprimento)
+  private
+    [weak]
+    FParent         : iModelCaixa;
+    FValorSuprimento: Currency;
+    FOperador       : String;
+    FBluetooth      : iModelConexaoBluetooth;
+    constructor Create(AParent: iModelCaixa);
+    procedure Imprimir;
+    procedure Gravar;
+    procedure LimparEntidade;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelCaixa): iModelCaixaMetodosSuprimento;
+    function SetValorSuprimento(AValue: Currency): iModelCaixaMetodosSuprimento;
+    function SetOperador(AOperador: String)      : iModelCaixaMetodosSuprimento;
+    function &End                                : iModelCaixaMetodos;
+  end;
+
+implementation
+
+{ TModelCaixaMetodosSuprimento }
+
+function TModelCaixaMetodosSuprimento.&End: iModelCaixaMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE SUPRIMENTO
+  Result := FParent.Metodos;
+
+  Imprimir;
+  Gravar;
+
+  LimparEntidade;
+end;
+
+procedure TModelCaixaMetodosSuprimento.Gravar;
+var
+  LCaixaOperacoes: TCAIXAOPERACOES;
+begin
+  FParent.DAO.Modify(FParent.Entidade);
+
+  FParent.Entidade.OPERACOES.Add(TCAIXAOPERACOES.Create);
+  LCaixaOperacoes          := FParent.Entidade.OPERACOES.Last;
+  LCaixaOperacoes.CAIXA    := FParent.Entidade.GUUID;
+  LCaixaOperacoes.TIPO     := Integer(ocSuprimento);
+  LCaixaOperacoes.VALOR    := FValorSuprimento;
+  LCaixaOperacoes.OPERADOR := FOperador;
+
+  FParent.DAO.Update(FParent.Entidade);
+end;
+
+procedure TModelCaixaMetodosSuprimento.Imprimir;
+var
+  LSocket: TBluetoothSocket;
+begin
+  FBluetooth.ConectarDispositivo('P25_027546_01', LSocket);
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('SUPRIMENTO' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(+)VALOR: ' + FormatCurr('#,##0.00', FValorSuprimento) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+end;
+
+procedure TModelCaixaMetodosSuprimento.LimparEntidade;
+begin
+  FParent.Entidade.OPERACOES.Clear;
+end;
+
+constructor TModelCaixaMetodosSuprimento.Create(AParent: iModelCaixa);
+begin
+  FParent    := AParent;
+  FBluetooth := TModelConexaoFactory.New.ConexaoBluetooth;
+end;
+
+destructor TModelCaixaMetodosSuprimento.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelCaixaMetodosSuprimento.New(AParent: iModelCaixa): iModelCaixaMetodosSuprimento;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelCaixaMetodosSuprimento.SetOperador(
+  AOperador: String): iModelCaixaMetodosSuprimento;
+begin
+  Result    := Self;
+  FOperador := AOperador;
+end;
+
+function TModelCaixaMetodosSuprimento.SetValorSuprimento(
+  AValue: Currency): iModelCaixaMetodosSuprimento;
+begin
+  Result           := Self;
+  if AValue <= 0 then
+    raise Exception.Create(
+      'Para fazer um suprimento, insira um valor maior que R$0.'
+    );
+  FValorSuprimento := AValue;
+end;
+
+end.

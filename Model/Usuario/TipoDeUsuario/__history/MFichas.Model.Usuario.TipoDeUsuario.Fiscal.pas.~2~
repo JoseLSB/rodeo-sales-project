@@ -1,0 +1,108 @@
+unit MFichas.Model.Usuario.TipoDeUsuario.Fiscal;
+
+interface
+
+uses
+  MFichas.Model.Usuario.Interfaces;
+
+type
+  TModelUsuarioTipoDeUsuarioFiscal = class(TInterfacedObject, iModelUsuarioMetodos)
+  private
+    [weak]
+    FParent            : iModelUsuario;
+    FNextResponsibility: iModelUsuarioMetodos;
+    constructor Create(AParent: iModelUsuario);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelUsuario): iModelUsuarioMetodos;
+    function NextReponsibility(AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+    function LogoENomeDaFesta           : iModelUsuarioMetodos;
+    function Suprimento                 : iModelUsuarioMetodos;
+    function Sangria                    : iModelUsuarioMetodos;
+    function FecharCaixa                : iModelUsuarioMetodos;
+    function CadastrarProdutos          : iModelUsuarioMetodos;
+    function CadastrarGrupos            : iModelUsuarioMetodos;
+    function CadastrarUsuarios          : iModelUsuarioMetodos;
+    function AcessarRelatorios          : iModelUsuarioMetodos;
+    function AcessarConfiguracoes       : iModelUsuarioMetodos;
+    function ExcluirProdutosPosImpressao: iModelUsuarioMetodos;
+  end;
+
+implementation
+
+{ TModelUsuarioTipoDeUsuarioFiscal }
+
+function TModelUsuarioTipoDeUsuarioFiscal.AcessarConfiguracoes: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.AcessarRelatorios: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.CadastrarGrupos: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.CadastrarProdutos: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.CadastrarUsuarios: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+constructor TModelUsuarioTipoDeUsuarioFiscal.Create(AParent: iModelUsuario);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelUsuarioTipoDeUsuarioFiscal.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.ExcluirProdutosPosImpressao: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.FecharCaixa: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.LogoENomeDaFesta: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelUsuarioTipoDeUsuarioFiscal.New(AParent: iModelUsuario): iModelUsuarioMetodos;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.NextReponsibility(
+  AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+begin
+  Result              := Self;
+  FNextResponsibility := AValue;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.Sangria: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+function TModelUsuarioTipoDeUsuarioFiscal.Suprimento: iModelUsuarioMetodos;
+begin
+  Result := Self;
+end;
+
+end.

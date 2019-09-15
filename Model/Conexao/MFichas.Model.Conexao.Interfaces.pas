@@ -1,0 +1,39 @@
+unit MFichas.Model.Conexao.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections,
+  System.Bluetooth,
+
+  ORMBR.Factory.Interfaces,
+
+  FireDAC.Comp.Client;
+
+type
+  iModelConexaoSQL       = interface;
+  iModelConexaoBluetooth = interface;
+  iModelConexaoFactory   = interface;
+
+  iModelConexaoSQL = interface
+    ['{42CC2F84-B965-4DE1-A8F0-44EFD15D7DCE}']
+    function Conn: iDBConnection;
+    function Query: TFDQuery;
+  end;
+
+  iModelConexaoBluetooth = interface
+    ['{94DB15EA-C87E-454C-BFC2-59A8FA25285A}']
+    function ListarDispositivos(var AList: TList<String>): iModelConexaoBluetooth;
+    function ConectarDispositivo(var ASocket: TBluetoothSocket): iModelConexaoBluetooth;
+    procedure LimparSocketPosImpressao;
+  end;
+
+  iModelConexaoFactory = interface
+    ['{F2D21153-EE55-4E8F-99A9-0FBD8D144E1A}']
+    function ConexaoSQL      : iModelConexaoSQL;
+    function ConexaoBluetooth: iModelConexaoBluetooth;
+  end;
+
+implementation
+
+end.

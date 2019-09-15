@@ -1,0 +1,12 @@
+object DMSQL: TDMSQL
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 311
+  Width = 446
+  object FDConnection: TFDConnection
+    LoginPrompt = False
+    BeforeConnect = FDConnectionBeforeConnect
+    Left = 200
+    Top = 120
+  end
+end

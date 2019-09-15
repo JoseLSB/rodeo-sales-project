@@ -1,0 +1,82 @@
+unit MFichas.Model.Item.Metodos.Devolver;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Entidade.VENDAITENS,
+  MFichas.Controller.Constantes;
+
+type
+  TModelItemMetodosDevolver = class(TInterfacedObject, iModelItemMetodosDevolver)
+  private
+    [weak]
+    FParent    : iModelItem;
+    FCodigo    : String;
+    FQuantidade: Double;
+    FValor     : Currency;
+    constructor Create(AParent: iModelItem);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelItem): iModelItemMetodosDevolver;
+    function Codigo(ACodigo: String)         : iModelItemMetodosDevolver;
+    function Quantidade(AQuantidade: Double) : iModelItemMetodosDevolver;
+    function Valor(AValor: Currency)         : iModelItemMetodosDevolver;
+    function &End                            : iModelItemMetodos;
+  end;
+
+implementation
+
+{ TModelItemMetodosDevolver }
+
+function TModelItemMetodosDevolver.Codigo(
+  ACodigo: String): iModelItemMetodosDevolver;
+begin
+  Result  := Self;
+  FCodigo := ACodigo;
+end;
+
+function TModelItemMetodosDevolver.&End: iModelItemMetodos;
+begin
+  //IMPLEMENTAR METODO DE DEVOLUÇAO DE ITEM
+  Result := FParent.Metodos;
+
+  FParent.Entidade.PRODUTO    := FCodigo;
+  FParent.Entidade.QUANTIDADE := FQuantidade;
+  FParent.Entidade.PRECO      := FValor;
+  FParent.Entidade.TIPO       := Integer(tvDevolucao);
+end;
+
+constructor TModelItemMetodosDevolver.Create(AParent: iModelItem);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelItemMetodosDevolver.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelItemMetodosDevolver.New(AParent: iModelItem): iModelItemMetodosDevolver;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelItemMetodosDevolver.Quantidade(
+  AQuantidade: Double): iModelItemMetodosDevolver;
+begin
+  Result      := Self;
+  FQuantidade := AQuantidade;
+end;
+
+function TModelItemMetodosDevolver.Valor(
+  AValor: Currency): iModelItemMetodosDevolver;
+begin
+  Result := Self;
+  FValor := AValor;
+end;
+
+end.

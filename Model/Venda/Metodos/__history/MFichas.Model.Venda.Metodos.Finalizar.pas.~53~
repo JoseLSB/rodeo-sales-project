@@ -1,0 +1,119 @@
+unit MFichas.Model.Venda.Metodos.Finalizar;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Controller.Types,
+
+  MFichas.Model.Entidade.VENDA,
+  MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Venda.State.Factory,
+
+  MFichas.Controller.Venda.Interfaces;
+
+type
+  TModelVendaMetodosFinalizar = class(TInterfacedObject, iModelVendaMetodosFinalizar)
+  private
+    [weak]
+    FParent     : iModelVenda;
+    FListaVendas: TObjectList<TVENDA>;
+    FVenda      : TVENDA;
+    FVendaController: iControllerVenda;
+    constructor Create(AParent: iModelVenda);
+    procedure LimparEntidadeDeVenda;
+    procedure RecuperarVendaAtual;
+    procedure GravarVendaNoBanco;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelVenda): iModelVendaMetodosFinalizar;
+    function Executar: iModelVendaMetodosFinalizar;
+    function &End    : iModelVendaMetodos;
+  end;
+
+implementation
+
+uses
+  MFichas.Controller.Venda;
+
+{ TModelVendaMetodosFinalizar }
+
+function TModelVendaMetodosFinalizar.&End: iModelVendaMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+procedure TModelVendaMetodosFinalizar.Gravar;
+begin
+  FParent.Item.GravarNoBanco.Executar;
+  FVendaController.Metodos.EfetuarPagamento.Executar;
+  GravarVendaNoBanco;
+end;
+
+procedure TModelVendaMetodosFinalizar.GravarVendaNoBanco;
+begin
+  RecuperarVendaAtual;
+
+  FParent.DAO.Modify(FVenda);
+  FVenda.DATAFECHAMENTO := Now;
+  FVenda.STATUS         := Integer(svFechada);
+  FParent.DAO.Update(FVenda);
+end;
+
+procedure TModelVendaMetodosFinalizar.RecuperarVendaAtual;
+begin
+  FListaVendas        := FParent.DAO.FindWhere('', 'DATAABERTURA DESC');
+  FVenda.GUUID        := FListaVendas.Items[0].GUUID;
+  FVenda.CAIXA        := FListaVendas.Items[0].CAIXA;
+  FVenda.NUMERO       := FListaVendas.Items[0].NUMERO;
+  FVenda.DATAABERTURA := FListaVendas.Items[0].DATAABERTURA;
+end;
+
+constructor TModelVendaMetodosFinalizar.Create(AParent: iModelVenda);
+begin
+  FParent      := AParent;
+  FVenda       := TVENDA.Create;
+end;
+
+destructor TModelVendaMetodosFinalizar.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FVenda);
+  if Assigned(FListaVendas) then
+    FreeAndNil(FListaVendas);
+  {$ELSE}
+  FVenda.Free;
+  FVenda.DisposeOf;
+  if Assigned(FListaVendas) then
+  begin
+    FListaVendas.Free;
+    FListaVendas.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelVendaMetodosFinalizar.Executar: iModelVendaMetodosFinalizar;
+begin
+  //TODO: IMPLEMENTAR METODO DE FINALIZAÇÃO DA VENDA.
+  Result := Self;
+  Gravar;
+  LimparEntidadeDeVenda;
+  FParent.SetState(TModelVendaStateFactory.New.Fechada);
+end;
+
+procedure TModelVendaMetodosFinalizar.LimparEntidadeDeVenda;
+begin
+  FParent.Entidade.CleanupInstance;
+  FParent.Entidade.DATAABERTURA := StrToDateTime('30/12/1899');
+end;
+
+class function TModelVendaMetodosFinalizar.New(AParent: iModelVenda): iModelVendaMetodosFinalizar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

@@ -1,0 +1,62 @@
+﻿unit MFichas.Model.Empresa.Metodos.Editar.View;
+
+interface
+
+uses
+  MFichas.Model.Empresa.Interfaces;
+
+type
+  TModelEmpresaMetodosEditarView = class(TInterfacedObject, iModelEmpresaMetodosEditarView)
+  private
+    [weak]
+    FParent     : iModelEmpresa;
+    FDescricao  : String;
+    FLogoEmpresa: String;
+    constructor Create(AParent: iModelEmpresa);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelEmpresa): iModelEmpresaMetodosEditarView;
+    function Descricao(ANomeEmpresa: String): iModelEmpresaMetodosEditarView;
+    function LogoTipo(ALogoEmpresa: String) : iModelEmpresaMetodosEditarView;
+    function &End                           : iModelEmpresa;
+  end;
+
+implementation
+
+{ TModelEmpresaMetodosEditarView }
+
+function TModelEmpresaMetodosEditarView.&End: iModelEmpresa;
+begin
+
+end;
+
+constructor TModelEmpresaMetodosEditarView.Create(AParent: iModelEmpresa);
+begin
+  FParent := AParent;
+end;
+
+function TModelEmpresaMetodosEditarView.Descricao(
+  ANomeEmpresa: String): iModelEmpresaMetodosEditarView;
+begin
+  Result := Self;
+  FDescricao := ANomeEmpresa;
+end;
+
+destructor TModelEmpresaMetodosEditarView.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelEmpresaMetodosEditarView.LogoTipo(
+  ALogoEmpresa: String): iModelEmpresaMetodosEditarView;
+begin
+
+end;
+
+class function TModelEmpresaMetodosEditarView.New(AParent: iModelEmpresa): iModelEmpresaMetodosEditarView;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

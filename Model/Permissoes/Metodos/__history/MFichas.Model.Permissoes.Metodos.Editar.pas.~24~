@@ -1,0 +1,265 @@
+unit MFichas.Model.Permissoes.Metodos.Editar;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+  System.StrUtils,
+
+  MFichas.Model.Permissoes.Interfaces,
+  MFichas.Model.Entidade.USUARIOPERMISSOES,
+
+  MFichas.Controller.Types;
+
+type
+  TModelPermissoesMetodosEditar = class(TInterfacedObject, iModelPermissoesEditar)
+  private
+    [weak]
+    FParent              : iModelPermissoes;
+    FEntidade            : TUSUARIOPERMISSOES;
+    FListaPermissoes     : TObjectList<TUSUARIOPERMISSOES>;
+    FAbrirCaixa          : Integer;
+    FFecharCaixa         : Integer;
+    FSuprimentoCaixa     : Integer;
+    FSangriaCaixa        : Integer;
+    FCadastrarProdutos   : Integer;
+    FCadastrarGrupos     : Integer;
+    FCadastrarUsuarios   : Integer;
+    FAcessarRelatorios   : Integer;
+    FAcessarConfiguracoes: Integer;
+    FExcluirProdutos     : Integer;
+    constructor Create(AParent: iModelPermissoes);
+    procedure Validacao(AValue: Integer);
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPermissoes): iModelPermissoesEditar;
+    function AbrirCaixa(ABoolean: Integer)                 : iModelPermissoesEditar;
+    function FecharCaixa(ABoolean: Integer)                : iModelPermissoesEditar;
+    function Suprimento(ABoolean: Integer)                 : iModelPermissoesEditar;
+    function Sangria(ABoolean: Integer)                    : iModelPermissoesEditar;
+    function CadastrarProdutos(ABoolean: Integer)          : iModelPermissoesEditar;
+    function CadastrarGrupos(ABoolean: Integer)            : iModelPermissoesEditar;
+    function CadastrarUsuarios(ABoolean: Integer)          : iModelPermissoesEditar;
+    function AcessarRelatorios(ABoolean: Integer)          : iModelPermissoesEditar;
+    function AcessarConfiguracoes(ABoolean: Integer)       : iModelPermissoesEditar;
+    function ExcluirProdutosPosImpressao(ABoolean: Integer): iModelPermissoesEditar;
+    function Executar                                      : iModelPermissoesEditar;
+    function &End                                          : iModelPermissoes;
+  end;
+
+implementation
+
+{ TModelPermissoesMetodosEditar }
+
+
+function TModelPermissoesMetodosEditar.AbrirCaixa(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FAbrirCaixa := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.AcessarConfiguracoes(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FAcessarConfiguracoes := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.AcessarRelatorios(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FAcessarRelatorios := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.CadastrarGrupos(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FCadastrarGrupos := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.CadastrarProdutos(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FCadastrarProdutos := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.CadastrarUsuarios(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FCadastrarUsuarios := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.&End: iModelPermissoes;
+begin
+  Result := FParent;
+end;
+
+constructor TModelPermissoesMetodosEditar.Create(AParent: iModelPermissoes);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPermissoesMetodosEditar.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  if Assigned(FEntidade) then
+    FreeAndNil(FEntidade);
+  if Assigned(FListaPermissoes) then
+    FreeAndNil(FListaPermissoes);
+  {$ELSE}
+  if Assigned(FEntidade) then
+  begin
+    FEntidade.Free;
+    FEntidade.DisposeOf;
+  end;
+  if Assigned(FListaPermissoes) then
+  begin
+    FListaPermissoes.Free;
+    FListaPermissoes.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelPermissoesMetodosEditar.ExcluirProdutosPosImpressao(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FExcluirProdutos := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.Executar: iModelPermissoesEditar;
+begin
+  Result := Self;
+  Gravar;
+end;
+
+function TModelPermissoesMetodosEditar.FecharCaixa(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FFecharCaixa := ABoolean;
+end;
+
+procedure TModelPermissoesMetodosEditar.Gravar;
+var
+  I: Integer;
+begin
+  FListaPermissoes := FParent.DAO.Find;
+
+  for I := 0 to Pred(FListaPermissoes.Count) do
+  begin
+    case AnsiIndexStr(
+      FListaPermissoes[I].DESCRICAO,
+      [ 'ABRIRCAIXA',
+        'FECHARCAIXA',
+        'SUPRIMENTOCAIXA',
+        'SANGRIACAIXA',
+        'CADASTRARPRODUTOS',
+        'CADASTRARGRUPOS',
+        'CADASTRARUSUARIOS',
+        'ACESSARRELATORIOS',
+        'ACESSARCONFIGURACOES',
+        'EXCLUIRPRODUTOS'
+      ]) of
+
+      0:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FAbrirCaixa;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      1:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FFecharCaixa;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      2:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FSuprimentoCaixa;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      3:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FSangriaCaixa;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      4:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FCadastrarProdutos;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      5:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FCadastrarGrupos;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      6:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FCadastrarUsuarios;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      7:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FAcessarRelatorios;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      8:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FAcessarConfiguracoes;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+      9:begin
+          FParent.DAO.Modify(FListaPermissoes[I]);
+          FListaPermissoes[I].PERMISSAO := FExcluirProdutos;
+          FParent.DAO.Update(FListaPermissoes[I]);
+        end;
+    end;
+  end;
+end;
+
+class function TModelPermissoesMetodosEditar.New(AParent: iModelPermissoes): iModelPermissoesEditar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPermissoesMetodosEditar.Sangria(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FSangriaCaixa := ABoolean;
+end;
+
+function TModelPermissoesMetodosEditar.Suprimento(
+  ABoolean: Integer): iModelPermissoesEditar;
+begin
+  Result := Self;
+  Validacao(ABoolean);
+  FSuprimentoCaixa := ABoolean;
+end;
+
+procedure TModelPermissoesMetodosEditar.Validacao(AValue: Integer);
+begin
+  if (AValue < 0) or (AValue > 1) then
+    raise Exception.Create(
+      'O valor de entrada para função de Editar Permissoes é inválido.' + sLineBreak +
+      'Insira 0 ou 1 como parametro de entrada.'
+    );
+end;
+
+end.

@@ -1,0 +1,386 @@
+object FrameConfirmacaoProduto: TFrameConfirmacaoProduto
+  Size.Width = 320.000000000000000000
+  Size.Height = 200.000000000000000000
+  Size.PlatformDefault = False
+  object LayoutPrincipal: TLayout
+    Align = Contents
+    Size.Width = 320.000000000000000000
+    Size.Height = 200.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object RectangleSombra: TRectangle
+      Align = Contents
+      Fill.Color = claBlack
+      Opacity = 0.400000005960464400
+      Size.Width = 320.000000000000000000
+      Size.Height = 200.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object RectanglePrincipal: TRectangle
+      Align = Contents
+      Size.Width = 320.000000000000000000
+      Size.Height = 200.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      XRadius = 15.000000000000000000
+      YRadius = 15.000000000000000000
+      object LayoutRectangleTop: TLayout
+        Align = Top
+        Margins.Top = 10.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 320.000000000000000000
+        Size.Height = 31.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object LabelTitulo: TLabel
+          Align = Contents
+          StyledSettings = [FontColor]
+          Size.Width = 320.000000000000000000
+          Size.Height = 31.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Segoe UI Historic'
+          TextSettings.Font.Size = 16.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.HorzAlign = Center
+          Text = 'Confirma'#231#227'o do Produto'
+        end
+      end
+      object LayoutRectangleClient: TLayout
+        Align = Client
+        Size.Width = 320.000000000000000000
+        Size.Height = 102.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Layout1: TLayout
+          Align = Top
+          Margins.Top = 10.000000000000000000
+          Position.Y = 34.000000000000000000
+          Size.Width = 320.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object Layout2: TLayout
+            Align = Right
+            Position.X = 176.000000000000000000
+            Size.Width = 144.000000000000000000
+            Size.Height = 38.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object Layout3: TLayout
+              Align = Left
+              Size.Width = 50.000000000000000000
+              Size.Height = 38.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              object Layout4: TLayout
+                Align = Client
+                Margins.Left = 8.000000000000000000
+                Margins.Top = 2.000000000000000000
+                Margins.Right = 8.000000000000000000
+                Margins.Bottom = 3.000000000000000000
+                Size.Width = 34.000000000000000000
+                Size.Height = 33.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object Image1: TImage
+                  MultiResBitmap = <
+                    item
+                      Width = 48
+                      Height = 48
+                      PNG = {
+                        89504E470D0A1A0A0000000D49484452000000300000003008060000005702F9
+                        87000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                        059D494441546843D59A7D6C13651CC79F5EB7BB5EDB75EDBA97B2B177BA3108
+                        086328CBE2180AC6383012C732F883484421CE108D44FF807F8C2F0113FD0B33
+                        954413D4456720FC450251C1A9938CF2B20637BA768C2130DAB55DDBBBDEF5BA
+                        DE9DCF9567959776B66CDD7A9FE4D73EBFEFD3DC3DBF7B5E7ECFDD5501E60023
+                        4916371BF51B1AF272D655EB34B5651AA2DA801306B598A595EA1945849E0C73
+                        93A334E718A583B64B1EDFF95E2F7DD6CD30E3D103CC82C70EC0A405055B0A4B
+                        77B4959A76AEC8D3D5233925AEF8FC178F8FB98EFD78FD66370D801BC9299172
+                        00C52A5569674DD9BB2F5494EC2E52622A24CF0A6F50604F8CDF3EFA95E39F4F
+                        6EB1EC6D2427452A0110FBCCE5EFBC5E5971304F8D91489B53023CCF1CB18D7D
+                        706478EC33E886EFA933935400355AEDD2AEB5753D75B99A15484A2B4393B4F5
+                        D54BB6F61B146543524294E83B21AD25056DDF35D69D2A26C9C5484A3B052ABC
+                        687B99719723C05DB3D3CC1092E3326300BB2A8B3B5F5A5DFB8D1953E2008850
+                        993FCB86E7D42D2E68578738A7D54F5BA018978401BC526E7AE3E3954B3EAF98
+                        C54A355BA4736F321937BB42E18441C40D401A365BE1955FC8C6DF4FB6C9D81A
+                        0CD05607CD5E43528C471A58A3C5979E6A5E63512B951A246504C108473FF7C7
+                        C09A512A3C8CA4280F0740FCB27ED5853A9D7A5E569B54F9DB4F0F6CEAB53E09
+                        8BB125F68121B4AFBAE4BDAD2505DB919B711412B889894468CB24FD2792FEEB
+                        0129C39E69AEB219F0DCB424A9B982A204A6A9DF6AF6B0EC1DC98FF5C0FEDA92
+                        0F9B8CC6A6784B5A261981836CA52860BFB9FDA7A10030E9C30473C78B65FAD7
+                        A4B21CD856AADD0BB7B9F952391AC0968AC21D850A42054418A50CCC90A525DB
+                        CA8A3A6201BC5C9CBF13000196E4636DA506D8663889A59B116BCBB294B6B099
+                        C2EADE8B26AC594F6C40BEEC68CC35B460F57ACD3A20C26E91A1D5EB348DD812
+                        ADAA167A301EF959B526BB162B27F1EA3875B2B02A3561560C3E63F6E666AB0D
+                        50FA7F300C280D70F955A469930A9748DE0BEFEDA521920413C1884731B66951
+                        384B919F8DB419317ED405880698ACD348A8EF57E07DFF2DE4CDCC142786A379
+                        2059448147A5F421F2A99D4331D8220D2122B921A4C000A6873F4DE310127CDE
+                        E877324CB0BC47D1B7AE72A43C87AC429AAC186399116C94E31DF166B81CEC3A
+                        25D8314730648B5B2B031B61381B36E00B9DBF3FBBC9C92C01BA0FEBA5036761
+                        38B2A49F0E9EC3DC0C181FF0B317A7F7DA72B12B7EB6DF1904AE681E383E1E38
+                        166FCF9DC9D673D707DB0C5774E943BA3D3BBFBEEAA6015364F40DFD34142F32
+                        6B7BAF97510078A23D20BD5C3871CB7F345A2B03BAEFF8BF901A2F9563297531
+                        094A7E6EA81CCE512AD448CA48184E0C360E8C9AA5B92BF9B1C72A8108A00451
+                        109ECE536D84B3042A9969876E4C1EF8DDC39D814E94873735F8E906D385E51A
+                        D54AE467145703ECE5E72F3B9F82C5A97B0A7A2A711FE13D366F3B131682F1A2
+                        5F48A3799EEA1CF4B54327D67889471EAFFBC2BC6798095FCB2D24DB2B80087B
+                        28FE01E7D3EC30ED1E1C74775CA0427F41E101E2BE1F186123431A4E706E3492
+                        9B91B4A01CB67BF69C74B1DDC87D80B8014858E9B065829B7266E591AD0BF5A2
+                        C30E33D66187774FF7389370894F188084958E58187ACAFAAC8E68C5B3C0BCBE
+                        27A369813AE870779C7485E25EF96992BAB295385EF3E5726DCF328DEA0924A5
+                        95ABF4D4E5CEA140FB08C739909490197B601A1FCF7BBEBDCB7ECD0A225DAFE3
+                        9A70059ED443805461783178E886FFC0DB76FFEE499E4FEAAF07298F6D23098A
+                        DF2CD2EEDFB608DBABC7C839D93BD14290F97E1C7475B9E84FA7336CB23CF6E4
+                        9436806D8BC88EB67C62E72A1DB116C92971C5CFF5FF34C11D3BE1647F98DEDB
+                        A4CA9CAC2E85001435E6AB5AEA73B21AAB09656D25A1346B084C9FAB54E448F5
+                        7E5EA4829CE083F7DFF6118EB75928AEAFDF3D75CE09802B7A80C706807F014D
+                        D439D46232DBA00000000049454E44AE426082}
+                      FileName = 'C:\PROJETO\Imagens\PNG48x\Menos.png'
+                    end>
+                  Align = Client
+                  Size.Width = 34.000000000000000000
+                  Size.Height = 33.000000000000000000
+                  Size.PlatformDefault = False
+                  OnClick = Image1Click
+                end
+              end
+            end
+            object Layout5: TLayout
+              Align = Right
+              Position.X = 94.000000000000000000
+              Size.Width = 50.000000000000000000
+              Size.Height = 38.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              object Layout6: TLayout
+                Align = Client
+                Margins.Left = 7.000000000000000000
+                Margins.Right = 7.000000000000000000
+                Margins.Bottom = 2.000000000000000000
+                Size.Width = 36.000000000000000000
+                Size.Height = 36.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object Image2: TImage
+                  MultiResBitmap = <
+                    item
+                      Width = 48
+                      Height = 48
+                      PNG = {
+                        89504E470D0A1A0A0000000D49484452000000300000003008060000005702F9
+                        87000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                        0511494441546843ED985D4C1C551480CFBD33CC527EDAF0D7146A6A8D96126C
+                        AC09589BF8A0528D4D358DA6A136D12A36041391D6C62713136CA3F10DA30583
+                        3C20C6462D601F68D29752DE8C31DD5543495A88FAD056904097D0EE023B3FF7
+                        7AEF72585DEECE32B00BACB1DFCB9C737667E69E7BCE9C7366E01EF7F89F43F0
+                        9812B5DDB5DAB507CBF610A6D510CEAB39E1E58443E9C45F244FFE5EB2858738
+                        8131003E0C84F8C56D072AFEB875A5E7708F13BD400AA4E440A5FFF8361DB446
+                        6EC2516240299A3D6173EB4F9DE867B9EDB45EDD7BE6169A97CD8A1C78F4E7A6
+                        12E6681F4D93A9373641A18EE61531310A567119EF3480BE1FA86E9944B36796
+                        EDC02EFF3BAF50066780920234A589481098AF7170CF27DFA1C1139E1DA81C6A
+                        36F4993B6D40A11E4DAB02076837207C3C50DD61A129299E1C78E4D777739965
+                        F75242F7A369956117B360B6563831830657281E5D913BCF4CF6FDDA2D5E420F
+                        982CB7BBCADF90850657967440A60DA5F01CAA6B06A1F07C84E57C8AAA2B4953
+                        28FAC002398BEAB21878E80394E6A9F92D5EF70C214706AB5ACEA1A6E01A0191
+                        F79BA3D566BDE1BCADE2A7C622D414DC53C8723E4C7FA95C114506D54FA3AC90
+                        D001D96165934275FD0959F5BB7F39B915B538123A20C783543B6C5AC9F719CC
+                        E68DA8C5A138200733933975A8660E16A903DEACAC5731C8A9D2A0DA66543306
+                        392CEEF6DFA94635869A42B6F60C4A19072344599B1A12C632D601709CA51D30
+                        29AB403103219528C4503A7169DF09B3A48CBACE208B3B6CBA49DAB1EF46CCC1
+                        A73FF7A116458940C908CD9CF2B918BFA16CACFA103FB9FC979C35E329756D8A
+                        039C31943210F1B6B318C5A35D1F3731FAACEE1A85C88D299492F3434DFC24FC
+                        C4C0099492E3DBE63E7EB14B0E1F7AEFB3B84D572270FB616EA39879ECB595D7
+                        4C65A72B068E8D1B1B37A5DC89D3F63EF02FE6A667C747F6B56F41358A120112
+                        D1AFA1987110D31E4231865A85C273FDDCC9BC0759AE89CDDA97518DA1562142
+                        FA59D8442D7360211308877E5463280E5C7766AE58B7C3E3894AD6BAC13938C1
+                        D0E8C8E0FD8179C33FA82974B8C7211AE972C21134AC3F32239846BBE0D42925
+                        B755070436216DC1E91B16B0F50F0377388C4FCF99846A6D688A23A103BFBFD4
+                        7533DF29EAB4834B7E185B75ECA93014D84EC7F08B9DA3688AC3B5E396F73514
+                        3BF6CC7076E1C6422D2F6E00F4C4E28E9DACC3BAC14211B082D31386C1775E7D
+                        E19B842340C20848460E764C52AE35DA5333A27C79FACE9A56E43D2D9901DC78
+                        CB6DF112D7082C507EFEF57642C89B59C57940372CF9A9322D44173F19128325
+                        6F1D39F455139A13E21A8105F2277C4DE24A17E5051D11D2D5269A361372F1EC
+                        4269E1F693687665C90848AAFA1A7242F65C8FF0F780966B805E9023444FA77A
+                        46561BF9C0B2194B947D76213F2BFB48E0E0D29FD7353C2665ECDB80B5BDE6F1
+                        1E33C72EE6167B4C4642A41550439C2E8E29219B94E8B2D66418B8E90895B796
+                        163E70ECC7FD2D9EC2BDECBB97F7D6BD6C59D066F8A088E814A8A8505AAE0F44
+                        F3C37F78233ADB8885CBCD989FBDAC09F9C00E1FFAB277FE1FDE58D1F6559C3F
+                        5AC4819E0E02A92F0430E44588A103C9D681FA3420BA90A5430B5717FD50A608
+                        B7C40E9B36B039D123852CED41005314D82F7C86D99CACDAB8B1220716D871EE
+                        B5AD54A76F8B29EB5571A9FBD0EC0DC7BEC935ED6BD961DD9A94175272204677
+                        ADB643DF50A501DD27A68F2A4EF84E3B424A433EC8973FE745E0AEEEE36342BC
+                        2E6E181023EFE5E8609660B6B9C77F0B80BF01254BE77E1B46764C0000000049
+                        454E44AE426082}
+                      FileName = 'C:\PROJETO\Imagens\PNG48x\Mais.png'
+                    end>
+                  Align = Client
+                  Size.Width = 36.000000000000000000
+                  Size.Height = 36.000000000000000000
+                  Size.PlatformDefault = False
+                  OnClick = Image2Click
+                end
+              end
+            end
+            object Layout7: TLayout
+              Align = Client
+              Size.Width = 44.000000000000000000
+              Size.Height = 38.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              object Layout8: TLayout
+                Align = Client
+                Margins.Top = 1.000000000000000000
+                Size.Width = 44.000000000000000000
+                Size.Height = 37.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 0
+                object EditQuantidade: TEdit
+                  Touch.InteractiveGestures = [LongTap, DoubleTap]
+                  Align = Client
+                  StyleLookup = 'transparentedit'
+                  TabOrder = 0
+                  CanFocus = False
+                  Text = '1'
+                  TextSettings.FontColor = claWhite
+                  TextSettings.HorzAlign = Center
+                  Size.Width = 44.000000000000000000
+                  Size.Height = 37.000000000000000000
+                  Size.PlatformDefault = False
+                  StyledSettings = [Family, Size, Style]
+                end
+              end
+            end
+          end
+          object Layout9: TLayout
+            Align = Client
+            Size.Width = 176.000000000000000000
+            Size.Height = 38.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object Label1: TLabel
+              Align = Left
+              AutoSize = True
+              StyledSettings = [Style]
+              Margins.Left = 5.000000000000000000
+              Position.X = 5.000000000000000000
+              Size.Width = 76.000000000000000000
+              Size.Height = 38.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'Label11Style1'
+              TextSettings.Font.Family = 'Segoe UI Historic'
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.WordWrap = False
+              Text = 'Valor: R$ '
+            end
+            object LabelValorProduto: TLabel
+              Align = Left
+              AutoSize = True
+              StyledSettings = []
+              Position.X = 81.000000000000000000
+              Size.Width = 39.000000000000000000
+              Size.Height = 38.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'Label11Style1'
+              TextSettings.Font.Family = 'Segoe UI Historic'
+              TextSettings.Font.Size = 20.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.WordWrap = False
+              Text = '0,00'
+            end
+          end
+        end
+        object LabelDescricaoProduto: TLabel
+          Align = Top
+          AutoSize = True
+          StyledSettings = []
+          Margins.Left = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 310.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Family = 'Segoe UI Historic'
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.FontColor = xFF5C5C5C
+          Text = 'Descri'#231#227'o do Produto'
+        end
+      end
+      object LayoutRectangleBottom: TLayout
+        Align = Bottom
+        Position.Y = 143.000000000000000000
+        Size.Width = 320.000000000000000000
+        Size.Height = 57.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object LayoutDireita: TLayout
+          Align = Right
+          Position.X = 182.000000000000000000
+          Size.Width = 138.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object RoundRectBotaoConfirmar: TRoundRect
+            Align = Center
+            Size.Width = 108.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFF5C5C5C
+            Stroke.Thickness = 1.500000000000000000
+            object LabelBotaoConfirmar: TLabel
+              Align = Center
+              AutoSize = True
+              StyledSettings = [Family]
+              Margins.Left = 8.000000000000000000
+              Margins.Top = 8.000000000000000000
+              Margins.Right = 8.000000000000000000
+              Margins.Bottom = 8.000000000000000000
+              Size.Width = 84.000000000000000000
+              Size.Height = 19.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 14.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = xFF5C5C5C
+              TextSettings.HorzAlign = Center
+              Text = 'Confirmar'
+            end
+          end
+        end
+        object LayoutEsquerda: TLayout
+          Align = Left
+          Size.Width = 138.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object RoundRectBotaoCancelar: TRoundRect
+            Align = Center
+            Size.Width = 108.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFF5C5C5C
+            Stroke.Thickness = 1.500000000000000000
+          end
+          object LabelBotaoCancelar: TLabel
+            Align = Center
+            AutoSize = True
+            StyledSettings = [Family]
+            Margins.Left = 8.000000000000000000
+            Margins.Top = 8.000000000000000000
+            Margins.Right = 8.000000000000000000
+            Margins.Bottom = 8.000000000000000000
+            Size.Width = 84.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF5C5C5C
+            TextSettings.HorzAlign = Center
+            Text = 'Cancelar'
+          end
+        end
+      end
+    end
+  end
+end

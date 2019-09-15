@@ -1,0 +1,40 @@
+unit MFichas.Controller.Venda.Metodos.DevolverItem;
+
+interface
+
+uses
+  MFichas.Controller.Venda.Interfaces, MFichas.Model.Venda.Interfaces;
+
+type
+  TControllerVendaMetodosDevolverItem = class(TInterfacedObject, iControllerVendaMetodosDevolverItem)
+  private
+    [weak]
+    FParent: iControllerVenda;
+    FModel : iModelVenda;
+    constructor Create(AParent: iControllerVenda; AModel: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iControllerVenda; AModel: iModelVenda): iControllerVendaMetodosDevolverItem;
+  end;
+
+implementation
+
+{ TControllerVendaMetodosDevolverItem }
+
+constructor TControllerVendaMetodosDevolverItem.Create(AParent: iControllerVenda; AModel: iModelVenda);
+begin
+  FParent := AParent;
+end;
+
+destructor TControllerVendaMetodosDevolverItem.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerVendaMetodosDevolverItem.New(AParent: iControllerVenda; AModel: iModelVenda): iControllerVendaMetodosDevolverItem;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

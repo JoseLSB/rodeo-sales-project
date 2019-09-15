@@ -1,0 +1,129 @@
+unit MFichas.Model.Produto.Metodos.Buscar;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Produto.Interfaces,
+
+  MFichas.Controller.Types,
+
+  ORMBR.Container.DataSet.Interfaces,
+  ORMBR.Container.DataSet,
+  ORMBR.DataSet.ClientDataSet,
+
+  FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet;
+
+type
+  TModelProdutoMetodosBuscar = class(TInterfacedObject, iModelProdutoMetodosBuscar)
+  private
+    [weak]
+    FParent    : iModelProduto;
+    FFDMemTable: TFDMemTable;
+    constructor Create(AParent: iModelProduto);
+    procedure CopiarDataSet;
+    procedure Validacao;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelProduto): iModelProdutoMetodosBuscar;
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelProdutoMetodosBuscar;
+    function BuscarTodos                     : iModelProdutoMetodosBuscar;
+    function BuscarTodosAtivos               : iModelProdutoMetodosBuscar;
+    function BuscarPorCodigo(ACodigo: String): iModelProdutoMetodosBuscar;
+    function BuscarPorGrupo(AGrupo: String)  : iModelProdutoMetodosBuscar;
+    function &End                            : iModelProdutoMetodos;
+  end;
+
+implementation
+
+{ TModelProdutoMetodosBuscar }
+
+function TModelProdutoMetodosBuscar.BuscarPorCodigo(
+  ACodigo: String): iModelProdutoMetodosBuscar;
+begin
+  Result := Self;
+  FParent.DAODataSet.OpenWhere(
+    ' GUUID =  ' + QuotedStr(ACodigo) +
+    ' STATUS = ' + Integer(saiAtivo).ToString
+  );
+  Validacao;
+  CopiarDataSet;
+end;
+
+function TModelProdutoMetodosBuscar.BuscarPorGrupo(
+  AGrupo: String): iModelProdutoMetodosBuscar;
+begin
+  Result := Self;
+  FParent.DAODataSet.OpenWhere(
+    ' GRUPO =  ' + QuotedStr(AGrupo) + ' AND ' +
+    ' STATUS = ' + Integer(saiAtivo).ToString
+  );
+  Validacao;
+  CopiarDataSet;
+end;
+
+function TModelProdutoMetodosBuscar.BuscarTodos: iModelProdutoMetodosBuscar;
+begin
+  Result := Self;
+  FParent.DAODataSet.Open;
+  Validacao;
+  CopiarDataSet;
+end;
+
+function TModelProdutoMetodosBuscar.BuscarTodosAtivos: iModelProdutoMetodosBuscar;
+begin
+  Result := Self;
+  FParent.DAODataSet.OpenWhere(
+    'STATUS = ' + Integer(saiAtivo).ToString
+  );
+  Validacao;
+  CopiarDataSet;
+end;
+
+function TModelProdutoMetodosBuscar.&End: iModelProdutoMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE BUSCAR PRODUTOS
+  Result := FParent.Metodos;
+end;
+
+procedure TModelProdutoMetodosBuscar.Validacao;
+begin
+  if not Assigned(FFDMemTable) then
+    raise Exception.Create(
+      'Para prosseguir, você deve vincular um FDMemTable ao encadeamento' +
+      ' de funcões do método de Produto.Metodo.Buscar .'
+    );
+end;
+
+procedure TModelProdutoMetodosBuscar.CopiarDataSet;
+begin
+  FFDMemTable.CopyDataSet(FParent.DAODataSet.DataSet, [coStructure, coRestart, coAppend]);
+  FFDMemTable.IndexFieldNames := 'DESCRICAO';
+end;
+
+function TModelProdutoMetodosBuscar.FDMemTable(
+  AFDMemTable: TFDMemTable): iModelProdutoMetodosBuscar;
+begin
+  Result      := Self;
+  FFDMemTable := AFDMemTable;
+end;
+
+constructor TModelProdutoMetodosBuscar.Create(AParent: iModelProduto);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelProdutoMetodosBuscar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelProdutoMetodosBuscar.New(AParent: iModelProduto): iModelProdutoMetodosBuscar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

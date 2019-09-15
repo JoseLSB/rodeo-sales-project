@@ -1,0 +1,103 @@
+unit MFichas.Model.Item;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Item.Metodos.Factory,
+  MFichas.Model.Item.Iterator,
+  MFichas.Model.Item.Metodos.GravarNoBanco,
+  MFichas.Model.Entidade.VENDAITENS;
+
+type
+  TModelItem = class(TInterfacedObject, iModelItem, iModelItemMetodos)
+  private
+    FIterator: iModelItemIterator;
+    FEntidade: TVENDAITENS;
+    FVender: iModelItemMetodosVender;
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelItem;
+    function Metodos                         : iModelItemMetodos;
+    function Entidade                        : TVENDAITENS; overload;
+    function Entidade(AEntidade: TVENDAITENS): iModelItem; overload;
+    function Iterator                        : iModelItemIterator;
+    function GravarNoBanco                   : iModelItemGravarNoBanco;
+    //METODOS
+    function Vender       : iModelItemMetodosVender;
+    function Cancelar     : iModelItemMetodosCancelar;
+    function Devolver     : iModelItemMetodosDevolver;
+    function &End         : iModelItem;
+  end;
+
+implementation
+
+{ TModelItem }
+
+function TModelItem.&End: iModelItem;
+begin
+  Result := Self;
+end;
+
+function TModelItem.Entidade: TVENDAITENS;
+begin
+  Result := FEntidade;
+end;
+
+function TModelItem.Entidade(AEntidade: TVENDAITENS): iModelItem;
+begin
+  Result := Self;
+  FEntidade := AEntidade;
+end;
+
+function TModelItem.Cancelar: iModelItemMetodosCancelar;
+begin
+  Result := TModelItemMetodosFactory.New.Cancelar(Self);
+end;
+
+constructor TModelItem.Create;
+begin
+  FIterator := TModelItemIterator.New(Self);
+  FEntidade := TVENDAITENS.Create;
+end;
+
+destructor TModelItem.Destroy;
+begin
+  FreeAndNil(FEntidade);
+  inherited;
+end;
+
+function TModelItem.Devolver: iModelItemMetodosDevolver;
+begin
+  Result := TModelItemMetodosFactory.New.Devolver(Self);
+end;
+
+function TModelItem.GravarNoBanco: iModelItemGravarNoBanco;
+begin
+  Result := TModelItemMetodosGravarNoBanco.New(Self);
+end;
+
+function TModelItem.Iterator: iModelItemIterator;
+begin
+  Result := FIterator;
+end;
+
+function TModelItem.Metodos: iModelItemMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelItem.New: iModelItem;
+begin
+  Result := Self.Create;
+end;
+
+function TModelItem.Vender: iModelItemMetodosVender;
+begin
+  Result := TModelItemMetodosFactory.New.Vender(Self);
+end;
+
+end.

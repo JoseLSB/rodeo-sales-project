@@ -1,0 +1,95 @@
+unit MFichas.Model.Item.Iterator;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Entidade.VENDAITENS;
+
+type
+  TModelItemIterator = class(TInterfacedObject, iModelItemIterator)
+  private
+    [weak]
+    FParent: iModelItem;
+    FList  : TList<iModelItem>;
+    FCount : Integer;
+    constructor Create(AParent: iModelItem);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelItem): iModelItemIterator;
+    function hasNext                : Boolean;
+    function Next                   : iModelItem;
+    function Add(AItem: iModelItem) : iModelItemIterator;
+    function Remove(AIndex: Integer): iModelItemIterator;
+    function ClearIterator          : iModelItemIterator;
+    function &End                   : iModelItem;
+  end;
+
+implementation
+
+{ TModelItemIterator }
+
+function TModelItemIterator.Add(AItem: iModelItem) : iModelItemIterator;
+begin
+  Result := Self;
+  FList.Add(AItem);
+end;
+
+function TModelItemIterator.&End: iModelItem;
+begin
+  Result := FParent;
+end;
+
+function TModelItemIterator.hasNext: Boolean;
+begin
+  if (Result) and (FList.Count = 1) then FCount := 0;
+  Result := not (FCount = FList.Count);
+  if (not Result) then FCount := 0;
+end;
+
+function TModelItemIterator.ClearIterator: iModelItemIterator;
+begin
+  Result := Self;
+  FList.Clear;
+end;
+
+constructor TModelItemIterator.Create(AParent: iModelItem);
+begin
+  FParent := AParent;
+  FList   := TList<iModelItem>.Create;
+  FCount  := 0;
+end;
+
+destructor TModelItemIterator.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FList);
+  {$ELSE}
+  FList.Free;
+  FList.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelItemIterator.New(AParent: iModelItem): iModelItemIterator;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelItemIterator.Next: iModelItem;
+begin
+  Result := FList.Items[FCount];
+  Inc(FCount);
+end;
+
+function TModelItemIterator.Remove(AIndex: Integer): iModelItemIterator;
+begin
+  Result := Self;
+  FList.Delete(AIndex);
+end;
+
+end.

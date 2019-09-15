@@ -1,0 +1,99 @@
+unit MFichas.Model.Configuracao.Metodos.Editar.View;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Configuracao.Interfaces,
+  MFichas.Model.Entidade.CONFIGURACOES,
+
+  ORMBR.Types.Blob;
+
+type
+  TModelConfiguracaoMetodosEditarView = class(TInterfacedObject, iModelConfiguracaoMetodosEditarView)
+  private
+    [weak]
+    FParent           : iModelConfiguracao;
+    FEntidade         : TCONFIGURACOES;
+    FImpressora       : String;
+    FListaConfiguracao: TObjectList<TCONFIGURACOES>;
+    constructor Create(AParent: iModelConfiguracao);
+    procedure RecuperarObjectoNoBancoDeDados;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelConfiguracao): iModelConfiguracaoMetodosEditarView;
+    function Impressora(AImpressora: String): iModelConfiguracaoMetodosEditarView;
+    function &End                           : iModelConfiguracaoMetodos;
+  end;
+
+implementation
+
+{ TModelConfiguracaoMetodosEditarView }
+
+function TModelConfiguracaoMetodosEditarView.&End: iModelConfiguracaoMetodos;
+begin
+  Result := FParent.Metodos;
+  RecuperarObjectoNoBancoDeDados;
+  Gravar;
+end;
+
+procedure TModelConfiguracaoMetodosEditarView.Gravar;
+begin
+  FParent.DAO.Modify(FEntidade);
+  FEntidade.IMPRESSORA := FImpressora;
+  FParent.DAO.Update(FEntidade);
+end;
+
+function TModelConfiguracaoMetodosEditarView.Impressora(
+  AImpressora: String): iModelConfiguracaoMetodosEditarView;
+begin
+  Result      := Self;
+  FImpressora := AImpressora;
+end;
+
+constructor TModelConfiguracaoMetodosEditarView.Create(AParent: iModelConfiguracao);
+begin
+  FParent   := AParent;
+  FEntidade := TCONFIGURACOES.Create;
+end;
+
+destructor TModelConfiguracaoMetodosEditarView.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  if Assigned(FListaConfiguracao) then
+    FreeAndNil(FListaConfiguracao);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  if Assigned(FListaConfiguracao) then
+  begin
+    FListaConfiguracao.Free;
+    FListaConfiguracao.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelConfiguracaoMetodosEditarView.New(AParent: iModelConfiguracao): iModelConfiguracaoMetodosEditarView;
+begin
+  Result := Self.Create(AParent);
+end;
+
+procedure TModelConfiguracaoMetodosEditarView.RecuperarObjectoNoBancoDeDados;
+begin
+  FListaConfiguracao := FParent.DAO.Find;
+
+  FEntidade.GUUID            := FListaConfiguracao[0].GUUID;
+  FEntidade.IMPRESSORA       := FListaConfiguracao[0].IMPRESSORA;
+  FEntidade.NOMEDISPOSITIVO  := FListaConfiguracao[0].NOMEDISPOSITIVO;
+  FEntidade.GUUIDDISPOSITIVO := FListaConfiguracao[0].GUUIDDISPOSITIVO;
+  FEntidade.DATACADASTRO     := FListaConfiguracao[0].DATACADASTRO;
+  FEntidade.DATAALTERACAO    := FListaConfiguracao[0].DATAALTERACAO;
+  FEntidade.DATALIBERACAO    := FListaConfiguracao[0].DATALIBERACAO;
+end;
+
+end.

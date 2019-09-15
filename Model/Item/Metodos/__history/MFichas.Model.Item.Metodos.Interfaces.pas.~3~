@@ -1,0 +1,18 @@
+unit MFichas.Model.Item.Metodos.Interfaces;
+
+interface
+
+uses
+  MFichas.Model.Item.Interfaces;
+
+type
+  iModelItemMetodosFactory = interface
+    ['{3D0158D6-E25D-4E78-A76E-39C2815FAFFD}']
+    function Vender(AParent: iModelItem)  : iModelItemMetodosVender;
+    function Cancelar(AParent: iModelItem): iModelItemMetodosCancelar;
+    function Devolver(AParent: iModelItem): iModelItemMetodosDevolver;
+  end;
+
+implementation
+
+end.

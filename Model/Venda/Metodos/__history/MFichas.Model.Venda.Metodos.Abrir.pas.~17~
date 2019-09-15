@@ -1,0 +1,75 @@
+unit MFichas.Model.Venda.Metodos.Abrir;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Controller.Constantes,
+
+  MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Entidade.VENDA,
+  MFichas.Model.Venda.State.Factory;
+
+type
+  TModelVendaMetodosAbrir = class(TInterfacedObject, iModelVendaMetodosAbrir)
+  private
+    [weak]
+    FParent: iModelVenda;
+    FVenda : TVENDA;
+    constructor Create(AParent: iModelVenda);
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelVenda): iModelVendaMetodosAbrir;
+    function Executar: iModelVendaMetodosAbrir;
+    function &End    : iModelVendaMetodos;
+  end;
+
+implementation
+
+{ TModelVendaMetodosAbrir }
+
+function TModelVendaMetodosAbrir.&End: iModelVendaMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+constructor TModelVendaMetodosAbrir.Create(AParent: iModelVenda);
+begin
+  FParent := AParent;
+  FVenda  := TVENDA.Create;
+end;
+
+destructor TModelVendaMetodosAbrir.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FVenda);
+  {$ELSE}
+  FVenda.Free;
+  FVenda.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelVendaMetodosAbrir.Executar: iModelVendaMetodosAbrir;
+begin
+  //TODO: IMPLEMENTAR METODO DE ABERTURA DE VENDA.
+  Result := Self;
+  Gravar;
+  FParent.SetState(TModelVendaStateFactory.New.Aberta);
+end;
+
+procedure TModelVendaMetodosAbrir.Gravar;
+begin
+  FParent.Entidade.CAIXA  := FParent.Caixa.Entidade.GUUID;
+  FParent.Entidade.STATUS := Integer(svAberta);
+  FParent.DAO.Insert(FParent.Entidade);
+end;
+
+class function TModelVendaMetodosAbrir.New(AParent: iModelVenda): iModelVendaMetodosAbrir;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

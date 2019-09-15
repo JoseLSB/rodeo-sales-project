@@ -1,0 +1,149 @@
+unit MFichas.Model.Usuario.Funcoes.Editar;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Usuario.Interfaces,
+  MFichas.Model.Entidade.USUARIO,
+
+  MFichas.Controller.Types;
+
+type
+  TModelUsuarioFuncoesEditar = class(TInterfacedObject, iModelUsuarioFuncoesEditar)
+  private
+    [weak]
+    FParent      : iModelUsuario;
+    FEntidade    : TUSUARIO;
+    FGUUID       : String;
+    FLogin       : String;
+    FNome        : String;
+    FSenha       : String;
+    FTipoUsuario : Integer;
+    FAtivoInativo: Integer;
+    FListaUsuario: TObjectList<TUSUARIO>;
+    constructor Create(AParent: iModelUsuario);
+    procedure RecuperarObjetoDoBancoDeDados;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelUsuario): iModelUsuarioFuncoesEditar;
+    function GUUID(AGUUID: String)          : iModelUsuarioFuncoesEditar;
+    function Login(ALogin: String)          : iModelUsuarioFuncoesEditar;
+    function Nome(ANomeUsuario: String)     : iModelUsuarioFuncoesEditar;
+    function Senha(ASenha: String)          : iModelUsuarioFuncoesEditar;
+    function TipoUsuario(ABoolean: Integer) : iModelUsuarioFuncoesEditar;
+    function AtivoInativo(ABoolean: Integer): iModelUsuarioFuncoesEditar;
+    function &End                           : iModelUsuarioFuncoes;
+  end;
+
+implementation
+
+{ TModelUsuarioFuncoesEditar }
+
+function TModelUsuarioFuncoesEditar.&End: iModelUsuarioFuncoes;
+begin
+  Result := FParent.Funcoes;
+  RecuperarObjetoDoBancoDeDados;
+  Gravar;
+end;
+
+function TModelUsuarioFuncoesEditar.AtivoInativo(
+  ABoolean: Integer): iModelUsuarioFuncoesEditar;
+begin
+  Result        := Self;
+  FAtivoInativo := ABoolean;
+end;
+
+constructor TModelUsuarioFuncoesEditar.Create(AParent: iModelUsuario);
+begin
+  FParent   := AParent;
+  FEntidade := TUSUARIO.Create;
+end;
+
+destructor TModelUsuarioFuncoesEditar.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  if Assigned(FListaUsuario) then
+    FreeAndNil(FListaUsuario);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  if Assigned(FListaUsuario) then
+  begin
+    FListaUsuario.Free;
+    FListaUsuario.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelUsuarioFuncoesEditar.TipoUsuario(ABoolean: Integer)
+  : iModelUsuarioFuncoesEditar;
+begin
+  Result       := Self;
+  FTipoUsuario := ABoolean;
+end;
+
+procedure TModelUsuarioFuncoesEditar.Gravar;
+begin
+  FParent.DAO.Modify(FEntidade);
+  FEntidade.GUUID  := FGUUID;
+  FEntidade.LOGIN  := FLogin.ToUpper;
+  FEntidade.NOME   := FNome;
+  FEntidade.SENHA  := FSenha;
+  FEntidade.TIPO   := FTipoUsuario;
+  FEntidade.STATUS := FAtivoInativo;
+  FParent.DAO.Update(FEntidade);
+end;
+
+function TModelUsuarioFuncoesEditar.GUUID(
+  AGUUID: String): iModelUsuarioFuncoesEditar;
+begin
+  Result := Self;
+  FGUUID := AGUUID;
+end;
+
+function TModelUsuarioFuncoesEditar.Login(
+  ALogin: String): iModelUsuarioFuncoesEditar;
+begin
+  Result := Self;
+  FLogin := ALogin;
+end;
+
+class function TModelUsuarioFuncoesEditar.New(AParent: iModelUsuario): iModelUsuarioFuncoesEditar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelUsuarioFuncoesEditar.Nome(
+  ANomeUsuario: String): iModelUsuarioFuncoesEditar;
+begin
+  Result := Self;
+  FNome  := ANomeUsuario;
+end;
+
+procedure TModelUsuarioFuncoesEditar.RecuperarObjetoDoBancoDeDados;
+begin
+  FListaUsuario           := FParent.DAO.FindWhere('GUUID = ' + QuotedStr(FGUUID));
+  FEntidade.GUUID         := FListaUsuario[0].GUUID;
+  FEntidade.LOGIN         := FListaUsuario[0].LOGIN;
+  FEntidade.NOME          := FListaUsuario[0].NOME;
+  FEntidade.SENHA         := FListaUsuario[0].SENHA;
+  FEntidade.TIPO          := FListaUsuario[0].TIPO;
+  FEntidade.STATUS        := FListaUsuario[0].STATUS;
+  FEntidade.DATACADASTRO  := FListaUsuario[0].DATACADASTRO;
+  FEntidade.DATAALTERACAO := FListaUsuario[0].DATAALTERACAO;
+end;
+
+function TModelUsuarioFuncoesEditar.Senha(
+  ASenha: String): iModelUsuarioFuncoesEditar;
+begin
+  Result := Self;
+  FSenha := ASenha;
+end;
+
+end.

@@ -1,0 +1,62 @@
+unit MFichas.Model.Usuario.TipoDeUsuario.Factory;
+
+interface
+
+uses
+  MFichas.Model.Usuario.TipoDeUsuario.Interfaces,
+  MFichas.Model.Usuario.Interfaces,
+  MFichas.Model.Usuario.TipoDeUsuario.Caixa,
+  MFichas.Model.Usuario.TipoDeUsuario.Fiscal,
+  MFichas.Model.Usuario.TipoDeUsuario.Gerente;
+
+type
+  TModelUsuarioTipoDeUsuarioFactory = class(TInterfacedObject, iModelUsuarioTipoDeUsuarioFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelUsuarioTipoDeUsuarioFactory;
+    function Caixa(AParent: iModelUsuario)  : iModelUsuarioMetodos;
+    function Fiscal(AParent: iModelUsuario) : iModelUsuarioMetodos;
+    function Gerente(AParent: iModelUsuario): iModelUsuarioMetodos;
+  end;
+
+implementation
+
+{ TModelUsuarioTipoDeUsuarioFactory }
+
+function TModelUsuarioTipoDeUsuarioFactory.Caixa(
+  AParent: iModelUsuario): iModelUsuarioMetodos;
+begin
+  Result := TModelUsuarioTipoDeUsuarioCaixa.New(AParent);
+end;
+
+constructor TModelUsuarioTipoDeUsuarioFactory.Create;
+begin
+
+end;
+
+destructor TModelUsuarioTipoDeUsuarioFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuarioTipoDeUsuarioFactory.Fiscal(
+  AParent: iModelUsuario): iModelUsuarioMetodos;
+begin
+  Result := TModelUsuarioTipoDeUsuarioFiscal.New(AParent);
+end;
+
+function TModelUsuarioTipoDeUsuarioFactory.Gerente(
+  AParent: iModelUsuario): iModelUsuarioMetodos;
+begin
+
+end;
+
+class function TModelUsuarioTipoDeUsuarioFactory.New: iModelUsuarioTipoDeUsuarioFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

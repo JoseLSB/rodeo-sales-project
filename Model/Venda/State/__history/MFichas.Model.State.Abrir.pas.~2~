@@ -1,0 +1,57 @@
+unit MFichas.Model.State.Abrir;
+
+interface
+
+uses
+  MFichas.Model.Venda.Interfaces;
+
+type
+  TModelStateAbrir = class(TInterfacedObject, iModelVendaMetodos)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelVendaMetodos;
+    function Abrir    : iModelVendaMetodosAbrir;
+    function Pagar    : iModelVendaMetodosPagar;
+    function Finalizar: iModelVendaMetodosFinalizar;
+  end;
+
+implementation
+
+{ TModelStateAbrir }
+
+function TModelStateAbrir.Abrir: iModelVendaMetodosAbrir;
+begin
+  raise Exception.Create(
+    'Esta venda já encontrasse aberta'
+  );
+end;
+
+constructor TModelStateAbrir.Create;
+begin
+
+end;
+
+destructor TModelStateAbrir.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelStateAbrir.Finalizar: iModelVendaMetodosFinalizar;
+begin
+
+end;
+
+class function TModelStateAbrir.New: iModelVendaMetodos;
+begin
+  Result := Self.Create;
+end;
+
+function TModelStateAbrir.Pagar: iModelVendaMetodosPagar;
+begin
+
+end;
+
+end.

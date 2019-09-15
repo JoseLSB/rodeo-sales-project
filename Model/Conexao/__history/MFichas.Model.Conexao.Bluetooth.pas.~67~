@@ -1,0 +1,156 @@
+unit MFichas.Model.Conexao.Bluetooth;
+
+interface
+
+
+uses
+  System.SysUtils,
+  System.Bluetooth,
+  System.Bluetooth.Components,
+  System.Generics.Collections,
+
+  MFichas.Model.Conexao.Interfaces;
+
+const
+  UUID = '{00001101-0000-1000-8000-00805F9B34FB}';
+
+type
+  TModelConexaoBluetooth = class(TInterfacedObject, iModelConexaoBluetooth)
+  private
+    FBluetooth: TBluetooth;
+    FSocket   : TBluetoothSocket;
+    procedure ConectarSocket(var ASocket: TBluetoothSocket);
+    class var FInstance: iModelConexaoBluetooth;
+    constructor Create;
+    procedure CriarComponenteBluetooth;
+    procedure VerificarSeBluetoothEstaAtivo;
+    function ObterDispositivoPeloNome(ANomeDispositivo: String): TBluetoothDevice;
+  public
+    destructor Destroy; override;
+    class function New: iModelConexaoBluetooth;
+    function ListarDispositivos(var AList: TList<String>): iModelConexaoBluetooth;
+    function ConectarDispositivo(var ASocket: TBluetoothSocket): iModelConexaoBluetooth;
+    procedure LimparSocketPosImpressao;
+  end;
+
+implementation
+
+{ TModelConexaoBluetooth }
+
+function TModelConexaoBluetooth.ConectarDispositivo(var ASocket: TBluetoothSocket): iModelConexaoBluetooth;
+var
+  LDevice: TBluetoothDevice;
+  LState: TBluetoothDeviceState;
+begin
+  Result  := Self;
+  LDevice := ObterDispositivoPeloNome('P25_027546_01');
+  LState  := LDevice.State;
+  if LDevice <> nil then
+  begin
+    if Assigned(FSocket) then
+    begin
+      FSocket.Free;
+      Sleep(5000);
+      FSocket := LDevice.CreateClientSocket(StringToGUID(UUID), False);
+      ConectarSocket(ASocket);
+    end
+    else
+    begin
+      FSocket := LDevice.CreateClientSocket(StringToGUID(UUID), False);
+      if FSocket <> nil then
+        ConectarSocket(ASocket);
+    end;
+  end;
+end;
+
+procedure TModelConexaoBluetooth.ConectarSocket(var ASocket: TBluetoothSocket);
+begin
+  try
+    FSocket.Connect;
+    ASocket := FSocket;
+  except
+    raise Exception.Create(
+      'Falha ao tentar se conectar com a impressora informada.' + sLineBreak +
+      'Verifique se a mesma está realmente ligada, e tente novamente.');
+  end;
+end;
+
+procedure TModelConexaoBluetooth.VerificarSeBluetoothEstaAtivo;
+begin
+  if FBluetooth.ConnectionState = TBluetoothConnectionState.Disconnected then
+    raise Exception.Create(
+      'Falha ao buscar dispositivos' + sLineBreak +
+      'Verifique se o seu Bluetooth está ativado e tente novamente.'
+    );
+end;
+
+constructor TModelConexaoBluetooth.Create;
+begin
+  CriarComponenteBluetooth;
+end;
+
+procedure TModelConexaoBluetooth.CriarComponenteBluetooth;
+begin
+  FBluetooth         := TBluetooth.Create(nil);
+  FBluetooth.Enabled := True;
+end;
+
+destructor TModelConexaoBluetooth.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FBluetooth);
+  if Assigned(FSocket) then
+    FreeAndNil(FSocket);
+  {$ELSE}
+  FBluetooth.Free;
+  FBluetooth.DisposeOf;
+  if Assigned(FSocket) then
+  begin
+    FSocket.Free;
+    FSocket.DisposeOf;
+  end;
+  {$ENDIF}
+  inherited;
+end;
+
+procedure TModelConexaoBluetooth.LimparSocketPosImpressao;
+begin
+  FSocket.Close;
+end;
+
+function TModelConexaoBluetooth.ListarDispositivos(var AList: TList<String>): iModelConexaoBluetooth;
+var
+  LDevice: TBluetoothDevice;
+begin
+  Result := Self;
+  VerificarSeBluetoothEstaAtivo;
+
+  AList.Clear;
+
+  for LDevice in FBluetooth.PairedDevices do
+  begin
+    AList.Add(LDevice.DeviceName);
+  end;
+end;
+
+class function TModelConexaoBluetooth.New: iModelConexaoBluetooth;
+begin
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+  Result := FInstance;
+end;
+
+function TModelConexaoBluetooth.ObterDispositivoPeloNome(
+  ANomeDispositivo: String): TBluetoothDevice;
+var
+  LDevice: TBluetoothDevice;
+begin
+  Result := nil;
+  for LDevice in FBluetooth.PairedDevices do
+  begin
+    if LDevice.DeviceName = ANomeDispositivo then
+      Result := LDevice;
+  end;
+end;
+
+end.

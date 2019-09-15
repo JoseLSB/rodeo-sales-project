@@ -1,0 +1,7 @@
+unit MFichas.Model.Pagamento.Formas.Credito.Processar;
+
+interface
+
+implementation
+
+end.

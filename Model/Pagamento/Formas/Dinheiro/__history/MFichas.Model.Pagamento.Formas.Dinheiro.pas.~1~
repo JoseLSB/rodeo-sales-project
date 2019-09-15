@@ -1,0 +1,7 @@
+unit MFichas.Model.Pagamento.Formas.Dinheiro;
+
+interface
+
+implementation
+
+end.

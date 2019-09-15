@@ -1,0 +1,13 @@
+unit MFichas.Model.Permissoes.Interfaces;
+
+interface
+
+type
+  iModelPermissoes = interface
+    ['{10B0BC27-5241-4CDF-A08A-4A82EF6C97DD}']
+//    function ListaDePermissoes: TList<TPERMISSOES>;
+  end;
+
+implementation
+
+end.

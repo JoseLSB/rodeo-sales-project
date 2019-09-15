@@ -1,0 +1,100 @@
+unit MFichas.Model.Usuario;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Usuario.Interfaces,
+  MFichas.Model.Entidade.USUARIO,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+
+  ORMBR.Container.ObjectSet,
+  ORMBR.Container.ObjectSet.Interfaces;
+
+type
+  TModelUsuario = class(TInterfacedObject, iModelUsuario)
+  private
+    FEntidade      : TUSUARIO;
+    FEntidadeFiscal: TUSUARIO;
+    FConn          : iModelConexaoSQL;
+    FDAO           : IContainerObjectSet<TUSUARIO>;
+    FMetodos       : iModelUsuarioMetodos;
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelUsuario;
+    function Metodos(AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+    function Funcoes                      : iModelUsuarioFuncoes;
+    function Entidade                     : TUSUARIO; overload;
+    function EntidadeFiscal               : TUSUARIO;
+    function Entidade(AEntidade: TUSUARIO): iModelUsuario; overload;
+    function DAO                          : iContainerObjectSet<TUSUARIO>;
+  end;
+
+implementation
+
+{ TModelUsuario }
+
+constructor TModelUsuario.Create;
+begin
+  FEntidade       := TUSUARIO.Create;
+  FEntidadeFiscal := TUSUARIO.Create;
+  FConn           := TModelConexaoFactory.New.ConexaoSQL;
+  FDAO            := TContainerObjectSet<TUSUARIO>.Create(FConn.Conn);
+end;
+
+function TModelUsuario.DAO: iContainerObjectSet<TUSUARIO>;
+begin
+  Result := FDAO;
+end;
+
+destructor TModelUsuario.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  FreeAndNil(FEntidadeFiscal);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  FEntidadeFiscal.Free;
+  FEntidadeFiscal.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelUsuario.Entidade: TUSUARIO;
+begin
+  Result := FEntidade;
+end;
+
+function TModelUsuario.Entidade(AEntidade: TUSUARIO): iModelUsuario;
+begin
+  Result    := Self;
+  FEntidade := AEntidade;
+end;
+
+function TModelUsuario.EntidadeFiscal: TUSUARIO;
+begin
+  Result := FEntidadeFiscal;
+end;
+
+function TModelUsuario.Funcoes: iModelUsuarioFuncoes;
+begin
+  raise Exception.Create('Implemente aqui');
+end;
+
+function TModelUsuario.Metodos(
+  AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+begin
+  FMetodos := AValue;
+  Result   := FMetodos;
+end;
+
+class function TModelUsuario.New: iModelUsuario;
+begin
+  Result := Self.Create;
+end;
+
+end.

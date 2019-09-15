@@ -1,0 +1,59 @@
+unit MFichas.Model.Pagamento.Formas.Factory;
+
+interface
+
+uses
+  MFichas.Model.Pagamento.Interfaces,
+  MFichas.Model.Pagamento.Formas.Interfaces,
+  MFichas.Model.Pagamento.Formas.Dinheiro,
+  MFichas.Model.Pagamento.Formas.Debito,
+  MFichas.Model.Pagamento.Formas.Credito;
+
+type
+  TModelPagamentoFormasFactory = class(TInterfacedObject, iModelPagamentoFormasFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelPagamentoFormasFactory;
+    function Dinheiro      : iModelPagamentoMetodos;
+    function CartaoDebito  : iModelPagamentoMetodos;
+    function CartaoCredito : iModelPagamentoMetodos;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasFactory }
+
+function TModelPagamentoFormasFactory.CartaoCredito: iModelPagamentoMetodos;
+begin
+
+end;
+
+function TModelPagamentoFormasFactory.CartaoDebito: iModelPagamentoMetodos;
+begin
+
+end;
+
+constructor TModelPagamentoFormasFactory.Create;
+begin
+
+end;
+
+destructor TModelPagamentoFormasFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPagamentoFormasFactory.Dinheiro: iModelPagamentoMetodos;
+begin
+
+end;
+
+class function TModelPagamentoFormasFactory.New: iModelPagamentoFormasFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

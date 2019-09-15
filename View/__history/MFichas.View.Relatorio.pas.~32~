@@ -1,0 +1,192 @@
+unit MFichas.View.Relatorio;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+
+  FMX.Types,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Graphics,
+  FMX.Dialogs,
+  FMX.Objects,
+  FMX.Layouts,
+  FMX.ListBox,
+  FMX.StdCtrls,
+  FMX.Controls.Presentation,
+  FMX.TabControl,
+  FMX.ListView.Types,
+  FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base,
+  FMX.ListView,
+  FMX.Platform,
+  FMX.VirtualKeyBoard,
+
+  MultiDetailAppearanceU,
+
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Impressao.Interfaces,
+  MFichas.Model.Impressao,
+
+  MFichas.Controller.Types;
+
+type
+  TRelatorioView = class(TForm)
+    LayoutPrincipal: TLayout;
+    TabControlPrincipal: TTabControl;
+    TabItemListarRelatorio: TTabItem;
+    RectangleListar: TRectangle;
+    ToolBarListar: TToolBar;
+    LabelToolBarListar: TLabel;
+    ButtonBackListar: TButton;
+    LayoutRelatorioBottom: TLayout;
+    RoundRectSalvarAlteracoes: TRoundRect;
+    LabelBotaoSalvarAlteracoes: TLabel;
+    ListView1: TListView;
+    procedure FormCreate(Sender: TObject);
+    procedure RoundRectSalvarAlteracoesClick(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure ButtonBackListarClick(Sender: TObject);
+  private
+    { Private declarations }
+    FConexao  : iModelConexaoSQL;
+    FImpressao: iModelImpressao;
+    FListItem: TListViewItem;
+    function StatusCaixa: String;
+    function DataFechamento: String;
+    procedure BuscarCaixas;
+    procedure VoltarAbas;
+    procedure FecharForm;
+  public
+    { Public declarations }
+  end;
+
+var
+  RelatorioView: TRelatorioView;
+
+implementation
+
+{$R *.fmx}
+
+procedure TRelatorioView.BuscarCaixas;
+const
+  _SELECT = ' SELECT * FROM CAIXA ';
+  _WHERE  = ' ORDER BY DATAABERTURA DESC ';
+var
+  LCountRecords: Integer;
+  I: Integer;
+begin
+  FConexao.Query.Active := False;
+  FConexao.Query.SQL.Text := '';
+  FConexao.Query.SQL.Text := _SELECT + _WHERE;
+  FConexao.Query.Active := True;
+
+  LCountRecords := FConexao.Query.RecordCount;
+  I := -1;
+
+  if LCountRecords > 0 then
+  begin
+    while not FConexao.Query.Eof do
+    begin
+      FListItem := ListView1.Items.Add;
+      FListItem.Text := 'CAIXA ' + (LCountRecords - I).ToString;
+      FListItem.Detail := FConexao.Query.FieldByName('GUUID').AsString;
+      FListItem.Data[TMultiDetailAppearanceNames.Detail1] := StatusCaixa;
+      FListItem.Data[TMultiDetailAppearanceNames.Detail2] := 'Abertura: ' + FormatDateTime('dd/mm/yyyy hh:nn:ss', FConexao.Query.FieldByName('DATAABERTURA').AsDateTime);
+      FListItem.Data[TMultiDetailAppearanceNames.Detail3] := DataFechamento;
+      Inc(I);
+      FConexao.Query.Next;
+    end;
+  end;
+end;
+
+procedure TRelatorioView.ButtonBackListarClick(Sender: TObject);
+begin
+  VoltarAbas;
+end;
+
+function TRelatorioView.DataFechamento: String;
+var
+  LDate: TDate;
+begin
+  LDate := FConexao.Query.FieldByName('DATAFECHAMENTO').AsDateTime;
+  if FormatDateTime('dd/mm/yyyy', LDate) = '30/12/1899' then
+    Result := 'Fechamento:'
+  else
+    Result := 'Fechamento: ' + FormatDateTime('dd/mm/yyyy hh:nn:ss', FConexao.Query.FieldByName('DATAFECHAMENTO').AsDateTime);
+end;
+
+procedure TRelatorioView.FecharForm;
+begin
+  RelatorioView.Close;
+  {$IFDEF ANDROID OR IOS}
+  if Assigned(RelatorioView) then
+  begin
+    RelatorioView.DisposeOf;
+    RelatorioView.Free;
+  end;
+  {$ENDIF}
+end;
+
+procedure TRelatorioView.FormCreate(Sender: TObject);
+begin
+  FConexao   := TModelConexaoFactory.New.ConexaoSQL;
+  FImpressao := TModelImpressao.New;
+
+  TabControlPrincipal.TabPosition := TTabPosition.None;
+  TabControlPrincipal.ActiveTab   := TabItemListarRelatorio;
+
+  BuscarCaixas;
+end;
+
+procedure TRelatorioView.FormKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+var
+  LTeclado: IFMXVirtualKeyboardService;
+begin
+  if (Key = vkHardwareBack) then
+  begin
+    TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(LTeclado));
+    if (LTeclado <> nil) and (TVirtualKeyboardState.Visible in LTeclado.VirtualKeyboardState) then
+      LTeclado.HideVirtualKeyboard
+    else
+    begin
+      Key := 0;
+      VoltarAbas;
+    end;
+  end;
+end;
+
+procedure TRelatorioView.RoundRectSalvarAlteracoesClick(Sender: TObject);
+begin
+  FImpressao
+  .Caixa
+    .Fechamento
+      .TituloDaImpressao('RELATORIO GERENCIAL')
+      .CodigoDoCaixa(ListView1.Items.AppearanceItem[ListView1.ItemIndex].Detail)
+      .ExecutarImpressao
+    .&End
+  .&End;
+end;
+
+function TRelatorioView.StatusCaixa: String;
+begin
+  case FConexao.Query.FieldByName('STATUS').AsInteger of
+    0: Result := 'Status: Fechado';
+    1: Result := 'Status: Aberto';
+  end;
+end;
+
+procedure TRelatorioView.VoltarAbas;
+begin
+  FecharForm;
+end;
+
+end.

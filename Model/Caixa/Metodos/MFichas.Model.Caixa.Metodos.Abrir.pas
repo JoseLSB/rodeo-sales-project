@@ -1,0 +1,126 @@
+unit MFichas.Model.Caixa.Metodos.Abrir;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Bluetooth,
+
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Caixa.State.Factory,
+  MFichas.Model.Usuario.Interfaces,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+
+  MFichas.Controller.Types;
+
+
+type
+  TModelCaixaMetodosAbrir = class(TInterfacedObject, iModelCaixaMetodosAbrir)
+  private
+    [weak]
+    FParent       : iModelCaixa;
+    FValorAbertura: Currency;
+    FOperador     : iModelUsuario;
+    FFiscal       : String;
+    FBluetooth    : iModelConexaoBluetooth;
+    constructor Create(AParent: iModelCaixa);
+    procedure Imprimir;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelCaixa): iModelCaixaMetodosAbrir;
+    function SetValorAbertura(AValue: Currency)    : iModelCaixaMetodosAbrir;
+    function SetOperador(AOperador: iModelUsuario) : iModelCaixaMetodosAbrir; overload;
+    function SetOperador(AGUUIDFiscal: String)     : iModelCaixaMetodosAbrir; overload;
+    function &End                                  : iModelCaixaMetodos;
+  end;
+
+implementation
+
+{ TModelCaixaMetodosAbrir }
+
+function TModelCaixaMetodosAbrir.&End: iModelCaixaMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE ABERTURA DE CAIXA
+  Result := FParent.Metodos;
+
+  Imprimir;
+  Gravar;
+end;
+
+procedure TModelCaixaMetodosAbrir.Gravar;
+begin
+  FParent.Entidade.VALORABERTURA := FValorAbertura;
+  if FFiscal.IsEmpty then
+    FParent.Entidade.OPERADOR    := FOperador.Entidade.GUUID
+  else
+    FParent.Entidade.OPERADOR    := FFiscal;
+  FParent.Entidade.STATUS        := Integer(scAberto);
+  FParent.DAO.Insert(FParent.Entidade);
+
+  FParent.SetState(TModelCaixaStateFactory.New.Aberto);
+  FFiscal := '';
+end;
+
+procedure TModelCaixaMetodosAbrir.Imprimir;
+var
+  LSocket: TBluetoothSocket;
+begin
+  FBluetooth.ConectarDispositivo(LSocket);
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('ABERTURA DE CAIXA' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(49)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('(+)ABERTURA: ' + FormatCurr('#,##0.00', FValorAbertura) + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+  LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+end;
+
+constructor TModelCaixaMetodosAbrir.Create(AParent: iModelCaixa);
+begin
+  FParent    := AParent;
+  FBluetooth := TModelConexaoFactory.New.ConexaoBluetooth;
+end;
+
+destructor TModelCaixaMetodosAbrir.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelCaixaMetodosAbrir.New(AParent: iModelCaixa): iModelCaixaMetodosAbrir;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelCaixaMetodosAbrir.SetOperador(AOperador: iModelUsuario) : iModelCaixaMetodosAbrir;
+begin
+  Result    := Self;
+  FOperador := AOperador;
+end;
+
+function TModelCaixaMetodosAbrir.SetOperador(
+  AGUUIDFiscal: String): iModelCaixaMetodosAbrir;
+begin
+  Result  := Self;
+  FFiscal := AGUUIDFiscal;
+end;
+
+function TModelCaixaMetodosAbrir.SetValorAbertura(
+  AValue: Currency): iModelCaixaMetodosAbrir;
+begin
+  Result         := Self;
+  FValorAbertura := AValue;
+end;
+
+end.

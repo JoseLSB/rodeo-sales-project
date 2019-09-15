@@ -1,0 +1,176 @@
+unit MFichas.Model.Item.Metodos.GravarNoBanco;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Entidade.VENDAITENS,
+  MFichas.Model.Entidade.PRODUTO,
+
+  ORMBR.Container.ObjectSet.Interfaces,
+  ORMBR.Container.ObjectSet, System.Bluetooth, MFichas.Controller.Types;
+
+type
+  TModelItemMetodosGravarNoBanco = class(TInterfacedObject, iModelItemGravarNoBanco)
+  private
+    FConn     : iModelConexaoSQL;
+    FBluetooth: iModelConexaoBluetooth;
+    FDAO      : iContainerObjectSet<TVENDAITENS>;
+    FProduto : TObjectList<TPRODUTO>;
+    [weak]
+    FParent   : iModelItem;
+    constructor Create(AParent: iModelItem);
+    procedure DestruirListaProduto;
+    procedure Imprimir;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelItem): iModelItemGravarNoBanco;
+    function Executar: iModelItemGravarNoBanco;
+    function &End    : iModelItem;
+  end;
+
+implementation
+
+{ TModelItemMetodosGravarNoBanco }
+
+uses MFichas.Model.Produto;
+
+function TModelItemMetodosGravarNoBanco.&End: iModelItem;
+begin
+  Result := FParent;
+end;
+
+constructor TModelItemMetodosGravarNoBanco.Create(AParent: iModelItem);
+begin
+  FParent    := AParent;
+  FConn      := TModelConexaoFactory.New.ConexaoSQL;
+  FBluetooth := TModelConexaoFactory.New.ConexaoBluetooth;
+  FDAO       := TContainerObjectSet<TVENDAITENS>.Create(FConn.Conn, 10);
+end;
+
+destructor TModelItemMetodosGravarNoBanco.Destroy;
+begin
+  DestruirListaProduto;
+  inherited;
+end;
+
+procedure TModelItemMetodosGravarNoBanco.DestruirListaProduto;
+begin
+  {$IFDEF MSWINDOWS}
+  if Assigned(FProduto) then
+    FreeAndNil(FProduto);
+  {$ELSE}
+  if Assigned(FProduto) then
+  begin
+    FProduto.Free;
+    FProduto.DisposeOf;
+  end;
+  {$ENDIF}
+end;
+
+function TModelItemMetodosGravarNoBanco.Executar: iModelItemGravarNoBanco;
+var
+  LItem  : iModelItem;
+  I      : Integer;
+  LSocket: TBluetoothSocket;
+begin
+  Result := Self;
+
+  Imprimir;
+  Gravar;
+
+  FParent.Iterator.ClearIterator;
+end;
+
+procedure TModelItemMetodosGravarNoBanco.Gravar;
+var
+  LItem: iModelItem;
+begin
+  while FParent.Iterator.hasNext do
+  begin
+    LItem := FParent.Iterator.Next;
+    FDAO.Insert(LItem.Entidade);
+  end;
+end;
+
+procedure TModelItemMetodosGravarNoBanco.Imprimir;
+var
+  LItem  : iModelItem;
+  LSocket: TBluetoothSocket;
+  I      : Integer;
+begin
+  FBluetooth.ConectarDispositivo(LSocket);
+  while FParent.Iterator.hasNext do
+  begin
+    LItem    := FParent.Iterator.Next;
+    if LItem.Entidade.TIPO = Integer(tvVenda) then
+    begin
+      FProduto := TModelProduto.New.Metodos.BuscarModel.BuscarPorCodigo(LItem.Entidade.PRODUTO);
+      if LItem.Entidade.QUANTIDADE > 1 then
+      begin
+        for I := 0 to Pred(Trunc(LItem.Entidade.QUANTIDADE)) do
+        begin
+          try
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes('COMUNIDADE AMOR FRATERNO' + chr(10)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + chr(10)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(48)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(FProduto.Items[0].DESCRICAO + chr(10)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(48)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes('R$' + LItem.Entidade.PRECO.ToString + chr(10)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+            LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+          except
+            raise Exception.Create(
+              'Falha na impressão.' + sLineBreak +
+              'A comunicação com a impressora foi perdida. Tente novamente ou chame o suporte.'
+            );
+            DestruirListaProduto;
+          end;
+        end;
+      end
+      else
+      begin
+        try
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes('COMUNIDADE AMOR FRATERNO' + chr(10)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(1)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(DateTimeToStr(Now) + chr(10)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(48)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(FProduto.Items[0].DESCRICAO + chr(10)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(33) + chr(0)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(97) + chr(48)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes('R$' + LItem.Entidade.PRECO.ToString + chr(10)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(27) + chr(100) + chr(1)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes('------------------------' + chr(10)));
+          LSocket.SendData(TEncoding.UTF8.GetBytes(chr(10)));
+        except
+          raise Exception.Create(
+            'Falha na impressão.' + sLineBreak +
+            'A comunicação com a impressora foi perdida. Tente novamente ou chame o suporte.'
+          );
+          DestruirListaProduto;
+        end;
+      end;
+      DestruirListaProduto;
+    end;
+  end;
+end;
+
+class function TModelItemMetodosGravarNoBanco.New(AParent: iModelItem): iModelItemGravarNoBanco;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

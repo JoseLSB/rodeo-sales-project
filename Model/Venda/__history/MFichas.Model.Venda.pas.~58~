@@ -1,0 +1,149 @@
+unit MFichas.Model.Venda;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Item,
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Venda.Metodos.Factory,
+  MFichas.Model.Venda.State.Factory,
+  MFichas.Model.Entidade.VENDA,
+  MFichas.Model.Conexao.Interfaces,
+  MFichas.Model.Conexao.Factory,
+  MFichas.Model.Pagamento.Interfaces,
+  MFichas.Model.Pagamento
+
+  ORMBR.Container.ObjectSet,
+  ORMBR.Container.ObjectSet.Interfaces;
+
+type
+  TModelVenda = class(TInterfacedObject, iModelVenda, iModelVendaMetodos)
+  private
+    [weak]
+    FParent   : iModelCaixa;
+    FState    : iModelVendaMetodos;
+    FEntidade : TVENDA;
+    FItem     : iModelItem;
+    FPagamento: iModelPagamento;
+    FConn     : iModelConexaoSQL;
+    FDAO      : iContainerObjectSet<TVENDA>;
+    constructor Create(AParent: iModelCaixa);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelCaixa): iModelVenda;
+    function SetState(AState: iModelVendaMetodos): iModelVenda;
+    function Metodos: iModelVendaMetodos;
+    function Entidade(AEntidade: TVENDA): iModelVenda; overload;
+    function Entidade                   : TVENDA; overload;
+    function Caixa                      : iModelCaixa;
+    function Item                       : iModelItem;
+    function Pagamento                  : iModelPagamento;
+    function DAO                        : iContainerObjectSet<TVENDA>;
+    //METODOS
+    function Abrir    : iModelVendaMetodosAbrir;
+    function Pagar    : iModelVendaMetodosPagar;
+    function Finalizar: iModelVendaMetodosFinalizar;
+    function &End     : iModelVenda;
+  end;
+
+implementation
+
+{ TModelVenda }
+
+function TModelVenda.&End: iModelVenda;
+begin
+  Result := Self;
+end;
+
+function TModelVenda.Abrir: iModelVendaMetodosAbrir;
+begin
+  FState.Abrir;
+  Result := TModelVendaMetodosFactory.New.Abrir(Self);
+end;
+
+function TModelVenda.Caixa: iModelCaixa;
+begin
+  Result := FParent;
+end;
+
+constructor TModelVenda.Create(AParent: iModelCaixa);
+begin
+  FState     := TModelVendaStateFactory.New.Fechada;
+  FParent    := AParent;
+  FEntidade  := TVENDA.Create;
+  FItem      := TModelItem.New(Self);
+  FPagamento := TModelPagamento.New(Self);
+  FConn      := TModelConexaoFactory.New.ConexaoSQL;
+  FDAO       := TContainerObjectSet<TVENDA>.Create(FConn.Conn, 10);
+end;
+
+function TModelVenda.DAO: iContainerObjectSet<TVENDA>;
+begin
+  Result := FDAO;
+end;
+
+destructor TModelVenda.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelVenda.Entidade(AEntidade: TVENDA): iModelVenda;
+begin
+  Result    := Self;
+  FEntidade := AEntidade;
+end;
+
+function TModelVenda.Entidade: TVENDA;
+begin
+  Result := FEntidade;
+end;
+
+function TModelVenda.Finalizar: iModelVendaMetodosFinalizar;
+begin
+  FState.Finalizar;
+  Result := TModelVendaMetodosFactory.New.Finalizar(Self);
+end;
+
+function TModelVenda.Item: iModelItem;
+begin
+  Result := FItem;
+end;
+
+function TModelVenda.Metodos: iModelVendaMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelVenda.New(AParent: iModelCaixa): iModelVenda;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelVenda.Pagamento: iModelPagamento;
+begin
+  Result := FPagamento;
+end;
+
+function TModelVenda.Pagar: iModelVendaMetodosPagar;
+begin
+  FState.Pagar;
+  Result := TModelVendaMetodosFactory.New.Pagar(Self);
+end;
+
+function TModelVenda.SetState(AState: iModelVendaMetodos): iModelVenda;
+begin
+  Result := Self;
+  FState := AState;
+end;
+
+end.

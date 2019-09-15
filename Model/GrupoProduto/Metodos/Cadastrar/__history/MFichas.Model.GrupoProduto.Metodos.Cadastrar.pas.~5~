@@ -1,0 +1,56 @@
+unit MFichas.Model.GrupoProduto.Metodos.Cadastrar;
+
+interface
+
+uses
+  MFichas.Model.GrupoProduto.Interfaces;
+
+type
+  TModelGrupoMetodosCadastrar = class(TInterfacedObject, iModelGrupoProdutoMetodosCadastrar)
+  private
+    [weak]
+    FParent   : iModelGrupoProduto;
+    FDescricao: String;
+    constructor Create(AParent: iModelGrupoProduto);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelGrupoProduto): iModelGrupoProdutoMetodosCadastrar;
+    function Descricao(ADescricao: String): iModelGrupoProdutoMetodosCadastrar;
+    function &End                         : iModelGrupoProdutoMetodos;
+  end;
+
+implementation
+
+{ TModelGrupoMetodosCadastrar }
+
+function TModelGrupoMetodosCadastrar.&End: iModelGrupoProdutoMetodos;
+begin
+  //TODO: IMPLEMENTAR MÉTODO DE CADASTRO DE GRUPOS.
+  Result := FParent.Metodos;
+  FParent.DAO.Insert(FEntidade);
+end;
+
+constructor TModelGrupoMetodosCadastrar.Create(AParent: iModelGrupoProduto);
+begin
+  FParent := AParent;
+end;
+
+function TModelGrupoMetodosCadastrar.Descricao(
+  ADescricao: String): iModelGrupoProdutoMetodosCadastrar;
+begin
+  Result := Self;
+  FDescricao := ADescricao;
+end;
+
+destructor TModelGrupoMetodosCadastrar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelGrupoMetodosCadastrar.New(AParent: iModelGrupoProduto): iModelGrupoProdutoMetodosCadastrar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

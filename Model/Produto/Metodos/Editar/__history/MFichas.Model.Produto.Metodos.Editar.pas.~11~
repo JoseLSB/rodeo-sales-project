@@ -1,0 +1,135 @@
+unit MFichas.Model.Produto.Metodos.Editar;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Generics.Collections,
+
+  MFichas.Model.Produto.Interfaces,
+
+  MFichas.Model.Entidade.PRODUTO;
+
+type
+  TModelProdutoMetodosEditar = class(TInterfacedObject, iModelProdutoMetodosEditar)
+  private
+    [weak]
+    FParent      : iModelProduto;
+    FEntidade    : TPRODUTO;
+    FGUUID       : String;
+    FDescricao   : String;
+    FValor       : Currency;
+    FGrupo       : String;
+    FAtivoInativo: Integer;
+    FListaProduto: TObjectList<TPRODUTO>;
+    constructor Create(AParent: iModelProduto);
+    procedure RecuperarObjetoDoBancoDeDados;
+    procedure Gravar;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelProduto): iModelProdutoMetodosEditar;
+    function GUUID(AGUUID: String)        : iModelProdutoMetodosEditar;
+    function Descricao(ADescricao: String): iModelProdutoMetodosEditar;
+    function Valor(AValor: Currency)      : iModelProdutoMetodosEditar;
+    function Grupo(AGrupo: String)        : iModelProdutoMetodosEditar;
+    function AtivoInativo(AValue: Integer): iModelProdutoMetodosEditar;
+    function &End                         : iModelProdutoMetodos;
+  end;
+
+implementation
+
+{ TModelProdutoMetodosEditar }
+
+function TModelProdutoMetodosEditar.AtivoInativo(
+  AValue: Integer): iModelProdutoMetodosEditar;
+begin
+  Result        := Self;
+  FAtivoInativo := AValue;
+end;
+
+function TModelProdutoMetodosEditar.&End: iModelProdutoMetodos;
+begin
+  Result := FParent.Metodos;
+  RecuperarObjetoDoBancoDeDados;
+  Gravar;
+end;
+
+constructor TModelProdutoMetodosEditar.Create(AParent: iModelProduto);
+begin
+  FParent   := AParent;
+  FEntidade := TPRODUTO.Create;
+end;
+
+function TModelProdutoMetodosEditar.Descricao(
+  ADescricao: String): iModelProdutoMetodosEditar;
+begin
+  Result     := Self;
+  if ADescricao.IsNullOrWhiteSpace(ADescricao) then
+    raise Exception.Create(
+      'Não é possível alterar este produto se não tiver um Nome/Descrição.'
+    );
+  FDescricao := ADescricao;
+end;
+
+destructor TModelProdutoMetodosEditar.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+procedure TModelProdutoMetodosEditar.Gravar;
+begin
+  FParent.DAO.Modify(FEntidade);
+  FEntidade.DESCRICAO := FDescricao;
+  FEntidade.GRUPO     := FGrupo;
+  FEntidade.PRECO     := FValor;
+  FEntidade.STATUS    := FAtivoInativo;
+  FParent.DAO.Update(FEntidade);
+end;
+
+function TModelProdutoMetodosEditar.Grupo(
+  AGrupo: String): iModelProdutoMetodosEditar;
+begin
+  Result := Self;
+  FGrupo := AGrupo;
+end;
+
+function TModelProdutoMetodosEditar.GUUID(
+  AGUUID: String): iModelProdutoMetodosEditar;
+begin
+  Result := Self;
+  FGUUID := AGUUID;
+end;
+
+class function TModelProdutoMetodosEditar.New(AParent: iModelProduto): iModelProdutoMetodosEditar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+procedure TModelProdutoMetodosEditar.RecuperarObjetoDoBancoDeDados;
+begin
+  FListaProduto := FParent.DAO.FindWhere('GUUID = ' + QuotedStr(FGUUID));
+
+  FEntidade.GUUID         := FListaProduto[0].GUUID;
+  FEntidade.GRUPO         := FListaProduto[0].GRUPO;
+  FEntidade.CODIGO        := FListaProduto[0].CODIGO;
+  FEntidade.DESCRICAO     := FListaProduto[0].DESCRICAO;
+  FEntidade.PRECO         := FListaProduto[0].PRECO;
+  FEntidade.STATUS        := FListaProduto[0].STATUS;
+  FEntidade.DATACADASTRO  := FListaProduto[0].DATACADASTRO;
+  FEntidade.DATAALTERACAO := FListaProduto[0].DATAALTERACAO;
+end;
+
+function TModelProdutoMetodosEditar.Valor(
+  AValor: Currency): iModelProdutoMetodosEditar;
+begin
+  Result := Self;
+  FValor := AValor;
+end;
+
+end.

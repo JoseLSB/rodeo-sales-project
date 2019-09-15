@@ -1,0 +1,67 @@
+unit MFichas.Controller.Venda.Metodos.CancelarItem;
+
+interface
+
+uses
+  MFichas.Controller.Venda.Interfaces, MFichas.Model.Venda.Interfaces;
+
+type
+  TControllerVendaMetodosCancelarItem = class(TInterfacedObject, iControllervendaMetodosCancelarItem)
+  private
+    [weak]
+    FParent: iControllerVenda;
+    FModel : iModelVenda;
+    FIndex : Integer;
+    constructor Create(AParent: iControllerVenda; AModel: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iControllerVenda; AModel: iModelVenda): iControllervendaMetodosCancelarItem;
+    function Index(AIndex: Integer): iControllerVendaMetodosCancelarItem;
+    function Executar              : iControllerVendaMetodosCancelarItem;
+    function &End                  : iControllerVendaMetodos;
+  end;
+
+implementation
+
+{ TControllerVendaMetodosCancelarItem }
+
+function TControllerVendaMetodosCancelarItem.&End: iControllerVendaMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+constructor TControllerVendaMetodosCancelarItem.Create(AParent: iControllerVenda; AModel: iModelVenda);
+begin
+  FParent := AParent;
+  FModel  := AModel;
+end;
+
+destructor TControllerVendaMetodosCancelarItem.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerVendaMetodosCancelarItem.Executar: iControllerVendaMetodosCancelarItem;
+begin
+  Result := Self;
+  FModel
+  .Item
+  .Iterator
+    .Remove(FIndex)
+  .&End
+end;
+
+function TControllerVendaMetodosCancelarItem.Index(
+  AIndex: Integer): iControllerVendaMetodosCancelarItem;
+begin
+  Result := Self;
+  FIndex := AIndex;
+end;
+
+class function TControllerVendaMetodosCancelarItem.New(AParent: iControllerVenda; AModel: iModelVenda): iControllervendaMetodosCancelarItem;
+begin
+  Result := Self.Create(AParent, AModel);
+end;
+
+end.

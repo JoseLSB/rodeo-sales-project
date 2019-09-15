@@ -1,0 +1,54 @@
+unit MFichas.Model.Pagamento.Formas.Dinheiro.Estornar;
+
+interface
+
+uses
+  MFichas.Model.Pagamento.Interfaces;
+
+type
+  TModelPagamentoFormasDinheiroEstornar = class(TInterfacedObject, iModelPagamentoMetodosEstornar)
+  private
+    [weak]
+    FParent: iModelPagamentoMetodos;
+    FValor : Currency;
+    constructor Create(AParent: iModelPagamentoMetodos);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPagamentoMetodos): iModelPagamentoMetodosEstornar;
+    function SetValor(AValue: Currency): iModelPagamentoMetodosEstornar;
+    function &End                      : iModelPagamentoMetodos;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasDinheiroEstornar }
+
+function TModelPagamentoFormasDinheiroEstornar.&End: iModelPagamentoMetodos;
+begin
+
+end;
+
+constructor TModelPagamentoFormasDinheiroEstornar.Create(AParent: iModelPagamentoMetodos);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamentoFormasDinheiroEstornar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelPagamentoFormasDinheiroEstornar.New(AParent: iModelPagamentoMetodos): iModelPagamentoMetodosEstornar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPagamentoFormasDinheiroEstornar.SetValor(
+  AValue: Currency): iModelPagamentoMetodosEstornar;
+begin
+  Result := Self;
+  FValor := AValue;
+end;
+
+end.

@@ -1,0 +1,55 @@
+unit MFichas.Model.Pagamento.Formas.Credito.Processar;
+
+interface
+
+uses
+  MFichas.Model.Pagamento.Interfaces;
+
+type
+  TModelPagamentoFormasCreditoProcessar = class(TInterfacedObject, iModelPagamentoMetodosProcessar)
+  private
+    [weak]
+    FParent: iModelPagamentoMetodos;
+    FValor : Currency;
+    constructor Create(AParent: iModelPagamentoMetodos);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPagamentoMetodos): iModelPagamentoMetodosProcessar;
+    function SetValor(AValue: Currency): iModelPagamentoMetodosProcessar;
+    function &End                      : iModelPagamentoMetodos;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasCreditoProcessar }
+
+function TModelPagamentoFormasCreditoProcessar.&End: iModelPagamentoMetodos;
+begin
+  //TODO: IMPLEMENTAR METODO DE PAGAMENTO EM CRÉDITO.
+  Result := FParent;
+end;
+
+constructor TModelPagamentoFormasCreditoProcessar.Create(AParent: iModelPagamentoMetodos);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamentoFormasCreditoProcessar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelPagamentoFormasCreditoProcessar.New(AParent: iModelPagamentoMetodos): iModelPagamentoMetodosProcessar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPagamentoFormasCreditoProcessar.SetValor(
+  AValue: Currency): iModelPagamentoMetodosProcessar;
+begin
+  Result := Self;
+  FValor := AValue;
+end;
+
+end.

@@ -1,0 +1,66 @@
+unit MFichas.Model.Caixa.Interfaces;
+
+interface
+
+uses
+  MFichas.Model.Entidade.CAIXA,
+
+  ORMBR.Container.ObjectSet.Interfaces;
+
+type
+  iModelCaixa                  = interface;
+  iModelCaixaMetodos           = interface;
+  iModelCaixaMetodosAbrir      = interface;
+  iModelCaixaMetodosFechar     = interface;
+  iModelCaixaMetodosSuprimento = interface;
+  iModelCaixaMetodosSangria    = interface;
+
+  iModelCaixa = interface
+    ['{6DAC11A6-61A5-4D9C-B49B-F24EA43C9C53}']
+    function SetState(AState: iModelCaixaMetodos): iModelCaixa;
+    function Metodos                             : iModelCaixaMetodos;
+    function Entidade: TCAIXA; overload;
+    function Entidade(ACaixa: TCAIXA): iModelCaixa; overload;
+    function DAO: iContainerObjectSet<TCAIXA>;
+  end;
+
+  iModelCaixaMetodos = interface
+    ['{CA0C1C52-AE7F-442E-9179-26561D70CD65}']
+    function Abrir     : iModelCaixaMetodosAbrir;
+    function Fechar    : iModelCaixaMetodosFechar;
+    function Suprimento: iModelCaixaMetodosSuprimento;
+    function Sangria   : iModelCaixaMetodosSangria;
+    function &End      : iModelCaixa;
+  end;
+
+  iModelCaixaMetodosAbrir = interface
+    ['{79CC7128-A775-40E7-A4EA-BC76DFFCA92C}']
+    function SetValorAbertura(AValue: Currency): iModelCaixaMetodosAbrir;
+    function SetOperador(AOperador: String)    : iModelCaixaMetodosAbrir;
+    function &End                              : iModelCaixaMetodos;
+  end;
+
+  iModelCaixaMetodosFechar = interface
+    ['{9AA943CF-5953-4CF9-A660-DBB88249AE3D}']
+    function SetValorFechamento(AValue: Currency): iModelCaixaMetodosFechar;
+    function SetOperador(AOperador: String)      : iModelCaixaMetodosFechar;
+    function &End                                : iModelCaixaMetodos;
+  end;
+
+  iModelCaixaMetodosSuprimento = interface
+    ['{FCEA205D-C423-4DBC-A612-64625F9E8F00}']
+    function SetValorSuprimento(AValue: Currency): iModelCaixaMetodosSuprimento;
+    function SetOperador(AOperador: String)      : iModelCaixaMetodosSuprimento;
+    function &End                                : iModelCaixaMetodos;
+  end;
+
+  iModelCaixaMetodosSangria = interface
+    ['{94E99810-3DE3-4B97-947E-7A7CA29A1E96}']
+    function SetValorSangria(AValue: Currency): iModelCaixaMetodosSangria;
+    function SetOperador(AOperador: String)   : iModelCaixaMetodosSangria;
+    function &End                             : iModelCaixaMetodos;
+  end;
+
+implementation
+
+end.

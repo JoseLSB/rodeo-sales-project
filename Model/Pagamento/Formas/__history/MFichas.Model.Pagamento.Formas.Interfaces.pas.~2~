@@ -1,0 +1,16 @@
+unit MFichas.Model.Pagamento.Formas.Interfaces;
+
+interface
+
+uses MFichas.Model.Pagamento.Interfaces;
+
+type
+  iModelPagamentoFormasFactory = interface
+    function Dinheiro: iModelPagamentoMetodos;
+    function Debito  : iModelPagamentoMetodos;
+    function Credito : iModelPagamentoMetodos;
+  end;
+
+implementation
+
+end.

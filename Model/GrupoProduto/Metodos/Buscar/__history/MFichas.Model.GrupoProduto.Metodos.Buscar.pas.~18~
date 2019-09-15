@@ -1,0 +1,86 @@
+unit MFichas.Model.GrupoProduto.Metodos.Buscar;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.GrupoProduto.Interfaces,
+
+  MFichas.Controller.Types,
+
+  FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet;
+
+type
+  TModelGrupoMetodosBuscar = class(TInterfacedObject, iModelGrupoProdutoMetodosBuscar)
+  private
+    [weak]
+    FParent    : iModelGrupoProduto;
+    FFDMemTable: TFDMemTable;
+    constructor Create(AParent: iModelGrupoProduto);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelGrupoProduto): iModelGrupoProdutoMetodosBuscar;
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelGrupoProdutoMetodosBuscar;
+    function BuscarTodos                         : iModelGrupoProdutoMetodosBuscar;
+    function BuscarTodosAtivos                   : iModelGrupoProdutoMetodosBuscar;
+    function &End                                : iModelGrupoProdutoMetodos;
+  end;
+
+implementation
+
+{ TModelGrupoMetodosBuscar }
+
+function TModelGrupoMetodosBuscar.BuscarTodos: iModelGrupoProdutoMetodosBuscar;
+begin
+  //TODO: IMPLEMENTAR MÉTODO DE BUSCA DE GRUPOS
+  Result := Self;
+  FParent.DAODataSet.Open;
+  if FParent.DAODataSet.DataSet.RecordCount = 0 then
+    raise Exception.Create('Nenhum registro encontrado.');
+  FFDMemTable.CopyDataSet(FParent.DAODataSet.DataSet, [coStructure, coRestart, coAppend]);
+  FFDMemTable.IndexFieldNames := 'DESCRICAO';
+end;
+
+function TModelGrupoMetodosBuscar.&End: iModelGrupoProdutoMetodos;
+begin
+  Result := FParent.Metodos;
+end;
+
+function TModelGrupoMetodosBuscar.FDMemTable(
+  AFDMemTable: TFDMemTable): iModelGrupoProdutoMetodosBuscar;
+begin
+  Result      := Self;
+  FFDMemTable := AFDMemTable;
+end;
+
+function TModelGrupoMetodosBuscar.BuscarTodosAtivos: iModelGrupoProdutoMetodosBuscar;
+begin
+  Result := Self;
+  FParent.DAODataSet.OpenWhere(
+    ' STATUS = ' + Integer(saiAtivo).ToString
+  );
+  if FParent.DAODataSet.DataSet.RecordCount = 0 then
+    raise Exception.Create('Nenhum registro encontrado.');
+  FFDMemTable.CopyDataSet(FParent.DAODataSet.DataSet, [coStructure, coRestart, coAppend]);
+  FFDMemTable.IndexFieldNames := 'DESCRICAO';
+end;
+
+constructor TModelGrupoMetodosBuscar.Create(AParent: iModelGrupoProduto);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelGrupoMetodosBuscar.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelGrupoMetodosBuscar.New(AParent: iModelGrupoProduto): iModelGrupoProdutoMetodosBuscar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

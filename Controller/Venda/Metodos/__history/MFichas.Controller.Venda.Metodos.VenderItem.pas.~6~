@@ -1,0 +1,95 @@
+unit MFichas.Controller.Venda.Metodos.VenderItem;
+
+interface
+
+uses
+  MFichas.Controller.Venda.Interfaces, MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Item;
+
+type
+  TControllerVendaMetodosVenderItem = class(TInterfacedObject, iControllerVendaMetodosVenderItem)
+  private
+    [weak]
+    FParent    : iControllerVenda;
+    FModel     : iModelVenda;
+    FCodigo    : String;
+    FQuantidade: Double;
+    FValor     : Currency;
+    constructor Create(AParent: iControllerVenda; AModel: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iControllerVenda; AModel: iModelVenda): iControllerVendaMetodosVenderItem;
+    function Codigo(ACodigo: String)        : iControllerVendaMetodosVenderItem;
+    function Quantidade(AQuantidade: Double): iControllerVendaMetodosVenderItem;
+    function Valor(AValor: Currency)        : iControllerVendaMetodosVenderItem;
+    function Executar                       : iControllerVendaMetodosVenderItem;
+    function &End                           : iControllerVendaMetodos;
+  end;
+
+implementation
+
+{ TControllerVendaMetodosVenderItem }
+
+function TControllerVendaMetodosVenderItem.Codigo(
+  ACodigo: String): iControllerVendaMetodosVenderItem;
+begin
+  Result  := Self;
+  FCodigo := ACodigo;
+end;
+
+function TControllerVendaMetodosVenderItem.&End: iControllerVendaMetodos;
+begin
+
+end;
+
+constructor TControllerVendaMetodosVenderItem.Create(AParent: iControllerVenda; AModel: iModelVenda);
+begin
+  FParent := AParent;
+  FModel  := AModel;
+end;
+
+destructor TControllerVendaMetodosVenderItem.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerVendaMetodosVenderItem.Executar: iControllerVendaMetodosVenderItem;
+begin
+  Result := Self;
+  FModel
+  .Item
+  .Iterator
+    .Add(
+      TModelItem.New(FModel)
+      .Metodos
+        .Vender
+          .Codigo(FCodigo)
+          .Quantidade(FQuantidade)
+          .Valor(FValor)
+        .&End
+      .&End
+    )
+  .&End
+end;
+
+class function TControllerVendaMetodosVenderItem.New(AParent: iControllerVenda; AModel: iModelVenda): iControllerVendaMetodosVenderItem;
+begin
+  Result := Self.Create(AParent, AModel);
+end;
+
+function TControllerVendaMetodosVenderItem.Quantidade(
+  AQuantidade: Double): iControllerVendaMetodosVenderItem;
+begin
+  Result      := Self;
+  FQuantidade := AQuantidade;
+end;
+
+function TControllerVendaMetodosVenderItem.Valor(
+  AValor: Currency): iControllerVendaMetodosVenderItem;
+begin
+  Result := Self;
+  FValor := AValor;
+end;
+
+end.

@@ -1,0 +1,58 @@
+unit MFichas.Model.GrupoProduto.Interfaces;
+
+interface
+
+uses
+  MFichas.Model.Entidade.GRUPOPRODUTO,
+
+  ORMBR.Container.ObjectSet.Interfaces,
+  ORMBR.Container.DataSet.Interfaces, FireDAC.Comp.Client;
+
+type
+  iModelGrupoProduto                 = interface;
+  iModelGrupoProdutoMetodos          = interface;
+  iModelGrupoProdutoMetodosCadastrar = interface;
+  iModelGrupoProdutoMetodosEditar    = interface;
+  iModelGrupoProdutoMetodosBuscar    = interface;
+
+  iModelGrupoProduto = interface
+    ['{6AF44436-FC7C-4A59-930B-BD8D2A38AC15}']
+    function Metodos                           : iModelGrupoProdutoMetodos;
+    function Entidade                          : TGRUPOPRODUTO; overload;
+    function Entidade(AEntidade: TGRUPOPRODUTO): iModelGrupoProduto; overload;
+    function DAO                               : iContainerObjectSet<TGRUPOPRODUTO>;
+    function DAODataSet                        : iContainerDataSet<TGRUPOPRODUTO>;
+  end;
+
+  iModelGrupoProdutoMetodos = interface
+    ['{71758538-4D50-4DF8-964D-454570EE0549}']
+    function Cadastrar: iModelGrupoProdutoMetodosCadastrar;
+    function Editar   : iModelGrupoProdutoMetodosEditar;
+    function Buscar   : iModelGrupoProdutoMetodosBuscar;
+    function &End     : iModelGrupoProduto;
+  end;
+
+  iModelGrupoProdutoMetodosCadastrar = interface
+    ['{1E182DF8-3C14-47E9-B219-C7A706B2D951}']
+    function Descricao(ADescricao: String): iModelGrupoProdutoMetodosCadastrar;
+    function &End                         : iModelGrupoProdutoMetodos;
+  end;
+
+  iModelGrupoProdutoMetodosEditar = interface
+    ['{8185AAF8-08F3-4880-AF0A-AA4D337DE02C}']
+    function GUUID(AGUUID: String)        : iModelGrupoProdutoMetodosEditar;
+    function Descricao(ADescricao: String): iModelGrupoProdutoMetodosEditar;
+    function &End                         : iModelGrupoProdutoMetodosEditar;
+  end;
+
+  iModelGrupoProdutoMetodosBuscar = interface
+    ['{D4C50BEF-1027-4A5E-A57A-30265A9DEC4C}']
+    function FDMemTable(AFDMemTable: TFDMemTable): iModelGrupoProdutoMetodosBuscar;
+    function BuscarTodos                         : iModelGrupoProdutoMetodosBuscar;
+    function BuscarTodosAtivos                   : iModelGrupoProdutoMetodosBuscar;
+    function &End                                : iModelGrupoProdutoMetodos;
+  end;
+
+implementation
+
+end.

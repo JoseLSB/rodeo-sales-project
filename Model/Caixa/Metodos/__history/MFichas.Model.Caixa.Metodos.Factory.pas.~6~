@@ -1,0 +1,65 @@
+unit MFichas.Model.Caixa.Metodos.Factory;
+
+interface
+
+uses
+  MFichas.Model.Caixa.Interfaces,
+  MFichas.Model.Caixa.Metodos.Interfaces,
+  MFichas.Model.Caixa.Metodos.Abrir,
+  MFichas.Model.Caixa.Metodos.Fechar,
+  MFichas.Model.Caixa.Metodos.Suprimento,
+  MFichas.Model.Caixa.Metodos.Sangria;
+
+type
+  TModelCaixaMetodosFactory = class(TInterfacedObject, iModelCaixaMetodosFactory)
+  private
+    constructor Create;
+    destructor Destroy; override;
+  public
+    class function New: iModelCaixaMetodosFactory;
+    function CaixaMetodoAbrir     : iModelCaixaMetodosAbrir;
+    function CaixaMetodoFechar    : iModelCaixaMetodosFechar;
+    function CaixaMetodoSuprimento: iModelCaixaMetodosSuprimento;
+    function CaixaMetodoSangria   : iModelCaixaMetodosSangria;
+  end;
+
+implementation
+
+{ TModelCaixaMetodosFactory }
+
+function TModelCaixaMetodosFactory.CaixaMetodoAbrir: iModelCaixaMetodosFactory;
+begin
+end;
+
+function TModelCaixaMetodosFactory.CaixaMetodoFechar: iModelCaixaMetodosFactory;
+begin
+
+end;
+
+function TModelCaixaMetodosFactory.CaixaMetodoSangria: iModelCaixaMetodosFactory;
+begin
+
+end;
+
+function TModelCaixaMetodosFactory.CaixaMetodoSuprimento: iModelCaixaMetodosSuprimento;
+begin
+
+end;
+
+constructor TModelCaixaMetodosFactory.Create;
+begin
+
+end;
+
+destructor TModelCaixaMetodosFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelCaixaMetodosFactory.New: iModelCaixaMetodosFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

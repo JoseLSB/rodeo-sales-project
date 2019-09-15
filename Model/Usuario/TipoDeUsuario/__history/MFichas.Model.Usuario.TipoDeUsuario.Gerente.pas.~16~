@@ -1,0 +1,155 @@
+unit MFichas.Model.Usuario.TipoDeUsuario.Gerente;
+
+interface
+
+uses
+  MFichas.Model.Usuario.Interfaces,
+
+  MFichas.Controller.Usuario.Operacoes.Interfaces,
+  MFichas.Controller.Types;
+
+type
+  TModelUsuarioTipoDeUsuarioGerente = class(TInterfacedObject, iModelUsuarioMetodos)
+  private
+    [weak]
+    FParent            : iModelUsuario;
+    FNextResponsibility: iModelUsuarioMetodos;
+    FOperacoes         : iControllerUsuarioOperacoes;
+    constructor Create(AParent: iModelUsuario);
+    procedure PedirSenha;
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelUsuario): iModelUsuarioMetodos;
+    function SetOperacoes(AOperacoes: iControllerUsuarioOperacoes): iModelUsuarioMetodos;
+    function NextReponsibility(AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+    function LogoENomeDaFesta           : iModelUsuarioMetodos;
+    function AbrirCaixa                 : iModelUsuarioMetodos;
+    function FecharCaixa                : iModelUsuarioMetodos;
+    function Suprimento                 : iModelUsuarioMetodos;
+    function Sangria                    : iModelUsuarioMetodos;
+    function CadastrarProdutos          : iModelUsuarioMetodos;
+    function CadastrarGrupos            : iModelUsuarioMetodos;
+    function CadastrarUsuarios          : iModelUsuarioMetodos;
+    function AcessarRelatorios          : iModelUsuarioMetodos;
+    function AcessarConfiguracoes       : iModelUsuarioMetodos;
+    function ExcluirProdutosPosImpressao: iModelUsuarioMetodos;
+    function &End                       : iModelUsuario;
+  end;
+
+implementation
+
+{ TModelUsuarioTipoDeUsuarioGerente }
+
+function TModelUsuarioTipoDeUsuarioGerente.&End: iModelUsuario;
+begin
+  Result := FParent;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.AbrirCaixa: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.AcessarConfiguracoes: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.AcessarRelatorios: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.CadastrarGrupos: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.CadastrarProdutos: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.CadastrarUsuarios: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+constructor TModelUsuarioTipoDeUsuarioGerente.Create(AParent: iModelUsuario);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelUsuarioTipoDeUsuarioGerente.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.ExcluirProdutosPosImpressao: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.FecharCaixa: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.LogoENomeDaFesta: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+class function TModelUsuarioTipoDeUsuarioGerente.New(AParent: iModelUsuario): iModelUsuarioMetodos;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.NextReponsibility(
+  AValue: iModelUsuarioMetodos): iModelUsuarioMetodos;
+begin
+  Result              := Self;
+  FNextResponsibility := AValue;
+end;
+
+procedure TModelUsuarioTipoDeUsuarioGerente.PedirSenha;
+begin
+  FOperacoes
+    .PedirSenha
+      .SetTitle('Entre com a senha de PROPRIETÁRIO')
+      .SetTextConfirm('Confirmar')
+      .SetTextCancel('Cancelar')
+      .SetChamada(cuGerente)
+    .&End;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.Sangria: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.SetOperacoes(
+  AOperacoes: iControllerUsuarioOperacoes): iModelUsuarioMetodos;
+begin
+  Result     := Self;
+  FOperacoes := AOperacoes;
+end;
+
+function TModelUsuarioTipoDeUsuarioGerente.Suprimento: iModelUsuarioMetodos;
+begin
+  Result := Self;
+  PedirSenha;
+end;
+
+end.

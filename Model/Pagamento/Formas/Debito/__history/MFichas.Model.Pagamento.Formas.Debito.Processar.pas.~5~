@@ -1,0 +1,72 @@
+unit MFichas.Model.Pagamento.Formas.Debito.Processar;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Pagamento.Interfaces,
+  MFichas.Model.Entidade.VENDAPAGAMENTOS,
+
+  MFichas.Controller.Types;
+
+type
+  TModelPagamentoFormasDebitoProcessar = class(TInterfacedObject, iModelPagamentoMetodosProcessar)
+  private
+    [weak]
+    FParent  : iModelPagamento;
+    FValor   : Currency;
+    FEntidade: TVENDAPAGAMENTOS;
+    constructor Create(AParent: iModelPagamento);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPagamento): iModelPagamentoMetodosProcessar;
+    function SetValor(AValue: Currency): iModelPagamentoMetodosProcessar;
+    function &End                      : iModelPagamentoMetodos;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasDebitoProcessar }
+
+function TModelPagamentoFormasDebitoProcessar.&End: iModelPagamentoMetodos;
+begin
+  //TODO IMPLEMENTAR METODO DE PAGAMENTO EM CARTAO DE DEBITO.
+  Result           := FParent.CartaoDeDebito;
+  FEntidade.VENDA  := FParent.EntidadeDeVenda.GUUID;
+  FEntidade.TIPO   := Integer(tpCartaoDebito);
+  FEntidade.VALOR  := FValor;
+  FEntidade.STATUS := Integer(spProcessado);
+  FParent.DAO.Insert(FEntidade);
+end;
+
+constructor TModelPagamentoFormasDebitoProcessar.Create(AParent: iModelPagamento);
+begin
+  FParent   := AParent;
+  FEntidade := TVENDAPAGAMENTOS.Create;
+end;
+
+destructor TModelPagamentoFormasDebitoProcessar.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+class function TModelPagamentoFormasDebitoProcessar.New(AParent: iModelPagamento): iModelPagamentoMetodosProcessar;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPagamentoFormasDebitoProcessar.SetValor(
+  AValue: Currency): iModelPagamentoMetodosProcessar;
+begin
+  Result := Self;
+  FValor := AValue;
+end;
+
+end.

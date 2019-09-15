@@ -1,0 +1,124 @@
+unit MFichas.Model.Item;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Item.Interfaces,
+  MFichas.Model.Item.Metodos.Factory,
+  MFichas.Model.Item.Iterator,
+  MFichas.Model.Item.Metodos.GravarNoBanco,
+  MFichas.Model.Entidade.VENDAITENS, MFichas.Model.Venda.Interfaces;
+
+type
+  TModelItem = class(TInterfacedObject, iModelItem, iModelItemMetodos)
+  private
+    [weak]
+    FParent  : iModelVenda;
+    FIterator: iModelItemIterator;
+    FEntidade: TVENDAITENS;
+    FVender  : iModelItemMetodosVender;
+    constructor Create(AParent: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelVenda): iModelItem;
+    function Metodos                         : iModelItemMetodos;
+    function Entidade                        : TVENDAITENS; overload;
+    function Entidade(AEntidade: TVENDAITENS): iModelItem; overload;
+    function Iterator                        : iModelItemIterator;
+    function GravarNoBanco                   : iModelItemGravarNoBanco;
+    function ValorTotal                      : Currency;
+    //METODOS
+    function Vender       : iModelItemMetodosVender;
+    function Cancelar     : iModelItemMetodosCancelar;
+    function Devolver     : iModelItemMetodosDevolver;
+    function &End         : iModelItem;
+  end;
+
+implementation
+
+{ TModelItem }
+
+function TModelItem.&End: iModelItem;
+begin
+  Result := Self;
+end;
+
+function TModelItem.Entidade: TVENDAITENS;
+begin
+  Result := FEntidade;
+end;
+
+function TModelItem.Entidade(AEntidade: TVENDAITENS): iModelItem;
+begin
+  Result    := Self;
+  FEntidade := AEntidade;
+end;
+
+function TModelItem.Cancelar: iModelItemMetodosCancelar;
+begin
+  Result := TModelItemMetodosFactory.New.Cancelar(Self);
+end;
+
+constructor TModelItem.Create(AParent: iModelVenda);
+begin
+  FParent   := AParent;
+  FIterator := TModelItemIterator.New(Self);
+  FEntidade := TVENDAITENS.Create;
+end;
+
+destructor TModelItem.Destroy;
+begin
+  {$IFDEF MSWINDOWS}
+  FreeAndNil(FEntidade);
+  {$ELSE}
+  FEntidade.Free;
+  FEntidade.DisposeOf;
+  {$ENDIF}
+  inherited;
+end;
+
+function TModelItem.Devolver: iModelItemMetodosDevolver;
+begin
+  Result := TModelItemMetodosFactory.New.Devolver(Self, FParent);
+end;
+
+function TModelItem.GravarNoBanco: iModelItemGravarNoBanco;
+begin
+  Result := TModelItemMetodosGravarNoBanco.New(Self);
+end;
+
+function TModelItem.Iterator: iModelItemIterator;
+begin
+  Result := FIterator;
+end;
+
+function TModelItem.Metodos: iModelItemMetodos;
+begin
+  Result := Self;
+end;
+
+class function TModelItem.New(AParent: iModelVenda): iModelItem;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelItem.ValorTotal: Currency;
+var
+  LItem: TVENDAITENS;
+begin
+  Result := 0;
+  if FIterator.hasNext then
+  begin
+    LItem  := FIterator.Next.Entidade;
+    Result := Result + (LItem.PRECO * LItem.QUANTIDADE);
+  end;
+end;
+
+function TModelItem.Vender: iModelItemMetodosVender;
+begin
+  Result := TModelItemMetodosFactory.New.Vender(Self, FParent);
+end;
+
+end.

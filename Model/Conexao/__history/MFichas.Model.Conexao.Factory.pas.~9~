@@ -1,0 +1,53 @@
+unit MFichas.Model.Conexao.Factory;
+
+interface
+
+uses
+  MFichas.Model.Conexao.Interfaces;
+
+type
+  TModelConexaoFactory = class(TInterfacedObject, iModelConexaoFactory)
+  private
+    constructor Create;
+  public
+    destructor Destroy; override;
+    class function New: iModelConexaoFactory;
+    function ConexaoSQL      : iModelConexaoSQL;
+    function ConexaoBluetooth: iModelConexaoBluetooth;
+  end;
+
+implementation
+
+uses
+  MFichas.Model.Conexao.SQL,
+  MFichas.Model.Conexao.Bluetooth;
+
+{ TModelConexaoFactory }
+
+function TModelConexaoFactory.ConexaoBluetooth: iModelConexaoBluetooth;
+begin
+  Result := TModelConexaoBluetooth.New;
+end;
+
+function TModelConexaoFactory.ConexaoSQL: iModelConexaoSQL;
+begin
+  Result := TModelConexaoSQL.New;
+end;
+
+constructor TModelConexaoFactory.Create;
+begin
+
+end;
+
+destructor TModelConexaoFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactory.New: iModelConexaoFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

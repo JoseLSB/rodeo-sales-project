@@ -1,0 +1,61 @@
+unit MFichas.Model.Pagamento.Formas.Credito;
+
+interface
+
+uses
+  System.SysUtils,
+
+  MFichas.Model.Pagamento.Interfaces;
+
+type
+  TModelPagamentoFormasCredito = class(TInterfacedObject, iModelPagamentoMetodos)
+  private
+    [weak]
+    FParent: iModelPagamento;
+    constructor Create(AParent: iModelPagamento);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelPagamento): iModelPagamentoMetodos;
+    function Processar: iModelPagamentoMetodosProcessar;
+    function Estornar : iModelPagamentoMetodosEstornar;
+    function &End     : iModelPagamento;
+  end;
+
+implementation
+
+{ TModelPagamentoFormasCredito }
+
+function TModelPagamentoFormasCredito.&End: iModelPagamento;
+begin
+  Result := FParent;
+end;
+
+constructor TModelPagamentoFormasCredito.Create(AParent: iModelPagamento);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamentoFormasCredito.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPagamentoFormasCredito.Estornar: iModelPagamentoMetodosEstornar;
+begin
+  raise Exception.Create(
+    'Error Message'
+  );
+end;
+
+class function TModelPagamentoFormasCredito.New(AParent: iModelPagamento): iModelPagamentoMetodos;
+begin
+  Result := Self.Create(AParent);
+end;
+
+function TModelPagamentoFormasCredito.Processar: iModelPagamentoMetodosProcessar;
+begin
+
+end;
+
+end.

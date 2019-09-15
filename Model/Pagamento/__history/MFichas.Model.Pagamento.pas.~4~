@@ -1,0 +1,58 @@
+unit MFichas.Model.Pagamento;
+
+interface
+
+uses
+  MFichas.Model.Venda.Interfaces,
+  MFichas.Model.Pagamento.Interfaces, MFichas.Model.Pagamento.Formas.Factory;
+
+type
+  TModelPagamento = class(TInterfacedObject, iModelPagamento)
+  private
+    [weak]
+    FParent: iModelVenda;
+    constructor Create(AParent: iModelVenda);
+  public
+    destructor Destroy; override;
+    class function New(AParent: iModelVenda): iModelPagamento;
+    function Dinheiro       : iModelPagamentoMetodos;
+    function CartaoDeDebito : iModelPagamentoMetodos;
+    function CartaoDeCredito: iModelPagamentoMetodos;
+  end;
+
+implementation
+
+{ TModelPagamento }
+
+function TModelPagamento.CartaoDeCredito: iModelPagamentoMetodos;
+begin
+  Result := TModelPagamentoFormasFactory.New.CartaoCredito(Self);
+end;
+
+function TModelPagamento.CartaoDeDebito: iModelPagamentoMetodos;
+begin
+   Result := TModelPagamentoFormasFactory.New.CartaoDebito(Self);
+end;
+
+constructor TModelPagamento.Create(AParent: iModelVenda);
+begin
+  FParent := AParent;
+end;
+
+destructor TModelPagamento.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPagamento.Dinheiro: iModelPagamentoMetodos;
+begin
+  Result := TModelPagamentoFormasFactory.New.Dinheiro(Self);
+end;
+
+class function TModelPagamento.New(AParent: iModelVenda): iModelPagamento;
+begin
+  Result := Self.Create(AParent);
+end;
+
+end.

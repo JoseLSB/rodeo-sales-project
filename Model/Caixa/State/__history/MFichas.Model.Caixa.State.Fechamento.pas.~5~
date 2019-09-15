@@ -1,0 +1,77 @@
+unit MFichas.Model.Caixa.State.Fechamento;
+
+interface
+
+uses
+  MFichas.Model.Caixa.Interfaces, System.SysUtils;
+
+type
+  TModelCaixaStateFechamento = class(TInterfacedObject, iModelCaixaMetodos)
+  private
+    constructor Create;
+    destructor Destroy; override;
+  public
+    class function New: iModelCaixaMetodos;
+    function Abrir     : iModelCaixaMetodos;
+    function Fechar    : iModelCaixaMetodos;
+    function Suprimento: iModelCaixaMetodos;
+    function Sangria   : iModelCaixaMetodos;
+    function &End      : iModelCaixa;
+  end;
+
+implementation
+
+{ TModelCaixaStateFechamento }
+
+function TModelCaixaStateFechamento.Abrir: iModelCaixaMetodos;
+begin
+
+end;
+
+function TModelCaixaStateFechamento.&End: iModelCaixa;
+begin
+
+end;
+
+constructor TModelCaixaStateFechamento.Create;
+begin
+
+end;
+
+destructor TModelCaixaStateFechamento.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelCaixaStateFechamento.Fechar: iModelCaixaMetodos;
+begin
+  Result := Self;
+  raise Exception.Create(
+    'Este caixa já encontrasse fechado.'
+  );
+end;
+
+class function TModelCaixaStateFechamento.New: iModelCaixaMetodos;
+begin
+  Result := Self.Create;
+end;
+
+function TModelCaixaStateFechamento.Sangria: iModelCaixaMetodos;
+begin
+  raise Exception.Create(
+    'Este caixa encontrasse fechado.' + sLineBreak +
+    'Não é possível efetuar uma Sangria.'
+  );
+end;
+
+function TModelCaixaStateFechamento.Suprimento: iModelCaixaMetodos;
+begin
+  Result := Self;
+  raise Exception.Create(
+    'Este caixa encontrasse fechado.' + sLineBreak +
+    'Não é possível efetuar um Suprimento.'
+  );
+end;
+
+end.
